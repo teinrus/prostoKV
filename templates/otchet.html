@@ -1,0 +1,384 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if user.username == 'master' or user.username == 'admin' %}
+        <script> // зависимости выпадающих списков таблици
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+            $(function () {
+
+
+                $('#sample_data').mousemove(function () {
+                    $('td.otv_pod', this).mousedown(function () {
+
+                        temp = '';
+                        for (let i = 0; i < test.length; i++) {
+                            if ($(this).text() === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    })
+                });
+                $('#sample_data').editable({
+                    container: 'body',
+                    selector: 'td.prichina',
+                    url: '/update',
+                    title: 'prichina',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        function () {
+                            return sor
+                        },
+                    validate: function (value) {
+                        if ($.trim(value)) {
+                        }
+                    }
+                });
+            });
+
+            var dataTable = $('#sample_data').DataTable();
+
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: '/update',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+                        {% for el in uch %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: '/update',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: '/update',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+        </script>
+    {% endif %}
+
+    {% if user.username == 'master' or user.username == 'admin'%}
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+
+            var dataTable2 = $('#sample_data2').DataTable();
+
+
+            $('#sample_data2').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: '/update2',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+                        {% for el in uch %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data2').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: '/update2',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data2').editable({
+
+                container: 'body',
+                selector: 'td.prichina',
+                url: '/update2',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+                }
+            });
+
+            $('#sample_data2').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: '/update2',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+
+
+        </script>
+    {% endif %}
+
+    <head>
+        <title>Отчет простоев {{ line }} </title>
+    </head>
+
+    <body>
+
+
+    <ul class="up-1" style="margin-bottom:15px">
+        <li>{{ line }}</li>
+        <li>{{ smena }}</li>
+        {% if line != 'Линиия 2' %}
+            <li>Количество взрывов {{ boomOut }}</li>
+        {% endif %}
+        <ul class="up-1" style="margin-bottom:15px">
+            {% if nachaloOt != None %}
+                <li>Период c: {{ nachaloOt }}</li>
+                <li>по: {{ okonchanieOt }}</li>
+            {% endif %}
+
+        </ul>
+    </ul>
+    <ul class="col">
+        <ul style="margin-bottom:15px ">
+            <li>Общее время простоя: {{ sumProstoy }}</li>
+            <li>Общее время работы: {{ timeWork }}</li>
+        </ul>
+        <ul>
+            <li>Средняя производительность:{{ avgSpeed }} </li>
+            <li>Количество продукции:{{ allProd }}</li>
+        </ul>
+
+
+        <div class="col__wrapper"
+             style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
+            <div class="col" style="width: calc((100% - 30px) / 2);">
+                <canvas id="myChart"></canvas>
+            </div>
+            <ul class="col__list">
+                <li class="col__item__ot">
+                    <ul class="not-print">
+                        <form action="" method="get" style='display:table-caption;'>
+                            {{ form.as_ul }}
+                            <input class="not-print" type="submit" value="Сформировать" style="margin-top: 20px;">
+                        </form>
+
+                    </ul>
+                </li>
+
+                <li class="col__item__ot">
+                    <ul class="not-print" media="print">
+                        <li class="not-print">
+                            <a onclick="window.print()" style="margin-top: 20px;">Распечатать
+                            </a>
+                        </li>
+                        <li class="not-print">
+
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+
+        </div>
+        {% if line != 'Линиия 2' %}
+        <table id="sample_data" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время начала простоя</th>
+                <th>Время простоя</th>
+                <th>Участок</th>
+
+                <th>Ответст. подразделение</th>
+                <th>Причина</th>
+                <th>Комментарий</th>
+            </thead>
+            <tbody>
+            {% for row in table %}
+                <tr>
+                    <td>{{ row.startdata }}</td>
+                    <td>{{ row.starttime }}</td>
+                    <td>{{ row.prostoy }}
+                    </td>
+
+                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                    <td data-name="otv_pod" class="otv_pod" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+                    <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                    <td data-name="comment" class="comment" data-type="textarea"
+                        data-pk="{{ row.id }}">{{ row.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <table id="sample_data2" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время начала простоя</th>
+                <th>Время простоя</th>
+                <th>Участок</th>
+
+                <th>Ответст. подразделение</th>
+                <th>Причина</th>
+                <th>Комментарий</th>
+            </thead>
+            <tbody>
+            {% for row in table %}
+                <tr>
+                    <td>{{ row.startdata }}</td>
+                    <td>{{ row.starttime }}</td>
+                    <td>{{ row.prostoy }}
+                    </td>
+
+                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                    <td data-name="otv_pod" class="otv_pod" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+                    <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                    <td data-name="comment" class="comment" data-type="textarea"
+                        data-pk="{{ row.id }}">{{ row.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% endif %}
+        <script>
+            const ctx = document.getElementById('myChart');
+
+            new Chart(ctx, {
+                type: 'bar',
+
+                data: {
+                    labels: {{ lableChart| safe }}
+                    ,
+                    datasets: [{
+                        borderColor: 'rgb(0,100,255)',
+                        label: '# Скороть линии 5',
+                        data: {{ dataChart | safe }},
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+
+
+    </body>
+{% endblock %}

@@ -1,0 +1,26 @@
+
+{% block content %}
+
+{% for row in table5|dictsort:"id"  reversed %}
+    <tr>
+        <td data-pk="{{ row.id }}">{{ row.id }}</td>
+        <td data-name="startdata" class="startdata" data-type="text"
+            data-pk="{{ row.id }}">{{ row.startdata }}</td>
+        <td data-name="starttime" class="starttime" data-type="text"
+            data-pk="{{ row.id }}">{{ row.starttime }}</td>
+
+        <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy}}</td>
+
+        <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">
+            {{ row.uchastok }}</td>
+        <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}
+        </td>
+        <td data-name="prichina" class="prichina" data-type="select"
+            data-pk="{{ row.id }}">{{ row.prichina }}</td>
+        <td data-name="comment" class="comment" data-type="textarea" data-pk="{{ row.id }}">{{ row.comment }}
+        </td>
+    </tr>
+{% endfor %}
+
+{% endblock %}
+

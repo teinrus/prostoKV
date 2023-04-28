@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css"
+          rel="stylesheet">
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"
+            integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"
+            integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css"
+          rel="stylesheet">
+
+
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"
+            integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+</head>
+
+<body style="padding: 0px 50px; margin-top: 20px; margin-left: 0px;">
+
+<footer class="not-print">
+    <ul class="ul-bar">
+
+        <li>
+            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'home' %}'">
+                Главная
+            </button>
+        </li>
+        <li>
+
+            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchet' %}'">
+                Отчет
+            </button>
+
+
+        </li>
+
+        <li>
+
+        </li>
+        <li>
+            {% if user.is_authenticated %}
+                <button class="btn btn-sm btn-primary w-100 ml-2"
+                        onclick="location.href='{% url 'profileOut' %}'">{{ user.username }} | Выйти
+                </button>
+            {% else %}
+                <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'profile' %}'">
+                    Авторизация
+                </button>
+            {% endif %}
+        </li>
+    </ul>
+
+</footer>
+
+{% block content %}
+{% endblock %}
+</body>
+<style>
+    ul.up-1 li {
+        display: inline; /* Отображать как строчный элемент */
+        margin-right: 5px; /* Отступ слева */
+        padding: 3px; /* Поля вокруг текста */
+        margin-top: 10px
+    }
+
+
+    .col__wrapper {
+        padding: 2px;
+
+    }
+
+    .col__list {
+        margin: 0;
+        padding: 0;
+        width: calc((100% - 20px) / 2);
+        display: flex;
+        list-style: none;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .col__item {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        width: calc((100% - 10px) / 2);
+        outline: 2px solid #000;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+    }
+
+    .col__item__ot {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        width: calc((100% - 10px) / 2);
+        justify-content: center;
+        font-size: 15px;
+    }
+
+    .col__item:nth-child(-n+2) {
+        margin-bottom: 10px;
+    }
+
+    .col__item:nth-last-child(-n+2) {
+        margin-bottom: 0px;
+    }
+
+
+    .table table-bordered table-striped dataTable no-footer {
+        width: calc((100%));
+        outline: 5px solid #000;
+        margin-top: 20px;
+
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .ul-bar {
+        margin: 0;
+        display: flex;
+    }
+
+    .ul-bar li {
+        padding: 5px;
+    }
+
+    .ul-bar > li:first-child {
+        margin-left: 0px;
+    }
+
+    .ul-bar > li:last-child {
+        right: 42px;
+        position: absolute;
+    }
+
+    @media print {
+
+        .not-print {
+            visibility: hidden;
+        }
+
+        .dataTables_length {
+            visibility: hidden;
+        }
+
+        .dataTables_filter {
+            visibility: hidden;
+        }
+
+        .dataTables_info {
+            visibility: hidden;
+        }
+
+        .pagination {
+            visibility: hidden;
+        }
+
+
+    }
+
+
+</style>
+
+</html>

@@ -1,0 +1,160 @@
+{% block content %}
+
+<head>
+    <title>Простои линии</title>
+</head>
+
+<body>
+
+
+<h1 style="text-align:center">Простои линии 5</h1>
+{% if not user.username == 'admin' %}
+    <div class="col__wrapper"
+         style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
+        <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
+            <canvas id="Chart"></canvas>
+        </div>
+        <ul class="col__list">
+            <li class="col__item">
+                <ul>
+                    <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
+                    <li id="avgSpeeds"
+                        style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+                </ul>
+            </li>
+            <li class="col__item">
+                <ul>
+                    <li style="list-style-type: none; font-size:23px">Взрывы бутылки</li>
+                    <li id="boomOut" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                </ul>
+            <li class="col__item">
+                <ul>
+                    <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
+                    <li id="sumProstoy" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                </ul>
+            <li class="col__item">
+                <ul>
+                    <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
+                    <li id="allProc" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                </ul>
+
+            <li class="col__item" style="margin-top:10px;">
+                <ul>
+            <li style=" display: inline;list-style-type: none; font-size:15px">Количество продукции: </li>
+                    <li id="sumProduct" style=" display: inline;font-size:15px; list-style-type: none;"></li>
+                </ul>
+
+        </ul>
+    </div>
+
+
+{% endif %}
+
+    <script>//ajax для перезагрузки графика
+$(document).ready(function () {
+
+    var ctx = document.getElementById("Chart").getContext("2d");
+    var config;
+    var chart = [];
+
+
+    $.ajax({
+        url: 'getData',
+        method: 'post',
+        success: function (data) {
+
+            $('#avgSpeeds').html(data.avgSpeed);
+            $('#allProc').html(data.allProc);
+            $('#boomOut').html(data.boomOut);
+            $('#sumProstoy').html(data.sumProstoy);
+            $('#sumProduct').html(data.sumProduct);
+             var ctx = document.getElementById("Chart").getContext("2d");
+            config = {
+                borderColor: 'rgb(0,100,255)',
+                type: 'bar',
+                data: {
+                    labels: data.lableChart,
+                    datasets: [{
+                        label: '# Производительность линии 5',
+                        data: data.dataChart,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            };
+            chart = new Chart(ctx, config);
+            dataUpdater();
+
+
+        }
+    });
+    setInterval(function () {
+
+        $.ajax({
+            url: 'getData',
+            method: 'post',
+            success: function (data) {
+
+                $('#avgSpeeds').html(data.avgSpeed);
+                $('#allProc').html(data.allProc);
+                $('#boomOut').html(data.boomOut);
+                $('#sumProstoy').html(data.sumProstoy);
+                $('#sumProduct').html(data.sumProduct);
+                dataUpdater();
+            }
+        });
+
+    }, 15000);
+
+
+    function dataUpdater() {
+        $.ajax({
+            type: "post",
+            url: 'getData',
+        }).done(function (newData) {
+            chart.data.labels = newData.lableChart;
+            chart.data.datasets[0].data = newData.dataChart;
+            chart.update();
+        });
+
+    }
+
+    ;
+});
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        var item_num5 = $(this).attr('id');
+        update_item(item_num5)
+        setInterval(function () {
+            if (!$(".popover-title").is(':visible')) {
+                item_num5 = $(this).attr('id');
+                update_item(item_num5);
+
+            }
+
+        }, 15000);
+
+        function update_item(item_num5) {
+            $('#sample_data tbody').load(
+                "{% url 'update_items5' %}?item_num5=" + item_num5
+            );
+
+
+        }
+
+
+    });
+
+
+</script>
+
+{% endblock %}

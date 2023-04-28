@@ -1,0 +1,128 @@
+{% block content %}
+
+{% if user.username == 'master' or user.username == 'admin' or user.username == 'operator5' %}
+        <script> // зависимости выпадающих списков таблици
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+            $(function () {
+
+
+            });
+
+            var dataTable = $('#sample_data').DataTable();
+
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: '/update',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+                        {% for el in uch %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: '/update',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data').editable({
+                    container: 'body',
+                    selector: 'td.prichina',
+                    url: '/update',
+                    title: 'prichina',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        function () {
+                            return sor
+                        },
+                    validate: function (value) {
+                        if ($.trim(value)) {
+                        }
+                    }
+                });
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: '/update',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+        </script>
+    {% endif %}
+
+
+    {% include 'Line5/Chart5.html' %}
+
+    <table id="sample_data" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>Дата</th>
+            <th>Время начала простоя</th>
+            <th>Время простоя</th>
+            <th>Участок</th>
+
+            <th>Ответст. подразделение</th>
+            <th>Причина</th>
+            <th>Комментарий</th>
+        </thead>
+        <tbody>
+        {% include 'Line5/table_body.html' %}
+        </tbody>
+    </table>
+    </body>
+
+
+
+
+{% endblock %}
+
+
+</style>

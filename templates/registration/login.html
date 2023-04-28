@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="wrapper">
+
+        <div class="text mt-4 name">
+            Введите логин и пароль
+        </div>
+        <form class="p-3 mt-3" method="post">
+            {% csrf_token %}
+            <div class="form-field d-flex align-items-center">
+                <span class="far fa-user"></span>
+                <input type="text" name="username" id="userName" placeholder="Username">
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="password" name="password" id="pwd" placeholder="Password">
+            </div>
+            {{ form.errors }}
+            <button class="btn mt-3">Авторизоваться</button>
+
+        </form>
+
+    </div>
+
+{% endblock %}
