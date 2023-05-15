@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-at-0%%k0ye0f5=n0l%q7!6k$v0)+y*orju^hrbd%qf(h*8_3u(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -71,16 +71,16 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': '12345',
         'HOST':  '192.168.88.231',
-        'PORT': '5433',
+        'PORT': '5432',
     },
-    'titorovka_db': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'titorovka',
-        'USER': 'postgres',
-        'PASSWORD': '12345',
-        'HOST': '192.168.97.58',
-        'PORT': '5433',
-    }
+    # 'titorovka_db': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'titorovka',
+    #     'USER': 'postgres',
+    #     'PASSWORD': '12345',
+    #     'HOST': '192.168.97.58',
+    #     'PORT': '5432',
+    # }
 }
 # DATABASE_ROUTERS=['route.db_routers.DB_Temruk','route.db_routers.DB_S_Titorovskaya']
 DATABASE_ROUTERS=['route.db_routers.DB_S_Titorovskaya']

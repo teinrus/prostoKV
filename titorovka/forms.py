@@ -13,5 +13,5 @@ class Otchet(forms.Form):
     Smena = (('Смена 0', 'Все'),('Смена 1', 'Смена 1'), ('Смена 2', 'Смена 2'),('Смена 3', 'Смена 3'),)
     SmenaF = forms.ChoiceField(choices=Smena,required=False,label='Смена')
 
-    Line = (('Линиия 5', 'Линиия 5'), ('Линиия 2', 'Линиия 2'),('Линиия 4', 'Линиия 4'),)
+    Line = (('Линиия 31', 'Линиия 31'),('Линиия 33', 'Линиия 33'),)
     LineF = forms.ChoiceField(choices=Line, required=False, label='Линиия')

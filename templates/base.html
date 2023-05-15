@@ -67,15 +67,28 @@
     <ul class="ul-bar">
 
         <li>
-            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'home' %}'">
-                Главная
+            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'temruk' %}'">
+                Темрюк
             </button>
         </li>
         <li>
+            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'titorovka' %}'">
+                Старотиторовская
+            </button>
 
-            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchet' %}'">
+        <li>
+            {% if request.get_full_path == "/temruk" or request.get_full_path == " " %}
+                <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchet' %}'">
                 Отчет
             </button>
+                {% else %}
+                 <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'Sotchet' %}'">
+                Отчет
+            </button>
+
+
+        {% endif %}
+
 
 
         </li>
@@ -103,9 +116,9 @@
 </body>
 <style>
     ul.up-1 li {
-        display: inline; /* Отображать как строчный элемент */
-        margin-right: 5px; /* Отступ слева */
-        padding: 3px; /* Поля вокруг текста */
+        display: inline;
+        margin-right: 5px;
+        padding: 3px;
         margin-top: 10px
     }
 
@@ -187,7 +200,7 @@
     @media print {
 
         .not-print {
-            visibility: hidden;
+            display: none !important;
         }
 
         .dataTables_length {

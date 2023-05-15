@@ -4,13 +4,18 @@ from django.contrib import admin
 from .models import *
 
 
-admin.site.register(Table5)
-admin.site.register(Speed5)
 
 admin.site.register(Table2)
 admin.site.register(Speed2)
 
+admin.site.register(Table4)
+admin.site.register(Speed4)
+
+admin.site.register(Table5)
+admin.site.register(Speed5)
+
 admin.site.register(ProductionOutput2)
+admin.site.register(ProductionOutput4)
 admin.site.register(ProductionOutput5)
 
 

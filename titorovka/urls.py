@@ -3,5 +3,6 @@ from titorovka import views
 
 
 urlpatterns = [
-    path('', views.homePageView, name='titorovka'),
+    path('', views.index, name='titorovka'),
+    path('otchet', views.Sotchet, name='Sotchet'),
 ]

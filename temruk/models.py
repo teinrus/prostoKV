@@ -39,7 +39,7 @@ class bottling_plan(models.Model):
 
     Quantity= models.IntegerField('Количество')
     def __str__(self):
-        return str(self.Data)+'_'
+        return str(self.Data)+'_'+str(self.GIUDLine)
 
     class Meta:
         verbose_name_plural = "План розлива"
@@ -61,7 +61,7 @@ class Line(models.Model):
     PodrazdeleniePloshadka = models.CharField('ПодразделениеПлощадка', max_length=150)
     NomerLine = models.IntegerField('Номер линии')
     def __str__(self):
-        return str(self.Line)
+        return str(self.Line)+" "+str(self.GUID)
     class Meta:
         verbose_name_plural = "Линии"
 
@@ -98,14 +98,36 @@ class Table2(models.Model):
         return str(self.startdata)+'_' + str(self.starttime) + '_' +str(self.id)
     class Meta:
         verbose_name_plural = "Простои 2 линии"
+class Table4(models.Model):
+    startdata = models.DateField('Дата начала простоя')
+    starttime = models.TimeField('Время начала простоя')
+    prostoy = models.TimeField('Время простоя', blank=True, null=True)
+
+    uchastok = models.CharField('Где произошол простой', max_length=50, default='', blank=True, null=True)
+    prichina = models.CharField('Причина', max_length=50, default='', blank=True, null=True)
+    otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
+                               null=True)
+    comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.startdata)+'_' + str(self.starttime) + '_' +str(self.id)
+    class Meta:
+        verbose_name_plural = "Простои 4 линии"
 
 class Speed5(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
-    speed = models.IntegerField('Скорость линии')
+    depal = models.IntegerField('Скорость депалитизатор', default=0.0, blank=True, null=True)
+    triblok = models.IntegerField('Скорость триблока', default=0.0, blank=True, null=True)
+    muzle = models.IntegerField('Скорость мюзле', default=0.0, blank=True, null=True)
+    termotunel = models.IntegerField('Скорость термотунеля', default=0.0, blank=True, null=True)
+    kapsula = models.IntegerField('Скорость капсулятора', default=0.0, blank=True, null=True)
+    eticetka = models.IntegerField('Скорость этикетки', default=0.0, blank=True, null=True)
+    ukladchik = models.IntegerField('Скорость укладчика', default=0.0, blank=True, null=True)
+    zakleichik = models.IntegerField('Скорость заклейщика', default=0.0, blank=True, null=True)
 
     def __str__(self):
-        return str(self.speed)
+        return str(self.time)+" "+str(self.id)
 
     class Meta:
         verbose_name_plural = "Производительность линии 5"
@@ -119,6 +141,21 @@ class Speed2(models.Model):
 
     class Meta:
         verbose_name_plural = "Производительность линии 2"
+class Speed4(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    depal = models.IntegerField('Скорость депалитизатор',default=0.0, blank=True, null=True)
+    triblok = models.IntegerField('Скорость триблок',default=0.0, blank=True, null=True)
+    kapsula = models.IntegerField('Скорость капсулятора',default=0.0, blank=True, null=True)
+    eticetka = models.IntegerField('Скорость этикетки',default=0.0, blank=True, null=True)
+    ukladchik = models.IntegerField('Скорость укладчика',default=0.0, blank=True, null=True)
+    zakleichik = models.IntegerField('Скорость заклейщика',default=0.0, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.data)+" " + str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Производительность линии 4"
 
 class bottleExplosion(models.Model):
     data = models.DateField('Дата')
@@ -137,10 +174,20 @@ class ProductionOutput2(models.Model):
     production = models.IntegerField('Продукция линии')
 
     def __str__(self):
-        return str(self.production)
+        return str(self.time)
 
     class Meta:
         verbose_name_plural = "Выпуск продукции линии 2"
+class ProductionOutput4(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    production = models.IntegerField('Продукция линии')
+
+    def __str__(self):
+        return str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Выпуск продукции линии 4"
 class ProductionOutput5(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')

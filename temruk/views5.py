@@ -84,17 +84,20 @@ def update_items5(request):
 
 # получение данных для 4 блоков и графика
 def getData(requst):
-    plan = 31500
 
-    if start1 <= datetime.datetime.now().time() <= start2:
+
+    if start1 < datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
         spotSmena = datetime.time(16, 30, 0)
+        Smena=1
     elif start2 <= datetime.datetime.now().time() <= start3:
         startSmena = datetime.time(16, 30, 0)
         spotSmena = datetime.time(23, 59, 0)
+        Smena=2
     else:
         startSmena = datetime.time(00, 00, 00)
         spotSmena = datetime.time(8, 00, 00)
+        Smena=3
 
     table = Table5.objects.filter(startdata=datetime.date.today(),
                                   starttime__gte=startSmena,
@@ -108,14 +111,21 @@ def getData(requst):
     productionOutput5 = ProductionOutput5.objects.filter(data=datetime.date.today(),
                                   time__gte=startSmena,
                                   time__lte=spotSmena)
-
+    # try:
+    #     plan = bottling_plan.objects.filter(Data=datetime.date(year=2023, month=4, day=1),
+    #                                      GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+    #                                      ShiftNumber=Smena)
+    #
+    #     plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+    # except:
+    plan=31000
     try:
         count5=0
         avg=0
         for el in speed:
             if el.speed!=0:
                 count5+=1
-                avg+=el.speed
+                avg+=el.triblok
 
         avgSpeed = round(avg/count5, 2)
     except:
@@ -132,7 +142,6 @@ def getData(requst):
         sumProduct = productionOutput5.aggregate(Sum('production')).get('production__sum')
         for el in productionOutput5:
             sum+=el.production
-        print(sum)
         allProc = proc(startSmena, spotSmena, plan, sumProduct),
     except:
         sumProduct = 0
@@ -145,19 +154,41 @@ def getData(requst):
         boomOut = 0
 
     lableChart = []
-    dataChart = []
+    dataChart_triblok = []
+    dataChart_muzle = []
+    dataChart_termotunel = []
+    dataChart4_kapsula = []
+    dataChart4_eticetka = []
+    dataChart4_ukladchik = []
+    dataChart4_zakleichik = []
 
     for sp in speed:
         lableChart.append(str(sp.time))
-        dataChart.append(sp.speed)
+        dataChart_triblok.append(sp.triblok)
+        dataChart_muzle.append(sp.muzle)
+        dataChart_termotunel.append(sp.termotunel)
+        dataChart4_kapsula.append(sp.kapsula)
+        dataChart4_eticetka.append(sp.eticetka)
+        dataChart4_ukladchik.append(sp.ukladchik)
+        dataChart4_zakleichik.append(sp.zakleichik)
+
 
     result = {"allProc": allProc,
               "boomOut": boomOut,
               'sumProstoy': str(sumProstoy),
+              'sumProduct': sumProduct,
               'avgSpeed': avgSpeed,
+
               'lableChart': lableChart,
-              'dataChart': dataChart,
-              'sumProduct':sumProduct,
+
+              'dataChart_triblok': dataChart_triblok,
+              'dataChart_muzle':dataChart_muzle,
+              'dataChart_termotunel' :dataChart_termotunel,
+              'dataChart4_kapsula' :dataChart4_kapsula,
+              'dataChart4_eticetka':dataChart4_eticetka,
+              'dataChart4_ukladchik':dataChart4_ukladchik,
+              'dataChart4_zakleichik':dataChart4_zakleichik,
+
 
               }
     return JsonResponse(result)

@@ -22,7 +22,7 @@
                     <ul>
                         <li style="text-align: center;font-size:23px">Количество продукции</li>
                         <li id="sumProduct2"
-                            style="text-align: center; font-size:70px; list-style-type: none;">{{ productionOutput2 }}</li>
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProduct2 }}</li>
                     </ul>
                 <li class="col__item">
                     <ul>
@@ -57,16 +57,22 @@
                 config2 = {
                     type: 'bar',
                     data: {
-                        borderColor: 'rgb(0,100,255)',
+
                         labels: data.lableChart2,
                         datasets: [{
                             label: '# Производительность линии 2',
                             data: data.dataChart2,
-                            borderWidth: 1
+                            borderWidth: 3,
+                            borderColor: 'rgb(76,125,248)',
                         }]
                     },
                     options: {
-                        {#animation: false,#}
+
+                        elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
                         scales: {
                             y: {
                                 beginAtZero: true
@@ -109,7 +115,8 @@
             });
 
         }
-    });
+    })
+    ;
     </script>
 
     <script>

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.db.models import Sum, Avg
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from temruk.models import *
 
@@ -45,10 +45,31 @@ def proc(startSmena, spotSmena, plan, colProduct):
 # стартовая страница
 def index(request):
     if request.method == 'GET':
+        user_ip = request.META.get('HTTP_X_FORWARDED_FOR')
+        if user_ip:
+            ip = user_ip.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+    ipMask=ip.split('.')
+    if ipMask[2] =="97":
+        return redirect('temruk')
+    else:
+        return redirect('titorovka')
+
+
+
+def temruk(request):
+    if request.method == 'GET':
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
                                       starttime__gte=startSmena,
                                       starttime__lte=spotSmena)
         speed5 = Speed5.objects.filter(data=datetime.date.today(),
+                                      time__gte=startSmena,
+                                      time__lte=spotSmena)
+        table4 = Table4.objects.filter(startdata=datetime.date.today(),
+                                      starttime__gte=startSmena,
+                                      starttime__lte=spotSmena)
+        speed4 = Speed4.objects.filter(data=datetime.date.today(),
                                       time__gte=startSmena,
                                       time__lte=spotSmena)
         table2 = Table2.objects.filter(startdata=datetime.date.today(),
@@ -66,12 +87,19 @@ def index(request):
 
     prich = list(prichAll.values())
     uch = uchastok.objects.all()
-    return render(request, "index.html", {
-        'table5': table5,
-        'speed5': speed5,
+    uch_vino=uchastok.objects.exclude(uchastok="Мюзле")
+    return render(request, "temruk.html", {
+
         'otv_p':otv_p ,
         'prich': prich,
         'uch': uch,
+        'uch_vino': uch_vino,
+
+        'table5': table5,
+        'speed5': speed5,
+
+        'table4': table4,
+        'speed4': speed4,
 
         'table2': table2,
         'speed2': speed2,
@@ -138,7 +166,6 @@ def otchet(request):
                 timeTemp=datetime.timedelta(hours=(8*count),minutes=30*count)
             except:
                 timeTemp = 0
-            print(timeTemp)
         if form.cleaned_data["SmenaF"] == 'Смена 2':
             table = Table5.objects.filter(starttime__gte=datetime.time(16, 30),
                                           starttime__lte=datetime.time(23, 59),
@@ -284,6 +311,99 @@ def otchet(request):
             speed=speed2
             prod=productionOutput2
             boom=0
+        if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
+                form.cleaned_data["LineF"] == 'Линиия 4'):
+            if form.cleaned_data["SmenaF"]:
+                if form.cleaned_data["SmenaF"] == 'Смена 0':
+                    table4 = Table4.objects.filter(starttime__gte=datetime.time(0),
+                                                   starttime__lte=datetime.time(23, 59),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
+
+                    speed4 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(0),
+                                                   time__lte=datetime.time(23, 59))
+                    productionOutput4 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(0),
+                                                   time__lte=datetime.time(23, 59))
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                            "start_data"] + datetime.timedelta(days=1)
+                    except:
+                        timeTemp = 0
+            if form.cleaned_data["SmenaF"] == 'Смена 1':
+                table4 = Table4.objects.filter(starttime__gte=datetime.time(8),
+                                               starttime__lte=datetime.time(16, 30),
+                                               startdata__gte=form.cleaned_data["start_data"],
+                                               startdata__lte=form.cleaned_data["finish_data"]
+                                               ).order_by('startdata', 'starttime')
+                speed4 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(8),
+                                               time__lte=datetime.time(16, 30))
+                productionOutput4 = ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(8),
+                                               time__lte=datetime.time(16, 30))
+                try:
+                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+
+                    timeTemp = datetime.timedelta(hours=(8*count),minutes=30*count)
+                except:
+                    timeTemp = 0
+            if form.cleaned_data["SmenaF"] == 'Смена 2':
+                table4 = Table4.objects.filter(starttime__gte=datetime.time(16, 30),
+                                               starttime__lte=datetime.time(23, 59),
+                                               startdata__gte=form.cleaned_data["start_data"],
+                                               startdata__lte=form.cleaned_data["finish_data"]
+                                               ).order_by('startdata', 'starttime')
+                speed4 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(16, 30),
+                                               time__lte=datetime.time(23, 59))
+                productionOutput4 = ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(16, 30),
+                                               time__lte=datetime.time(23, 59))
+                try:
+                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+
+                    timeTemp = datetime.timedelta(hours=(7*count),minutes=30*count)
+                except:
+                    timeTemp = 0
+
+
+            if form.cleaned_data["SmenaF"] == 'Смена 3':
+                table4 = Table4.objects.filter(starttime__gte=datetime.time(00, 00),
+                                               starttime__lte=datetime.time(8, 00),
+                                               startdata__gte=form.cleaned_data["start_data"],
+                                               startdata__lte=form.cleaned_data["finish_data"]
+                                               ).order_by('startdata', 'starttime')
+                speed4 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(00, 00),
+                                               time__lte=datetime.time(8, 00))
+                productionOutput4 = ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(00, 00),
+                                               time__lte=datetime.time(8, 00))
+                try:
+                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+
+                    timeTemp = datetime.timedelta(hours=(8 * count))
+                except:
+                    timeTemp = 0
+
+            table=table4
+            speed=speed4
+            prod=productionOutput4
+            boom=0
     lableChart = []
     dataChart = []
 
@@ -321,8 +441,6 @@ def otchet(request):
     except:
         avgSpeed=0
 
-
-    # Данные для графика
     try:
         for sp in speed:
             lableChart.append(str(sp.time))
@@ -332,9 +450,21 @@ def otchet(request):
         dataChart = []
 
 
+    # Данные для графика
+    if form.cleaned_data["LineF"] == 'Линиия 4' or form.cleaned_data["LineF"] == 'Линиия 5':
+        try:
+            for sp in speed:
+                lableChart.append(str(sp.time))
+                dataChart.append(sp.triblok)
+        except:
+            lableChart = []
+            dataChart = []
+
+
 
 
     uch = uchastok.objects.all()
+    uch_vino=uchastok.objects.exclude(uchastok="Мюзле")
 
     prichAll = prichina.objects.all()
     podrazdeleniaEl = []
@@ -375,6 +505,7 @@ def otchet(request):
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
+        'uch_vino':uch_vino,
 
 
 
@@ -392,6 +523,16 @@ def profile_view(request):
     return render(request, 'registration/profile.html')
 def profileOut_view(request):
     logout(request)
-    return render(request, 'index.html')
+    if request.method == 'GET':
+        user_ip = request.META.get('HTTP_X_FORWARDED_FOR')
+        if user_ip:
+            ip = user_ip.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+    ipMask = ip.split('.')
+    if ipMask[2] == "97":
+        return redirect('temruk')
+    else:
+        return redirect('titorovka')
 
 

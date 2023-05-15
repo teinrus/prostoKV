@@ -25,6 +25,7 @@ else:
     startSmena = datetime.time(00, 00, 00)
     spotSmena = datetime.time(8, 00, 00)
 
+
 # функция формирования процентов за текущию смену
 def proc(startSmena, spotSmena, plan, colProduct):
     today = datetime.date.today()
@@ -42,8 +43,9 @@ def proc(startSmena, spotSmena, plan, colProduct):
     # проц вып продукции
     return int(colProduct / ((int(diff2.total_seconds()) * planProdSec) / 100))
 
-#изменение в таблице
-def update2(request):
+
+# изменение в таблице
+def update4(request):
     if request.method == 'POST':
 
         pk = request.POST.get('pk')
@@ -52,42 +54,43 @@ def update2(request):
 
         if name == 'uchastok':
             try:
-                a = Table2.objects.get(id=pk)
+                a = Table4.objects.get(id=pk)
                 a.uchastok = v
                 a.save()
             except:
-                a = Table2(uchastok=v, id=pk)
+                a = Table4(uchastok=v, id=pk)
                 a.save()
         elif name == 'prichina':
             try:
 
-                a = Table2.objects.get(id=pk)
+                a = Table4.objects.get(id=pk)
                 a.prichina = v
                 a.save()
             except:
-                a = Table2(prichina=v, id=pk)
+                a = Table4(prichina=v, id=pk)
                 a.save()
         elif name == 'otv_pod':
             try:
-                a = Table2.objects.get(id=pk)
+                a = Table4.objects.get(id=pk)
                 a.otv_pod = v
                 a.save()
             except:
-                a = Table2(otv_pod=v, id=pk)
+                a = Table4(otv_pod=v, id=pk)
                 a.save()
         elif name == 'comment':
             try:
-                a = Table2.objects.get(id=pk)
+                a = Table4.objects.get(id=pk)
                 a.comment = v
                 a.save()
             except:
-                a = Table2(comment=v, id=pk)
+                a = Table4(comment=v, id=pk)
                 a.save()
 
     return HttpResponse('yes')
 
+
 # получение данных в таблицу
-def update_items2(request):
+def update_items4(request):
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
         spotSmena = datetime.time(16, 30, 0)
@@ -98,12 +101,12 @@ def update_items2(request):
         startSmena = datetime.time(00, 00, 00)
         spotSmena = datetime.time(8, 00, 00)
 
-    table2 = Table2.objects.filter(startdata=datetime.date.today(),
+    table4 = Table4.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
 
     list = []
-    for table in table2:
+    for table in table4:
         table_info = {
             'id': table.id,
             'startdata': table.startdata,
@@ -120,15 +123,15 @@ def update_items2(request):
     table_dic = {}
     table_dic['data'] = list
 
-    return render(request, 'Line2/table_body2.html', {'table2': table2})
+    return render(request, 'Line4/table_body4.html', {'table4': table4})
+
 
 # получение данных для графика и ячеек
-def getData2(requst):
-
+def getData4(requst):
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
         spotSmena = datetime.time(16, 30, 0)
-        Smena=1
+        Smena = 1
     elif start2 <= datetime.datetime.now().time() <= start3:
         startSmena = datetime.time(16, 30, 0)
         spotSmena = datetime.time(23, 59, 0)
@@ -138,11 +141,9 @@ def getData2(requst):
         spotSmena = datetime.time(8, 00, 00)
         Smena = 3
 
-
-
     try:
         plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-                                         GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
+                                         GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
                                          ShiftNumber=Smena)
         plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
         if plan== None:
@@ -152,65 +153,72 @@ def getData2(requst):
         plan=31000
 
 
-
-
-
-    table2 = Table2.objects.filter(startdata=datetime.date.today(),
-                                  starttime__gte=startSmena,
-                                  starttime__lte=spotSmena)
-    speed2 = Speed2.objects.filter(data=datetime.date.today(),
-                                  time__gte=startSmena,
-                                  time__lte=spotSmena)
-    productionOutput2=ProductionOutput2.objects.filter(data=datetime.date.today(),
-                                  time__gte=startSmena,
-                                  time__lte=spotSmena)
+    table4 = Table4.objects.filter(startdata=datetime.date.today(),
+                                   starttime__gte=startSmena,
+                                   starttime__lte=spotSmena)
+    speed4 = Speed4.objects.filter(data=datetime.date.today(),
+                                   time__gte=startSmena,
+                                   time__lte=spotSmena)
+    productionOutput4 = ProductionOutput4.objects.filter(data=datetime.date.today(),
+                                                         time__gte=startSmena,
+                                                         time__lte=spotSmena)
 
     try:
-        count2=0
-        avg=0
-        for el in speed2:
-            if el.speed!=0:
-                count2+=1
-                avg+=el.speed
+        count4 = 0
+        avg = 0
+        for el in speed4:
+            if el.triblok != 0:
+                count4 += 1
+                avg += el.triblok
 
-        avgSpeed = round(avg/count2, 2)
+        avgSpeed = round(avg / count4, 2)
     except:
         avgSpeed = 0
     try:
-        sumProstoy = table2.aggregate(Sum('prostoy')).get('prostoy__sum')
+        sumProstoy = table4.aggregate(Sum('prostoy')).get('prostoy__sum')
 
         if (sumProstoy == None):
             sumProstoy = '00:00'
     except:
         sumProstoy = '00:00'
     try:
-        sumProduct2 = productionOutput2.aggregate(Sum('production')).get('production__sum')
+        sumProduct4 = productionOutput4.aggregate(Sum('production')).get('production__sum')
+        if (sumProduct4 == None):
+            sumProduct4 = '0'
     except:
-        sumProduct2 = 0
+        sumProduct4 = 0
     try:
-        allProc2 = proc(startSmena, spotSmena, plan, sumProduct2)
-
+        allProc4 = proc(startSmena, spotSmena, plan, sumProduct4)
     except:
-        allProc2 = 0
+        allProc4 = 0
 
+    lableChart4 = []
+    dataChart4_triblok = []
+    dataChart4_kapsula = []
+    dataChart4_eticetka = []
+    dataChart4_ukladchik = []
+    dataChart4_zakleichik = []
 
-
-
-    lableChart2 = []
-    dataChart2 = []
-
-    for sp in speed2:
-        lableChart2.append(str(sp.time))
-        dataChart2.append(sp.speed)
+    for sp in speed4:
+        lableChart4.append(str(sp.time))
+        dataChart4_triblok.append(sp.triblok)
+        dataChart4_kapsula.append(sp.kapsula)
+        dataChart4_eticetka.append(sp.eticetka)
+        dataChart4_ukladchik.append(sp.ukladchik)
+        dataChart4_zakleichik.append(sp.zakleichik)
 
     result = {
-            "allProc2": allProc2,
-            'sumProstoy2': str(sumProstoy),
-            'avgSpeed2': avgSpeed,
-            'sumProduct2':sumProduct2,
+        "allProc4": allProc4,
+        'sumProstoy4': str(sumProstoy),
+        'avgSpeed4': avgSpeed,
+        'sumProduct4': sumProduct4,
 
-            'lableChart2': lableChart2,
-            'dataChart2': dataChart2,
+        'lableChart4': lableChart4,
+        'dataChart4_triblok': dataChart4_triblok,
+        'dataChart4_kapsula': dataChart4_kapsula,
+        'dataChart4_eticetka': dataChart4_eticetka,
+        'dataChart4_ukladchik': dataChart4_ukladchik,
+        'dataChart4_zakleichik': dataChart4_zakleichik,
 
-              }
+    }
     return JsonResponse(result)
