@@ -109,6 +109,7 @@ def temruk(request):
 
 # блок формирования отчета
 def otchet(request):
+    plan=0
     timeTemp = 0
     form = Otchet(request.GET)
     if form.is_valid():
@@ -135,10 +136,21 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(0),
                                                   time__lte=datetime.time(23, 59))
+                    try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+                                                            )
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
+
+
+
                     except:
                         timeTemp = 0
 
@@ -160,6 +172,15 @@ def otchet(request):
                                           data__lte=form.cleaned_data["finish_data"],
                                           time__gte=datetime.time(8),
                                           time__lte=datetime.time(16, 30))
+            try:
+                plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                    Data__lte=form.cleaned_data["finish_data"],
+                                                    GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+                                                    ShiftNumber=1)
+                plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+            except:
+                plan = 0
+
             try:
                 timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                 count=1+timeTemp.total_seconds()/3600/24
@@ -185,6 +206,15 @@ def otchet(request):
                                           time__gte=datetime.time(16, 30),
                                           time__lte=datetime.time(23, 59))
             try:
+                plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                    Data__lte=form.cleaned_data["finish_data"],
+                                                    GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+                                                    ShiftNumber=2)
+                plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+            except:
+                plan = 0
+
+            try:
                 timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                 count=timeTemp.total_seconds()/3600/24+1
 
@@ -209,6 +239,14 @@ def otchet(request):
                                           data__lte=form.cleaned_data["finish_data"],
                                           time__gte=datetime.time(00, 00),
                                           time__lte=datetime.time(8, 00))
+            try:
+                plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                    Data__lte=form.cleaned_data["finish_data"],
+                                                    GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+                                                    ShiftNumber=3)
+                plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+            except:
+                plan = 0
 
             try:
                 timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
@@ -237,6 +275,14 @@ def otchet(request):
                                                    time__gte=datetime.time(0),
                                                    time__lte=datetime.time(23, 59))
                     try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77')
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
+
+                    try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
                     except:
@@ -256,6 +302,15 @@ def otchet(request):
                                                time__gte=datetime.time(8),
                                                time__lte=datetime.time(16, 30))
                 try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
+                                                        ShiftNumber=1)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan=0
+                try:
+
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
 
@@ -277,6 +332,16 @@ def otchet(request):
                                                time__gte=datetime.time(16, 30),
                                                time__lte=datetime.time(23, 59))
                 try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
+                                                        ShiftNumber=2)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan=0
+
+                try:
+
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
 
@@ -299,6 +364,14 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(00, 00),
                                                time__lte=datetime.time(8, 00))
+                try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
+                                                        ShiftNumber=3)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan=0
                 try:
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
@@ -329,9 +402,19 @@ def otchet(request):
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(0),
                                                    time__lte=datetime.time(23, 59))
+
+                    try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77')
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
+
+
                     except:
                         timeTemp = 0
             if form.cleaned_data["SmenaF"] == 'Смена 1':
@@ -348,6 +431,14 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(8),
                                                time__lte=datetime.time(16, 30))
+                try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
+                                                        ShiftNumber=1)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan = 0
                 try:
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
@@ -369,6 +460,14 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(16, 30),
                                                time__lte=datetime.time(23, 59))
+                try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
+                                                        ShiftNumber=2)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan = 0
                 try:
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
@@ -392,6 +491,14 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(00, 00),
                                                time__lte=datetime.time(8, 00))
+                try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
+                                                        ShiftNumber=3)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan = 0
                 try:
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
@@ -427,6 +534,8 @@ def otchet(request):
     #Общее время простоя
     try:
         sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
+        if sumProstoy== None:
+            sumProstoy=datetime.timedelta(0)
     except:
         table = []
         sumProstoy = 0
@@ -485,12 +594,14 @@ def otchet(request):
         'table': table,
         'form': form,
 
+
         'line':line,
         'smena':smena,
         'nachaloOt':nachaloOt,
         'okonchanieOt':okonchanieOt,
 
         'timeWork':timeWork,
+        'plan':plan,
         'sumProstoy': sumProstoy,
 
         'avgSpeed': avgSpeed,
