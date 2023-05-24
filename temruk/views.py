@@ -110,6 +110,7 @@ def temruk(request):
 # блок формирования отчета
 def otchet(request):
     plan=0
+    table=[]
     timeTemp = 0
     form = Otchet(request.GET)
     if form.is_valid():
@@ -154,107 +155,107 @@ def otchet(request):
                     except:
                         timeTemp = 0
 
-        if form.cleaned_data["SmenaF"] == 'Смена 1':
-            table = Table5.objects.filter(starttime__gte=datetime.time(8),
-                                          starttime__lte=datetime.time(16, 30),
-                                          startdata__gte=form.cleaned_data["start_data"],
-                                          startdata__lte=form.cleaned_data["finish_data"]
-                                          ).order_by('startdata', 'starttime')
-            speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                          data__lte=form.cleaned_data["finish_data"],
-                                          time__gte=datetime.time(8),
-                                          time__lte=datetime.time(16, 30))
-            boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                if form.cleaned_data["SmenaF"] == 'Смена 1':
+                    table = Table5.objects.filter(starttime__gte=datetime.time(8),
+                                                  starttime__lte=datetime.time(16, 30),
+                                                  startdata__gte=form.cleaned_data["start_data"],
+                                                  startdata__lte=form.cleaned_data["finish_data"]
+                                                  ).order_by('startdata', 'starttime')
+                    speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(8),
                                                   time__lte=datetime.time(16, 30))
-            prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                          data__lte=form.cleaned_data["finish_data"],
-                                          time__gte=datetime.time(8),
-                                          time__lte=datetime.time(16, 30))
-            try:
-                plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
-                                                    Data__lte=form.cleaned_data["finish_data"],
-                                                    GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
-                                                    ShiftNumber=1)
-                plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-            except:
-                plan = 0
+                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                          data__lte=form.cleaned_data["finish_data"],
+                                                          time__gte=datetime.time(8),
+                                                          time__lte=datetime.time(16, 30))
+                    prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(8),
+                                                  time__lte=datetime.time(16, 30))
+                    try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+                                                            ShiftNumber=1)
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
 
-            try:
-                timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                count=1+timeTemp.total_seconds()/3600/24
-                timeTemp=datetime.timedelta(hours=(8*count),minutes=30*count)
-            except:
-                timeTemp = 0
-        if form.cleaned_data["SmenaF"] == 'Смена 2':
-            table = Table5.objects.filter(starttime__gte=datetime.time(16, 30),
-                                          starttime__lte=datetime.time(23, 59),
-                                          startdata__gte=form.cleaned_data["start_data"],
-                                          startdata__lte=form.cleaned_data["finish_data"]
-                                          ).order_by('startdata', 'starttime')
-            speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                          data__lte=form.cleaned_data["finish_data"],
-                                          time__gte=datetime.time(16, 30),
-                                          time__lte=datetime.time(23, 59))
-            boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count=1+timeTemp.total_seconds()/3600/24
+                        timeTemp=datetime.timedelta(hours=(8*count),minutes=30*count)
+                    except:
+                        timeTemp = 0
+                if form.cleaned_data["SmenaF"] == 'Смена 2':
+                    table = Table5.objects.filter(starttime__gte=datetime.time(16, 30),
+                                                  starttime__lte=datetime.time(23, 59),
+                                                  startdata__gte=form.cleaned_data["start_data"],
+                                                  startdata__lte=form.cleaned_data["finish_data"]
+                                                  ).order_by('startdata', 'starttime')
+                    speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(16, 30),
                                                   time__lte=datetime.time(23, 59))
-            prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                          data__lte=form.cleaned_data["finish_data"],
-                                          time__gte=datetime.time(16, 30),
-                                          time__lte=datetime.time(23, 59))
-            try:
-                plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
-                                                    Data__lte=form.cleaned_data["finish_data"],
-                                                    GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
-                                                    ShiftNumber=2)
-                plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-            except:
-                plan = 0
+                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                          data__lte=form.cleaned_data["finish_data"],
+                                                          time__gte=datetime.time(16, 30),
+                                                          time__lte=datetime.time(23, 59))
+                    prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(16, 30),
+                                                  time__lte=datetime.time(23, 59))
+                    try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+                                                            ShiftNumber=2)
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
 
-            try:
-                timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                count=timeTemp.total_seconds()/3600/24+1
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count=timeTemp.total_seconds()/3600/24+1
 
-                timeTemp=datetime.timedelta(hours=(7*count),minutes=30*count)
-            except:
-                timeTemp = 0
-        if form.cleaned_data["SmenaF"] == 'Смена 3':
-            table = Table5.objects.filter(starttime__gte=datetime.time(00, 00),
-                                          starttime__lte=datetime.time(8, 00),
-                                          startdata__gte=form.cleaned_data["start_data"],
-                                          startdata__lte=form.cleaned_data["finish_data"]
-                                          ).order_by('startdata', 'starttime')
-            speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                          data__lte=form.cleaned_data["finish_data"],
-                                          time__gte=datetime.time(00, 00),
-                                          time__lte=datetime.time(8, 00))
-            boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                        timeTemp=datetime.timedelta(hours=(7*count),minutes=30*count)
+                    except:
+                        timeTemp = 0
+                if form.cleaned_data["SmenaF"] == 'Смена 3':
+                    table = Table5.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                  starttime__lte=datetime.time(8, 00),
+                                                  startdata__gte=form.cleaned_data["start_data"],
+                                                  startdata__lte=form.cleaned_data["finish_data"]
+                                                  ).order_by('startdata', 'starttime')
+                    speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(00, 00),
                                                   time__lte=datetime.time(8, 00))
-            prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                          data__lte=form.cleaned_data["finish_data"],
-                                          time__gte=datetime.time(00, 00),
-                                          time__lte=datetime.time(8, 00))
-            try:
-                plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
-                                                    Data__lte=form.cleaned_data["finish_data"],
-                                                    GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
-                                                    ShiftNumber=3)
-                plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-            except:
-                plan = 0
+                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                          data__lte=form.cleaned_data["finish_data"],
+                                                          time__gte=datetime.time(00, 00),
+                                                          time__lte=datetime.time(8, 00))
+                    prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(00, 00),
+                                                  time__lte=datetime.time(8, 00))
+                    try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+                                                            ShiftNumber=3)
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
 
-            try:
-                timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                count=timeTemp.total_seconds()/3600/24+1
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count=timeTemp.total_seconds()/3600/24+1
 
-                timeTemp=datetime.timedelta(hours=(8*count))
-            except:
-                timeTemp = 0
+                        timeTemp=datetime.timedelta(hours=(8*count))
+                    except:
+                        timeTemp = 0
         # Сортировка по сменам линии 2:
         if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 2'):
@@ -398,10 +399,9 @@ def otchet(request):
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(0),
                                                    time__lte=datetime.time(23, 59))
-                    productionOutput4 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                   data__lte=form.cleaned_data["finish_data"],
-                                                   time__gte=datetime.time(0),
-                                                   time__lte=datetime.time(23, 59))
+                    productionOutput4 = ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                   data__lte=form.cleaned_data["finish_data"])
+
 
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
@@ -537,7 +537,7 @@ def otchet(request):
         if sumProstoy== None:
             sumProstoy=datetime.timedelta(0)
     except:
-        table = []
+
         sumProstoy = 0
     # Средняя скорость
     try:

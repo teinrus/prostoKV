@@ -1,0 +1,176 @@
+{% block content %}
+
+
+    <h1 style="text-align:center">Простои линии 31</h1>
+
+
+    {% if not user.username == 'masterS' and not user.username == 'admin' %}
+        <div class="col__wrapper"
+             style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
+            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
+                <canvas id="Chart31"></canvas>
+            </div>
+            <ul class="col__list">
+                <li class="col__item">
+                    <ul>
+                        <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
+                        <li id="avgSpeeds31"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+                    </ul>
+                </li>
+                <li class="col__item">
+                    <ul>
+                        <li style="text-align: center;font-size:23px">Количество продукции</li>
+                        <li id="sumProduct31"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProduct31 }}</li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
+                        <li id="sumProstoy31" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
+                        <li id="allProc31" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+
+            </ul>
+        </div>
+    {% endif %}
+
+
+    <script>//ajax для перезагрузки графика
+    $(document).ready(function () {
+        var ctx31 = document.getElementById("Chart31").getContext("2d");
+        var config31;
+        var chart31 = [];
+        $.ajax({
+            url: 'getData31',
+            method: 'post',
+            success: function (data) {
+
+                $('#avgSpeeds31').html(data.avgSpeed31);
+                $('#allProc31').html(data.allProc31);
+                $('#sumProduct31').html(data.sumProduct31);
+                $('#sumProstoy31').html(data.sumProstoy31);
+                config31 = {
+                    type: 'bar',
+                    data: {
+
+                        labels: data.lableChart31,
+                        datasets: [{
+                            label: '# Производительность триблок',
+                            data: data.dataChart31_triblok,
+                            borderWidth: 3,
+                            borderColor: 'rgb(76,125,248)',
+                        }],
+                {#{#}
+                {#            label: '# Производительность капсула',#}
+                {#            data: data.dataChart31_kapsula,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,130,248)',#}
+                {#            },{#}
+                {#            label: '# Производительность этикетировка',#}
+                {#            data: data.dataChart31_eticetka,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,248,216)',#}
+                {#             },{#}
+                {#            label: '# Производительность укладчик',#}
+                {#            data: data.dataChart31_ukladchik,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,248,145)',#}
+                {#            },{#}
+                {#            label: '# Производительность заклейщик',#}
+                {#            data: data.dataChart31_zakleichik,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(87,248,76)',#}
+                {##}
+                {#        }]#}
+                    },
+                    options: {
+
+                        elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+                chart31 = new Chart(ctx31, config31);
+                dataUpdater();
+
+
+            }
+        });
+        setInterval(function () {
+
+            $.ajax({
+                url: 'getData31',
+                method: 'post',
+                success: function (data) {
+
+                    $('#avgSpeeds31').html(data.avgSpeed31);
+                    $('#allProc31').html(data.allProc31);
+                    $('#sumProstoy31').html(data.sumProstoy31);
+                    $('#sumProduct31').html(data.sumProduct31);
+                    dataUpdater();
+                }
+            });
+
+        }, 15000);
+
+
+        function dataUpdater() {
+            $.ajax({
+                type: "post",
+                url: 'getData31',
+            }).done(function (newData) {
+                chart31.data.labels = newData.lableChart31;
+                chart31.data.datasets[0].data = newData.dataChart31_triblok;
+                {#chart31.data.datasets[1].data = newData.dataChart31_kapsula;#}
+                {#chart31.data.datasets[2].data = newData.dataChart31_eticetka;#}
+                {#chart31.data.datasets[3].data = newData.dataChart31_ukladchik;#}
+                {#chart31.data.datasets[4].data = newData.dataChart31_zakleichik;#}
+                chart31.update();
+            });
+
+        }
+    })
+    ;
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+            var item_num31 = $(this).attr('id');
+            update_item(item_num31)
+            setInterval(function () {
+                if (!$(".popover-title").is(':visible')) {
+                    item_num31 = $(this).attr('id');
+                    update_item(item_num31);
+
+                }
+
+            }, 15000);
+
+            function update_item(item_num31) {
+                $('#sample_data31 tbody').load(
+                    "{% url 'update_items31' %}?item_num31=" + item_num31
+                );
+
+
+            }
+
+
+        });
+
+
+    </script>
+
+{% endblock %}

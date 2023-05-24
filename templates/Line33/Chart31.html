@@ -1,0 +1,176 @@
+{% block content %}
+
+
+    <h1 style="text-align:center">Простои линии 33</h1>
+
+
+    {% if not user.username == 'masterS' and not user.username == 'admin' %}
+        <div class="col__wrapper"
+             style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
+            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
+                <canvas id="Chart33"></canvas>
+            </div>
+            <ul class="col__list">
+                <li class="col__item">
+                    <ul>
+                        <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
+                        <li id="avgSpeeds33"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+                    </ul>
+                </li>
+                <li class="col__item">
+                    <ul>
+                        <li style="text-align: center;font-size:23px">Количество продукции</li>
+                        <li id="sumProduct33"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProduct33 }}</li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
+                        <li id="sumProstoy33" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
+                        <li id="allProc33" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+
+            </ul>
+        </div>
+    {% endif %}
+
+
+    <script>//ajax для перезагрузки графика
+    $(document).ready(function () {
+        var ctx33 = document.getElementById("Chart33").getContext("2d");
+        var config33;
+        var chart33 = [];
+        $.ajax({
+            url: 'getData33',
+            method: 'post',
+            success: function (data) {
+
+                $('#avgSpeeds33').html(data.avgSpeed33);
+                $('#allProc33').html(data.allProc33);
+                $('#sumProduct33').html(data.sumProduct33);
+                $('#sumProstoy33').html(data.sumProstoy33);
+                config33 = {
+                    type: 'bar',
+                    data: {
+
+                        labels: data.lableChart33,
+                        datasets: [{
+                            label: '# Производительность триблок',
+                            data: data.dataChart33_triblok,
+                            borderWidth: 3,
+                            borderColor: 'rgb(76,125,248)',
+                        }],
+                {#{#}
+                {#            label: '# Производительность капсула',#}
+                {#            data: data.dataChart33_kapsula,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,130,248)',#}
+                {#            },{#}
+                {#            label: '# Производительность этикетировка',#}
+                {#            data: data.dataChart33_eticetka,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,248,216)',#}
+                {#             },{#}
+                {#            label: '# Производительность укладчик',#}
+                {#            data: data.dataChart33_ukladchik,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,248,145)',#}
+                {#            },{#}
+                {#            label: '# Производительность заклейщик',#}
+                {#            data: data.dataChart33_zakleichik,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(87,248,76)',#}
+                {##}
+                {#        }]#}
+                    },
+                    options: {
+
+                        elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+                chart33 = new Chart(ctx33, config33);
+                dataUpdater();
+
+
+            }
+        });
+        setInterval(function () {
+
+            $.ajax({
+                url: 'getData33',
+                method: 'post',
+                success: function (data) {
+
+                    $('#avgSpeeds33').html(data.avgSpeed33);
+                    $('#allProc33').html(data.allProc33);
+                    $('#sumProstoy33').html(data.sumProstoy33);
+                    $('#sumProduct33').html(data.sumProduct33);
+                    dataUpdater();
+                }
+            });
+
+        }, 15000);
+
+
+        function dataUpdater() {
+            $.ajax({
+                type: "post",
+                url: 'getData33',
+            }).done(function (newData) {
+                chart33.data.labels = newData.lableChart33;
+                chart33.data.datasets[0].data = newData.dataChart33_triblok;
+                {#chart33.data.datasets[1].data = newData.dataChart33_kapsula;#}
+                {#chart33.data.datasets[2].data = newData.dataChart33_eticetka;#}
+                {#chart33.data.datasets[3].data = newData.dataChart33_ukladchik;#}
+                {#chart33.data.datasets[4].data = newData.dataChart33_zakleichik;#}
+                chart33.update();
+            });
+
+        }
+    })
+    ;
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+            var item_num33 = $(this).attr('id');
+            update_item(item_num33)
+            setInterval(function () {
+                if (!$(".popover-title").is(':visible')) {
+                    item_num33 = $(this).attr('id');
+                    update_item(item_num33);
+
+                }
+
+            }, 15000);
+
+            function update_item(item_num33) {
+                $('#sample_data33 tbody').load(
+                    "{% url 'update_items33' %}?item_num33=" + item_num33
+                );
+
+
+            }
+
+
+        });
+
+
+    </script>
+
+{% endblock %}

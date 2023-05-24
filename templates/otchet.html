@@ -338,28 +338,23 @@
     <body>
 
 
-    <ul class="up-1" style="margin-bottom:15px">
+    <ul class="up-1" style="margin-bottom:15px; font-size: 120%;">
         <li>{{ line }}</li>
         <li>{{ smena }}</li>
         {% if line == 'Линиия 5'%}
             <li>Количество взрывов {{ boomOut }}</li>
         {% endif %}
-        <ul class="up-1" style="margin-bottom:15px">
-            {% if nachaloOt != None %}
-                <li>Период c: {{ nachaloOt }}</li>
-                <li>по: {{ okonchanieOt }}</li>
-            {% endif %}
-        </ul>
+
     </ul>
     <ul class="col">
         <ul style="margin-bottom:15px ">
-            <li>Общее время простоя:{{ sumProstoy }}</li>
-            <li>Общее время работы: {{ timeWork }}</li>
+            <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy }}</b></li>
+            <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork }}</b></li>
         </ul>
         <ul>
-            <li>Средняя производительность:{{ avgSpeed }} </li>
-            <li>Количество продукции:{{ allProd }}</li>
-            <li>План продукции:{{ plan }}</li>
+            <li>Средняя производительность:<b style="font-size: 120%;"> {{ avgSpeed }}</b> </li>
+            <li>Количество продукции:<b style="font-size: 120%;"> {{ allProd }}</b></li>
+            <li>План продукции:<b style="font-size: 120%";> {{ plan }}</b></li>
         </ul>
     </ul>
 <div  class="not-print" media="print" >
@@ -414,7 +409,7 @@
                 <tbody>
                 {% for row in table %}
                     <tr>
-                        <td>{{ row.startdata }}</td>
+                        <td>{{ row.startdata|date:"d.m.Y" }}</td>
                         <td>{{ row.starttime }}</td>
                         <td>{{ row.prostoy }}
                         </td>
@@ -450,7 +445,7 @@
                 <tbody>
                 {% for row in table %}
                     <tr>
-                        <td>{{ row.startdata }}</td>
+                        <td>{{ row.startdata|date:"d.m.Y" }}</td>
                         <td>{{ row.starttime }}</td>
                         <td>{{ row.prostoy }}
                         </td>
@@ -486,7 +481,7 @@
                 <tbody>
                 {% for row in table %}
                     <tr>
-                        <td>{{ row.startdata }}</td>
+                        <td>{{ row.startdata|date:"d.m.Y" }}</td>
                         <td>{{ row.starttime }}</td>
                         <td>{{ row.prostoy }}
                         </td>

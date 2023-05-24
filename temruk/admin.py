@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from .models import *
 
-
+admin.site.register(TableTest)
 
 admin.site.register(Table2)
 admin.site.register(Speed2)

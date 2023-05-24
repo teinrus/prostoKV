@@ -137,19 +137,19 @@ def getData2(requst):
         startSmena = datetime.time(00, 00, 00)
         spotSmena = datetime.time(8, 00, 00)
         Smena = 3
-
-
-
     try:
         plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-                                         GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
+                                         GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
                                          ShiftNumber=Smena)
         plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
         if plan== None:
             plan=31000
-        print(plan)
+        # print(plan)
     except:
         plan=31000
+
+
+
 
 
 
@@ -169,9 +169,9 @@ def getData2(requst):
         count2=0
         avg=0
         for el in speed2:
-            if el.speed!=0:
+            if el.triblok!=0:
                 count2+=1
-                avg+=el.speed
+                avg+=el.triblok
 
         avgSpeed = round(avg/count2, 2)
     except:
@@ -201,7 +201,7 @@ def getData2(requst):
 
     for sp in speed2:
         lableChart2.append(str(sp.time))
-        dataChart2.append(sp.speed)
+        dataChart2.append(sp.triblok)
 
     result = {
             "allProc2": allProc2,

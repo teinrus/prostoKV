@@ -29,8 +29,8 @@ def proc(startSmena, spotSmena, plan, colProduct):
     d_start1 = datetime.datetime.combine(today, startSmena)
     d_end1 = datetime.datetime.combine(today, spotSmena)
     diff1 = d_end1 - d_start1
-    planProdSec = int(plan / int(diff1.total_seconds()))
 
+    planProdSec = (plan / diff1.total_seconds())
     # количество времени которое прошло
     d_start2 = datetime.datetime.combine(today, startSmena)
     d_end2 = datetime.datetime.combine(today, datetime.datetime.now().time())
@@ -54,12 +54,6 @@ def update_items5(request):
     table5 = Table5.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
-    # plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-    #                                ShiftNumber=2,
-    #                                BottlingLine='Линия розлива шампанских и игрист бутылка (Темрюк)')
-    #
-    # planTest=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-    # print(planTest)
     list = []
     for table in table5:
         table_info = {
@@ -111,14 +105,16 @@ def getData(requst):
     productionOutput5 = ProductionOutput5.objects.filter(data=datetime.date.today(),
                                   time__gte=startSmena,
                                   time__lte=spotSmena)
-    # try:
-    #     plan = bottling_plan.objects.filter(Data=datetime.date(year=2023, month=4, day=1),
-    #                                      GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
-    #                                      ShiftNumber=Smena)
-    #
-    #     plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-    # except:
-    plan=31000
+    try:
+        plan = bottling_plan.objects.filter(Data=datetime.date.today(),
+                                         GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+                                         ShiftNumber=Smena)
+        plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+        if plan== None:
+            plan=31000
+    except:
+        plan=31000
+
     try:
         count5=0
         avg=0
@@ -142,10 +138,15 @@ def getData(requst):
         sumProduct = productionOutput5.aggregate(Sum('production')).get('production__sum')
         for el in productionOutput5:
             sum+=el.production
-        allProc = proc(startSmena, spotSmena, plan, sumProduct),
     except:
         sumProduct = 0
+    try:
+        print(plan)
+        allProc = proc(startSmena, spotSmena, plan, sumProduct),
+    except:
+
         allProc = 0
+
     try:
         boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
         if (boomOut == None):

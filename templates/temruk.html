@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    {% if ipMask == 'operator5' %}
+    {% if user.username == 'operator5' %}
         {% include 'Line5/line5.html' %}
     {% endif %}
 

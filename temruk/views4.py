@@ -148,7 +148,7 @@ def getData4(requst):
         plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
         if plan== None:
             plan=31000
-        print(plan)
+        # print(plan)
     except:
         plan=31000
 
@@ -162,6 +162,16 @@ def getData4(requst):
     productionOutput4 = ProductionOutput4.objects.filter(data=datetime.date.today(),
                                                          time__gte=startSmena,
                                                          time__lte=spotSmena)
+    # productionOutput123 = ProductionOutput4.objects.filter(data=datetime.date.today()-datetime.timedelta(days=0))
+    # for i in range (len(productionOutput4)):
+    #
+    #     if i!=0:
+    #         prod=datetime.timedelta(hours=productionOutput123[i].time.hour, minutes=productionOutput123[i].time.minute,
+    #                                 seconds=productionOutput123[i].time.second)-datetime.timedelta(hours=productionOutput123[i-1].time.hour,minutes=productionOutput123[i-1].time.minute,seconds=productionOutput123[i-1].time.second)
+    #
+    #         if prod>datetime.timedelta(minutes=1,seconds=1):
+    #             print(productionOutput123[i].time)
+
 
     try:
         count4 = 0

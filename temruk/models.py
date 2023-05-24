@@ -68,6 +68,21 @@ class Line(models.Model):
 
 
 #Таблицы по линиям
+class TableTest(models.Model):
+    startdata = models.DateField('Дата начала простоя')
+    starttime = models.TimeField('Время начала простоя')
+    prostoy = models.TimeField('Время простоя', blank=True, null=True)
+
+    uchastok = models.CharField('Где произошол простой', max_length=50, default='', blank=True, null=True)
+    prichina = models.CharField('Причина', max_length=50, default='', blank=True, null=True)
+    otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
+                               null=True)
+    comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.startdata)+'_' + str(self.starttime) + '_' +str(self.id)
+    class Meta:
+        verbose_name_plural = "Простои Test"
 class Table5(models.Model):
     startdata = models.DateField('Дата начала простоя')
     starttime = models.TimeField('Время начала простоя')
@@ -134,10 +149,17 @@ class Speed5(models.Model):
 class Speed2(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
-    speed = models.IntegerField('Скорость линии')
+    depal = models.IntegerField('Скорость депалитизатор', default=0.0, blank=True, null=True)
+    triblok = models.IntegerField('Скорость триблока', default=0.0, blank=True, null=True)
+    muzle = models.IntegerField('Скорость мюзле', default=0.0, blank=True, null=True)
+    termotunel = models.IntegerField('Скорость термотунеля', default=0.0, blank=True, null=True)
+    kapsula = models.IntegerField('Скорость капсулятора', default=0.0, blank=True, null=True)
+    eticetka = models.IntegerField('Скорость этикетки', default=0.0, blank=True, null=True)
+    ukladchik = models.IntegerField('Скорость укладчика', default=0.0, blank=True, null=True)
+    zakleichik = models.IntegerField('Скорость заклейщика', default=0.0, blank=True, null=True)
 
     def __str__(self):
-        return str(self.speed)
+        return str(self.time)+" "+str(self.id)
 
     class Meta:
         verbose_name_plural = "Производительность линии 2"
@@ -239,13 +261,11 @@ class NapAcratofori(models.Model):
     acr70_press = models.FloatField('Давление 70',default=0.0, blank=True, null=True)
     acr70_volume = models.FloatField('Обьем 70',default=0.0, blank=True, null=True)
 
-    acr82_temp1 = models.FloatField('Температура 82 верх',default=0.0, blank=True, null=True)
-    acr82_temp2 = models.FloatField('Температура 82 низ',default=0.0, blank=True, null=True)
+    acr82_temp = models.FloatField('Температура 82 верх',default=0.0, blank=True, null=True)
     acr82_press = models.FloatField('Давление 82',default=0.0, blank=True, null=True)
     acr82_volume = models.FloatField('Обьем 82',default=0.0, blank=True, null=True)
 
-    acr83_temp1 = models.FloatField('Температура 83 верх',default=0.0, blank=True, null=True)
-    acr83_temp2 = models.FloatField('Температура 83 низ',default=0.0, blank=True, null=True)
+    acr83_temp = models.FloatField('Температура 83 верх',default=0.0, blank=True, null=True)
     acr83_press = models.FloatField('Давление 83',default=0.0, blank=True, null=True)
     acr83_volume = models.FloatField('Обьем 83',default=0.0, blank=True, null=True)
 
