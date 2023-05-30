@@ -103,6 +103,7 @@
 
     <body>
 
+
     {% include 'Line2/Chart2.html' %}
 
     <table id="sample_data2" class="table table-bordered table-striped">
@@ -122,10 +123,41 @@
         {% include 'Line2/table_body2.html' %}
         </tbody>
     </table>
+
+    <input type="button" id="start_perenaladka2"
+           value="Старт переналадка"/>
+    <input type="button" id="start_donaladka2" value="Cтарт доналадка"/>
+    <input type="button" id="TO2" value="ТО"/>
+    <input type="button" id="rabota2" value="Работа"/>
+    <script>
+    $('#start_perenaladka2').click(function () {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'start_perenaladka2' %}",
+        });
+    })
+    $('#start_donaladka2').click(function () {
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'start_donaladka2' %}",
+        });
+    })
+    $('#rabota2').click(function () {
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'rabota2' %}",
+        });
+    })
+    $('#TO2').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'TO2' %}",
+            });
+        })
+    </script>
     </body>
-
-
-
 
 {% endblock %}
 

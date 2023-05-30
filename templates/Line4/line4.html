@@ -1,6 +1,6 @@
 {% block content %}
 
-    {% if user.username == 'master' or user.username == 'admin'%}
+    {% if user.username == 'master' or user.username == 'admin' %}
         <script> // зависимости выпадающих списков таблицы
         $(document).ready(function () {
             var sor = [];
@@ -122,6 +122,40 @@
         {% include 'Line4/table_body4.html' %}
         </tbody>
     </table>
+    <input type="button" id="start_perenaladka4" value="Старт переналадка"/>
+    <input type="button" id="start_donaladka4" value="Cтарт доналадка"/>
+    <input type="button" id="TO4" value="ТО"/>
+    <input type="button" id="rabota4" value="Работа"/>
+
+    <script>
+        $('#start_perenaladka4').click(function () {
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_perenaladka4' %}",
+
+            });
+        })
+        $('#start_donaladka4').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_donaladka4' %}",
+            });
+        })
+        $('#rabota4').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'rabota4' %}",
+            });
+        })
+        $('#TO4').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'TO4' %}",
+            });
+        })
+
+    </script>
     </body>
 
 

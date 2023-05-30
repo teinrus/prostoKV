@@ -6,7 +6,11 @@ from django.shortcuts import render
 
 from temruk.models import *
 
-from .forms import Otchet
+from  pyModbusTCP.client import ModbusClient
+slave_address='192.168.88.230'
+port = 502
+unit_id = 1
+modbus_client = ModbusClient(host=slave_address, port=port,unit_id=unit_id,auto_open=True)
 
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 30, 0)
@@ -119,7 +123,7 @@ def getData(requst):
         count5=0
         avg=0
         for el in speed:
-            if el.speed!=0:
+            if el.triblok!=0:
                 count5+=1
                 avg+=el.triblok
 
@@ -239,3 +243,10 @@ def update(request):
                 a.save()
 
     return HttpResponse('yes')
+
+def getBtn5(requst):
+    buttons_reg = modbus_client.read_input_registers(0)
+    result = {
+        'buttons_reg':buttons_reg
+              }
+    return JsonResponse(result)

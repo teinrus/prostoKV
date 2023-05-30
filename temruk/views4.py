@@ -1,15 +1,16 @@
 import datetime
 
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
 
 from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
 from temruk.models import *
-
-from .forms import Otchet
+from  pyModbusTCP.client import ModbusClient
+slave_address='192.168.88.230'
+port = 502
+unit_id = 1
+modbus_client = ModbusClient(host=slave_address, port=port,unit_id=unit_id,auto_open=True)
 
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 30, 0)
@@ -231,4 +232,10 @@ def getData4(requst):
         'dataChart4_zakleichik': dataChart4_zakleichik,
 
     }
+    return JsonResponse(result)
+def getBtn4(requst):
+    buttons_reg = modbus_client.read_input_registers(1)
+    result = {
+        'buttons_reg':buttons_reg
+              }
     return JsonResponse(result)

@@ -1,15 +1,31 @@
 import datetime
+import time
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
 from django.db.models import Sum, Avg
+from django.http import HttpResponse
 
 from django.shortcuts import render, redirect
 
 from temruk.models import *
 
 from .forms import Otchet
+from  pyModbusTCP.client import ModbusClient
+
+
+
+bit=0
+def mod_bus(reg,bit_temp):
+
+    slave_address = '192.168.88.230'
+    port = 502
+    unit_id = 1
+    modbus_client = ModbusClient(host=slave_address, port=port, unit_id=unit_id, auto_open=True)
+    test = modbus_client.write_single_register(reg, bit_temp)
+
+
 
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 30, 0)
@@ -105,6 +121,49 @@ def temruk(request):
         'speed2': speed2,
 
     })
+
+def start_perenaladka5(request):
+    mod_bus(0,1)
+    return HttpResponse('yes')
+def start_donaladka5(request):
+    mod_bus(0,2)
+    return HttpResponse('yes')
+
+def rabota5(request):
+    mod_bus(0,4)
+    return HttpResponse('yes')
+def TO5(request):
+    mod_bus(0,8)
+    return HttpResponse('yes')
+
+def start_perenaladka4(request):
+    mod_bus(1,1)
+    return HttpResponse('yes')
+def start_donaladka4(request):
+    mod_bus(1,2)
+    return HttpResponse('yes')
+
+def rabota4(request):
+    mod_bus(1,4)
+    return HttpResponse('yes')
+def TO4(request):
+    mod_bus(1,8)
+    return HttpResponse('yes')
+
+def start_perenaladka2(request):
+    mod_bus(2,1)
+    return HttpResponse('yes')
+def start_donaladka2(request):
+    mod_bus(2,2)
+    return HttpResponse('yes')
+
+def rabota2(request):
+    mod_bus(2,4)
+    return HttpResponse('yes')
+def TO2(request):
+    mod_bus(2,8)
+    return HttpResponse('yes')
+
 
 
 # блок формирования отчета
@@ -550,24 +609,18 @@ def otchet(request):
     except:
         avgSpeed=0
 
-    try:
-        for sp in speed:
-            lableChart.append(str(sp.time))
-            dataChart.append(sp.speed)
-    except:
-        lableChart = []
-        dataChart = []
+
 
 
     # Данные для графика
-    if form.cleaned_data["LineF"] == 'Линиия 4' or form.cleaned_data["LineF"] == 'Линиия 5':
-        try:
-            for sp in speed:
-                lableChart.append(str(sp.time))
-                dataChart.append(sp.triblok)
-        except:
-            lableChart = []
-            dataChart = []
+
+    try:
+        for sp in speed:
+            lableChart.append(str(sp.time))
+            dataChart.append(sp.triblok)
+    except:
+        lableChart = []
+        dataChart = []
 
 
 

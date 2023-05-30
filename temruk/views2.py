@@ -1,7 +1,6 @@
 import datetime
+from  pyModbusTCP.client import ModbusClient
 
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
 
 from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
@@ -9,7 +8,10 @@ from django.shortcuts import render
 
 from temruk.models import *
 
-from .forms import Otchet
+slave_address='192.168.88.230'
+port = 502
+unit_id = 1
+modbus_client = ModbusClient(host=slave_address, port=port,unit_id=unit_id,auto_open=True)
 
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 30, 0)
@@ -102,23 +104,7 @@ def update_items2(request):
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
 
-    list = []
-    for table in table2:
-        table_info = {
-            'id': table.id,
-            'startdata': table.startdata,
-            'starttime': table.starttime,
-            'prostoy': table.prostoy,
 
-            'uchastok': table.uchastok,
-            'otv_pod': table.otv_pod,
-            'prichina': table.prichina,
-            'comment': table.comment,
-        }
-        list.append(table_info)
-
-    table_dic = {}
-    table_dic['data'] = list
 
     return render(request, 'Line2/table_body2.html', {'table2': table2})
 
@@ -139,20 +125,14 @@ def getData2(requst):
         Smena = 3
     try:
         plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-                                         GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
+                                         GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
                                          ShiftNumber=Smena)
         plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
         if plan== None:
             plan=31000
-        # print(plan)
+        print(plan)
     except:
         plan=31000
-
-
-
-
-
-
 
 
     table2 = Table2.objects.filter(startdata=datetime.date.today(),
@@ -196,6 +176,8 @@ def getData2(requst):
 
 
 
+
+
     lableChart2 = []
     dataChart2 = []
 
@@ -203,7 +185,10 @@ def getData2(requst):
         lableChart2.append(str(sp.time))
         dataChart2.append(sp.triblok)
 
+
+
     result = {
+
             "allProc2": allProc2,
             'sumProstoy2': str(sumProstoy),
             'avgSpeed2': avgSpeed,
@@ -212,5 +197,15 @@ def getData2(requst):
             'lableChart2': lableChart2,
             'dataChart2': dataChart2,
 
+
               }
     return JsonResponse(result)
+def getBtn2(requst):
+    buttons_reg = modbus_client.read_input_registers(2)
+    result = {
+        'buttons_reg':buttons_reg
+              }
+    return JsonResponse(result)
+
+
+

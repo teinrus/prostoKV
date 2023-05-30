@@ -1,6 +1,6 @@
 {% block content %}
 
-{% if user.username == 'master' or user.username == 'admin' or user.username == 'operator5' %}
+    {% if user.username == 'master' or user.username == 'admin' or user.username == 'operator5' %}
         <script> // зависимости выпадающих списков таблици
         $(document).ready(function () {
             var sor = [];
@@ -64,21 +64,21 @@
                 }
             });
             $('#sample_data').editable({
-                    container: 'body',
-                    selector: 'td.prichina',
-                    url: '/update',
-                    title: 'prichina',
-                    type: 'POST',
-                    value: "Не выбрано",
-                    source:
-                        function () {
-                            return sor
-                        },
-                    validate: function (value) {
-                        if ($.trim(value)) {
-                        }
+                container: 'body',
+                selector: 'td.prichina',
+                url: '/update',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
                     }
-                });
+                }
+            });
             $('#sample_data').editable({
                 container: 'body',
                 selector: 'td.comment',
@@ -117,6 +117,37 @@
         {% include 'Line5/table_body.html' %}
         </tbody>
     </table>
+    <input type="button" id="start_perenaladka5" value="Старт переналадка"/>
+    <input type="button" id="start_donaladka5" value="Cтарт доналадка"/>
+    <input type="button" id="TO5" value="ТО"/>
+    <input type="button" id="rabota5" value="Работа"/>
+
+    <script>
+        $('#start_perenaladka5').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_perenaladka5' %}",
+            });
+        })
+        $('#start_donaladka5').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_donaladka5' %}",
+            });
+        })
+        $('#rabota5').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'rabota5' %}",
+            });
+        })
+        $('#TO5').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'TO5' %}",
+            });
+        })
+    </script>
     </body>
 
 

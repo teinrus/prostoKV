@@ -355,11 +355,13 @@
                     item_num2 = $(this).attr('id');
                     update_item(item_num2);
 
+
                 }
 
             }, 2000);
 
             function update_item(item_num2) {
+
                 $('#sample_data2 tbody').load(
                     "{% url 'update_items2' %}?item_num2=" + item_num2
                 );
@@ -369,6 +371,183 @@
 
 
         });
+        $(document).ready(function () {
+            setInterval(function () {
+                $.ajax({
+                    url: 'getBtn2',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka2').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_donaladka2').attr('style', 'color:black;')
+                            $('#TO2').attr('style', 'color:black; ')
+                            $('#rabota2').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 2) {
+                            $('#start_donaladka2').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_perenaladka2').attr('style', 'color:black;')
+                            $('#TO2').attr('style', 'color:black; ')
+                            $('#rabota2').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 8) {
+                            $('#TO2').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_perenaladka2').attr('style', 'color:black;')
+                            $('#start_donaladka2').attr('style', 'color:black;')
+                            $('#rabota2').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 4) {
+                            $('#rabota2').attr('style', 'color:green; border: 1px solid blue;')
+                            $('#start_perenaladka2').attr('style', 'color:black;')
+                            $('#start_donaladka2').attr('style', 'color:black;')
+                            $('#TO2').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 0) {
+                            $('#start_perenaladka2').attr('style', 'color:black;')
+                            $('#start_donaladka2').attr('style', 'color:black;')
+                            $('#TO2').attr('style', 'color:black; ')
+                            $('#rabota2').attr('style', 'color:black; ')
+                        }
+
+                    }
+                });
+                $.ajax({
+                    url: 'getBtn4',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka4').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_donaladka4').attr('style', 'color:black;')
+                            $('#TO4').attr('style', 'color:black; ')
+                            $('#rabota4').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 2) {
+                            $('#start_donaladka4').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_perenaladka4').attr('style', 'color:black;')
+                            $('#TO4').attr('style', 'color:black; ')
+                            $('#rabota4').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 8) {
+                            $('#TO4').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_perenaladka4').attr('style', 'color:black;')
+                            $('#start_donaladka4').attr('style', 'color:black;')
+                            $('#rabota4').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 4) {
+                            $('#rabota4').attr('style', 'color:green; border: 1px solid blue;')
+                            $('#start_perenaladka4').attr('style', 'color:black;')
+                            $('#start_donaladka4').attr('style', 'color:black;')
+                            $('#TO4').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 0) {
+                            $('#start_perenaladka4').attr('style', 'color:black;')
+                            $('#start_donaladka4').attr('style', 'color:black;')
+                            $('#TO4').attr('style', 'color:black; ')
+                            $('#rabota4').attr('style', 'color:black; ')
+                        }
+
+                    }
+                });
+                $.ajax({
+                    url: 'getBtn5',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka5').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_donaladka5').attr('style', 'color:black;')
+                            $('#TO5').attr('style', 'color:black; ')
+                            $('#rabota5').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 2) {
+                            $('#start_perenaladka5').attr('style', 'color:black;')
+                            $('#TO5').attr('style', 'color:black; ')
+                            $('#rabota5').attr('style', 'color:black; ')
+                            $('#start_donaladka5').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 8) {
+                            $('#start_perenaladka5').attr('style', 'color:black;')
+                            $('#start_donaladka5').attr('style', 'color:black;')
+                            $('#rabota5').attr('style', 'color:black; ')
+                            $('#TO5').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 4) {
+                            $('#start_perenaladka5').attr('style', 'color:black;')
+                            $('#start_donaladka5').attr('style', 'color:black;')
+                            $('#TO5').attr('style', 'color:black; ')
+                            $('#rabota5').attr('style', 'color:green; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 0) {
+                            $('#start_perenaladka5').attr('style', 'color:black;')
+                            $('#start_donaladka5').attr('style', 'color:black;')
+                            $('#TO5').attr('style', 'color:black; ')
+                            $('#rabota5').attr('style', 'color:black; ')
+                        }
+
+                    }
+                });
+
+            }, 1000);
+
+            $.ajax({
+                url: 'getBtn2',
+                method: 'post',
+                success: function (data) {
+                    if (data.buttons_reg[0] == 1) {
+                        $('#start_perenaladka2').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 2) {
+                        $('#start_donaladka2').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 8) {
+                        $('#TO2').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 4) {
+                        $('#rabota2').attr('style', 'color:green; border: 1px solid blue;')
+                    }
+
+                }
+            });
+            $.ajax({
+                url: 'getBtn4',
+                method: 'post',
+                success: function (data) {
+                    if (data.buttons_reg[0] == 1) {
+                        $('#start_perenaladka4').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 2) {
+                        $('#start_donaladka4').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 8) {
+                        $('#TO4').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 4) {
+                        $('#rabota4').attr('style', 'color:green; border: 1px solid blue;')
+                    }
+
+                }
+            });
+            $.ajax({
+                url: 'getBtn5',
+                method: 'post',
+                success: function (data) {
+                    if (data.buttons_reg[0] == 1) {
+                        $('#start_perenaladka5').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 2) {
+                        $('#start_donaladka5').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 8) {
+                        $('#TO5').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 4) {
+                        $('#rabota5').attr('style', 'color:green; border: 1px solid blue;')
+                    }
+
+                }
+            });
+
+
+        });
+    </script>
 
 
     </script>
@@ -408,7 +587,6 @@
                 if (!$(".popover-title").is(':visible')) {
                     item_num5 = $(this).attr('id');
                     update_item(item_num5);
-
                 }
 
             }, 2000);
