@@ -190,6 +190,17 @@ class bottleExplosion(models.Model):
     class Meta:
         verbose_name_plural = "Взрывы бутылок"
 
+class bottleExplosion5(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    bottle = models.IntegerField('Взрыв')
+
+    def __str__(self):
+        return str(self.data) + '_' + str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Взрывы бутылок"
+
 class ProductionOutput2(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')

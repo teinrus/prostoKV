@@ -103,7 +103,7 @@ def getData(requst):
     speed = Speed5.objects.filter(data=datetime.date.today(),
                                   time__gte=startSmena,
                                   time__lte=spotSmena)
-    boom = bottleExplosion.objects.filter(data=datetime.date.today(),
+    boom = bottleExplosion5.objects.filter(data=datetime.date.today(),
                                           time__gte=startSmena,
                                           time__lte=spotSmena)
     productionOutput5 = ProductionOutput5.objects.filter(data=datetime.date.today(),

@@ -202,9 +202,11 @@ def getData2(requst):
     return JsonResponse(result)
 def getBtn2(requst):
     buttons_reg = modbus_client.read_input_registers(2)
+    print(buttons_reg)
     result = {
         'buttons_reg':buttons_reg
               }
+
     return JsonResponse(result)
 
 

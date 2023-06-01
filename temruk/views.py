@@ -188,7 +188,7 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(0),
                                                   time__lte=datetime.time(23, 59))
-                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                           data__lte=form.cleaned_data["finish_data"],
                                                           time__gte=datetime.time(0),
                                                           time__lte=datetime.time(23, 59))
@@ -224,7 +224,7 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(8),
                                                   time__lte=datetime.time(16, 30))
-                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                           data__lte=form.cleaned_data["finish_data"],
                                                           time__gte=datetime.time(8),
                                                           time__lte=datetime.time(16, 30))
@@ -257,7 +257,7 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(16, 30),
                                                   time__lte=datetime.time(23, 59))
-                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                           data__lte=form.cleaned_data["finish_data"],
                                                           time__gte=datetime.time(16, 30),
                                                           time__lte=datetime.time(23, 59))
@@ -291,7 +291,7 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(00, 00),
                                                   time__lte=datetime.time(8, 00))
-                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                           data__lte=form.cleaned_data["finish_data"],
                                                           time__gte=datetime.time(00, 00),
                                                           time__lte=datetime.time(8, 00))

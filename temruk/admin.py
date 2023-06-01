@@ -22,7 +22,7 @@ admin.site.register(ProductionOutput5)
 admin.site.register(prichina)
 admin.site.register(uchastok)
 
-admin.site.register(bottleExplosion)
+admin.site.register(bottleExplosion5)
 
 admin.site.register(bottling_plan)
 admin.site.register(Nomenclature)
