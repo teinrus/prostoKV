@@ -1,5 +1,5 @@
 import datetime
-import time
+
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -16,7 +16,7 @@ from  pyModbusTCP.client import ModbusClient
 
 
 
-bit=0
+
 def mod_bus(reg,bit_temp):
 
     slave_address = '192.168.88.230'
@@ -596,11 +596,14 @@ def otchet(request):
         if sumProstoy== None:
             sumProstoy=datetime.timedelta(0)
     except:
-
         sumProstoy = 0
     # Средняя скорость
     try:
+        if sumProstoy>timeTemp:
+            sumProstoy=timeTemp
         timeWork=(timeTemp -sumProstoy)
+
+
     except:
         timeWork=0
     try:
@@ -671,6 +674,306 @@ def otchet(request):
         'uch': uch,
         'uch_vino':uch_vino,
 
+
+
+    })
+
+def otchetSmena(request):
+    nomenklatura=[]
+    nomenklatura4=[]
+    nomenklatura2=[]
+
+    if  datetime.time(hour=8)< datetime.datetime.now().time()<datetime.time(hour=16,minute=30):
+        print('3')
+        smena=3
+        start_data = datetime.datetime.today()
+        finish_data = datetime.datetime.today()
+        start_time = str(datetime.timedelta(hours=0))
+        finish_time = str(datetime.timedelta(hours=8))
+        timeTemp = datetime.timedelta(hours=8)
+        dataTemp= datetime.datetime.today()
+
+
+    elif datetime.datetime.now().time()>datetime.time(hour=16,minute=29):
+        print('1')
+        smena = 1
+        start_data = datetime.datetime.today()
+        finish_data = datetime.datetime.today()
+        start_time = str(datetime.timedelta(hours=8))
+        finish_time = str(datetime.timedelta(hours=16,minutes=30))
+        timeTemp = datetime.timedelta(hours=8,minutes=30)
+        dataTemp= datetime.datetime.today()
+    else:
+        print('2')
+        smena = 2
+        start_data = datetime.datetime.today()-datetime.timedelta(days=1)
+        finish_data = datetime.datetime.today()-datetime.timedelta(days=1)
+        start_time = str(datetime.timedelta(hours=16,minutes=30))
+        finish_time = str(datetime.timedelta(hours=23,minutes=59))
+        timeTemp = datetime.timedelta(hours=7, minutes=30)
+        dataTemp= datetime.datetime.today()-datetime.timedelta(days=1)
+
+
+    table5 = Table5.objects.filter(starttime__gte=start_time,
+                                  starttime__lte=finish_time,
+                                  startdata__gte=start_data,
+                                  startdata__lte=finish_data
+                                  ).order_by('startdata', 'starttime')
+    table4 = Table4.objects.filter(starttime__gte=start_time,
+                                  starttime__lte=finish_time,
+                                  startdata__gte=start_data,
+                                  startdata__lte=finish_data
+                                  ).order_by('startdata', 'starttime')
+
+    table2 = Table2.objects.filter(starttime__gte=start_time,
+                                  starttime__lte=finish_time,
+                                  startdata__gte=start_data,
+                                  startdata__lte=finish_data
+                                  ).order_by('startdata', 'starttime')
+
+    boom5 = bottleExplosion5.objects.filter(data__gte=start_data,
+                                           data__lte=finish_data,
+                                           time__gte=start_time,
+                                           time__lte=finish_time)
+    boom5= boom5 if boom5 != None else 0
+
+
+    prod5 = ProductionOutput5.objects.filter(data__gte=start_data,
+                                  data__lte=finish_data,
+                                  time__gte=start_time,
+                                  time__lte=finish_time)
+    prod4 = ProductionOutput4.objects.filter(data__gte=start_data,
+                                  data__lte=finish_data,
+                                  time__gte=start_time,
+                                  time__lte=finish_time)
+    prod2 = ProductionOutput2.objects.filter(data__gte=start_data,
+                                  data__lte=finish_data,
+                                  time__gte=start_time,
+                                  time__lte=finish_time)
+
+    speed=Speed5.objects.filter(data__gte=start_data,
+                                  data__lte=finish_data,
+                                  time__gte=start_time,
+                                  time__lte=finish_time)
+    speed4=Speed4.objects.filter(data__gte=start_data,
+                                  data__lte=finish_data,
+                                  time__gte=start_time,
+                                  time__lte=finish_time)
+    speed2=Speed2.objects.filter(data__gte=start_data,
+                                  data__lte=finish_data,
+                                  time__gte=start_time,
+                                  time__lte=finish_time)
+    try:
+        plan = bottling_plan.objects.filter(Data__gte=start_data,
+                                            Data__lte=finish_data,
+                                            GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
+                                            ShiftNumber= smena)
+
+    except:
+        plan = 0
+
+    try:
+        for el in plan:
+            nomenklatura=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
+    except:
+        nomenklatura= "План отсутствует"
+
+
+    try:
+        plan4 = bottling_plan.objects.filter(Data__gte=start_data,
+                                            Data__lte=finish_data,
+                                            GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
+                                            ShiftNumber= smena)
+    except:
+        plan4 = 0
+
+    try:
+        for el in plan4:
+            nomenklatura4=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
+
+    except:
+        nomenklatura4= "План отсутствует"
+
+    try:
+        plan2 = bottling_plan.objects.filter(Data__gte=start_data,
+                                            Data__lte=finish_data,
+                                            GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
+                                            ShiftNumber= smena)
+    except:
+        plan2 = 0
+
+
+    try:
+        for el in plan2:
+            print(el)
+            nomenklatura2=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
+
+    except:
+        nomenklatura2= "План отсутствует"
+
+
+
+    #Общее количество  продукции
+    try:
+        allProd = prod5.aggregate(Sum('production')).get('production__sum')
+        if (allProd == None):
+            allProd = 0
+        procent = int(allProd/plan.aggregate(Sum('Quantity')).get('Quantity__sum')*100)
+    except:
+        procent=0
+        allProd = 0
+
+    try:
+        otklonenie=int(allProd) - int(plan.aggregate(Sum('Quantity')).get('Quantity__sum'))
+    except:
+        otklonenie=0
+
+    try:
+        allProd4 = prod4.aggregate(Sum('production')).get('production__sum')
+        if (allProd4 == None):
+            allProd4= 0
+        procent4 =int( allProd4/plan4.aggregate(Sum('Quantity')).get('Quantity__sum') *100)
+
+    except:
+        allProd4 = 0
+        procent4 = 0
+    try:
+        otklonenie4=int(allProd4) - int(plan4.aggregate(Sum('Quantity')).get('Quantity__sum'))
+    except:
+        otklonenie4=0
+    try:
+        allProd2 = prod2.aggregate(Sum('production')).get('production__sum')
+        if (allProd2 == None):
+            allProd2 = 0
+        procent2 =int( allProd2/plan2.aggregate(Sum('Quantity')).get('Quantity__sum') *100)
+
+    except:
+        allProd2 = 0
+        procent2=0
+    try:
+        otklonenie2=int(allProd2) - int(plan2.aggregate(Sum('Quantity')).get('Quantity__sum'))
+    except:
+        otklonenie2=0
+    #Общее количество  врывов бутылок
+    try:
+        boomOut = boom5.aggregate(Sum('bottle')).get('bottle__sum')
+        if (boomOut == None):
+            boomOut = 0
+    except:
+        boomOut = 0
+
+    #Общее время простоя
+    try:
+        sumProstoy = table5.aggregate(Sum('prostoy')).get('prostoy__sum')
+        if sumProstoy== None:
+            sumProstoy=datetime.timedelta(0)
+    except:
+        sumProstoy = 0
+    try:
+        sumProstoy4 = table4.aggregate(Sum('prostoy')).get('prostoy__sum')
+        if sumProstoy4== None:
+            sumProstoy4=datetime.timedelta(0)
+    except:
+        sumProstoy4 = 0
+    try:
+        sumProstoy2 = table2.aggregate(Sum('prostoy')).get('prostoy__sum')
+        if sumProstoy2== None:
+            sumProstoy2=datetime.timedelta(0)
+    except:
+        sumProstoy2 = 0
+
+    # Средняя скорость
+    try:
+        if sumProstoy>timeTemp:
+            sumProstoy=timeTemp
+        timeWork=(timeTemp -sumProstoy)
+
+    except:
+        timeWork=0
+    try:
+        if sumProstoy4>timeTemp:
+            sumProstoy4=timeTemp
+        timeWork4=(timeTemp -sumProstoy4)
+
+    except:
+        timeWork4=0
+    try:
+        if sumProstoy2>timeTemp:
+            sumProstoy2=timeTemp
+        timeWork2=(timeTemp -sumProstoy2)
+
+    except:
+        timeWork2=0
+
+
+
+    try:
+
+        avgSpeed = round((allProd / timeWork.total_seconds() * 3600), 2)
+
+    except:
+        avgSpeed=0
+
+    try:
+
+
+        avgSpeed4=round((allProd4 / timeWork4.total_seconds() * 3600),2)
+
+    except:
+        avgSpeed4=0
+    try:
+
+        avgSpeed2 = round((allProd2 / timeWork2.total_seconds() * 3600), 2)
+    except:
+        avgSpeed2=0
+
+    return render(request, "otchetSmena.html", {
+
+
+
+        'otklonenie':otklonenie,
+        'otklonenie4': otklonenie4,
+        'otklonenie2': otklonenie2,
+
+
+        'dataTemp':dataTemp.date(),
+        'smena':smena,
+
+        'procent':procent,
+        'procent4': procent4,
+        'procent2': procent2,
+
+
+        'table5': table5,
+        'table4': table4,
+        'table2': table2,
+
+
+        'timeWork':timeWork,
+        'timeWork4': timeWork4,
+        'timeWork2': timeWork2,
+
+        'nomenklatura':     nomenklatura,
+        'nomenklatura4':    nomenklatura4,
+        'nomenklatura2':    nomenklatura2,
+
+        'plan':             plan,
+        'plan4':            plan4,
+        'plan2':            plan2,
+
+        'sumProstoy':       sumProstoy,
+        'sumProstoy4':      sumProstoy4,
+        'sumProstoy2':      sumProstoy2,
+
+        'avgSpeed':         avgSpeed,
+        'avgSpeed4':        avgSpeed4,
+        'avgSpeed2':        avgSpeed2,
+
+        'boomOut':          boomOut,
+
+        'allProd':          allProd,
+        'allProd4':         allProd4,
+        'allProd2':         allProd2,
 
 
     })

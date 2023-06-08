@@ -1,6 +1,6 @@
 {% block content %}
 
-    {% if user.username == 'master' or user.username == 'admin' %}
+    {% if user.username == 'masterS' or user.username == 'admin' %}
         <script> // зависимости выпадающих списков таблицы
         $(document).ready(function () {
             var sor = [];
@@ -21,7 +21,7 @@
                 value: "Не выбрано",
                 source:
                     [
-                        {% for el in uch31 %}
+                        {% for el in uch_vino %}
                             {value: "{{ el }}", text: "{{ el }}"},
                         {% endfor %}],
                 validate: function (value) {
@@ -98,8 +98,74 @@
 
         </script>
     {% endif %}
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                $.ajax({
+                    url: 'getBtn31',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka31').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_donaladka31').attr('style', 'color:black;')
+                            $('#TO31').attr('style', 'color:black; ')
+                            $('#rabota31').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 2) {
+                            $('#start_donaladka31').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_perenaladka31').attr('style', 'color:black;')
+                            $('#TO31').attr('style', 'color:black; ')
+                            $('#rabota31').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 8) {
+                            $('#TO31').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_perenaladka31').attr('style', 'color:black;')
+                            $('#start_donaladka31').attr('style', 'color:black;')
+                            $('#rabota31').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 4) {
+                            $('#rabota31').attr('style', 'color:green; border: 1px solid blue;')
+                            $('#start_perenaladka31').attr('style', 'color:black;')
+                            $('#start_donaladka4').attr('style', 'color:black;')
+                            $('#TO31').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 0) {
+                            $('#start_perenaladka31').attr('style', 'color:black;')
+                            $('#start_donaladka31').attr('style', 'color:black;')
+                            $('#TO31').attr('style', 'color:black; ')
+                            $('#rabota31').attr('style', 'color:black; ')
+                        }
 
-   <script>
+                    }
+                });
+            }, 1000);
+
+
+            $.ajax({
+                url: 'getBtn31',
+                method: 'post',
+                success: function (data) {
+                    if (data.buttons_reg[0] == 1) {
+                        $('#start_perenaladka31').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 2) {
+                        $('#start_donaladka31').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 8) {
+                        $('#TO31').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 4) {
+                        $('#rabota31').attr('style', 'color:green; border: 1px solid blue;')
+                    }
+
+                }
+            });
+
+
+
+        });
+    </script>
+    <script>
 
         $(document).ready(function () {
             var item_num31 = $(this).attr('id');
@@ -111,7 +177,7 @@
 
                 }
 
-            }, 15000);
+            }, 30000);
 
             function update_item(item_num31) {
                 $('#sample_data31 tbody').load(
@@ -127,66 +193,13 @@
 
     </script>
 
-    <body>
 
-    {% include 'Line31/Chart31.html' %}
 
-    <table id="sample_data31" class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>id</th>
-            <th>Дата</th>
-            <th>Время начала простоя</th>
-            <th>Время простоя</th>
-            <th>Участок</th>
+    {% include 'Line31/line31.html' %}
 
-            <th>Ответст. подразделение</th>
-            <th>Причина</th>
-            <th>Комментарий</th>
-        </thead>
-        <tbody>
-        {% include 'Line31/table_body31.html' %}
-        </tbody>
-    </table>
-    </body>
 
-  <input type="button" id="start_perenaladka31" value="Старт переналадка"/>
-    <input type="button" id="start_donaladka31" value="Cтарт доналадка"/>
-    <input type="button" id="TO31" value="ТО"/>
-    <input type="button" id="rabota31" value="Работа"/>
 
-    <script>
-        $('#start_perenaladka31').click(function () {
 
-            $.ajax({
-                type: "POST",
-                url: "{% url 'start_perenaladka31' %}",
-
-            });
-        })
-        $('#start_donaladka31').click(function () {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'start_donaladka31' %}",
-            });
-        })
-        $('#rabota31').click(function () {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'rabota31' %}",
-            });
-        })
-        $('#TO31').click(function () {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'TO31' %}",
-            });
-        })
-
-    </script>
 
 
 {% endblock %}
-
-
-</style>

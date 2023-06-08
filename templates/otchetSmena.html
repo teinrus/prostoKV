@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+<head>
+    <title>Отчет простоев </title>
+</head>
+
+{% block content %}
+
+
+
+    <table class="table table-bordered table-striped">
+        <thead>
+         <th colspan="3"> ОП Темрюк ООО "Кубань-вино"</th>
+         <th colspan="3"> План-факт выполнения работ</th>
+         <th colspan="4">Дата:{{ dataTemp }}, смена: {{ smena }} </th>
+        </thead>
+
+        <tbody>
+        <th> №</th>
+        <th>Номенклатура:</th>
+        <th>План продукции:</th>
+        <th>Факт продукции:</th>
+        <th>Отклонение:</th>
+        <th>Процент выполнения:</th>
+        <th colspan="2">Количество людей:</th>
+        <th class="col-xs-2">Доп информация:</th>
+        <th>Время простоя:</th>
+
+
+
+        <tr class="vertical">
+            <th>5</th>
+            {% for el in nomenklatura %}
+                <th class="col-xs-2">{{ el }}</th>
+            {% endfor %}
+            <th>{% for el in plan %}
+                <li style="font-size:small" >{{ el.Quantity }}</li>
+            {% endfor %} </th>
+            <th class="col-xs-1"><div  style="font-size:small">{{ allProd }}</div></th>
+            <th class="col-xs-1">
+                <div  style="font-size:small">{{ otklonenie }}</div>
+            </th>
+            <th class="col-xs-1">
+                <div  style="font-size:small">{{ procent }}%</div>
+
+            </th>
+            <th>
+                Факт:
+
+            </th>
+            <th>
+                План:
+
+            </th>
+            <th class="col-xs-2">
+                <li>Взрывы:{{ boomOut }}</li>
+                <li>Производительность: {{ avgSpeed }}</li>
+                <li>Недоливы:</li>
+                <li>Переливы:</li>
+                <li>Пустые:</li>
+                <li>Сливы:</li>
+
+            </th>
+            <th><div  style="font-size:small">{{ sumProstoy }}</div></th>
+                <tr class="vertical">
+
+            <th>4</th>
+            {% for el in nomenklatura4 %}
+                <th class="col-xs-2">{{ el }}</th>
+            {% endfor %}
+            <th>{% for el in plan4 %}
+                <li style="font-size:small" >{{ el.Quantity }}</li>
+            {% endfor %} </th>
+            <th class="col-xs-1"><div  style="font-size:small">{{ allProd4 }}</div></th>
+            <th class="col-xs-1">
+                <div  style="font-size:small">{{ otklonenie4 }}</div>
+            </th>
+            <th class="col-xs-1">
+                <div  style="font-size:small">{{ procent4 }}%</div>
+
+            </th>
+            <th>
+                Факт:
+
+            </th>
+            <th>
+                План:
+
+            </th>
+            <th class="col-xs-2">
+                <li>Производительность: {{ avgSpeed4 }}</li>
+                <li>Недоливы:</li>
+                <li>Переливы:</li>
+                <li>Пустые:</li>
+                <li>Сливы:</li>
+
+            </th>
+            <th><div  style="font-size:small">{{ sumProstoy4 }}</div></th>
+                <tr class="vertical">
+
+                    <th>2</th>
+            {% for el in nomenklatura2 %}
+                <th class="col-xs-2">{{ el }}</th>
+            {% endfor %}
+            <th>{% for el in plan2 %}
+                <li style="font-size:small" >{{ el.Quantity }}</li>
+            {% endfor %} </th>
+            <th class="col-xs-1"><div  style="font-size:small">{{ allProd2 }}</div></th>
+            <th class="col-xs-1">
+                <div  style="font-size:small">{{ otklonenie2 }}</div>
+            </th>
+            <th class="col-xs-1">
+                <div  style="font-size:small">{{ procent2 }}%</div>
+
+            </th>
+            <th>
+                Факт:
+
+            </th>
+            <th>
+                План:
+
+            </th>
+            <th class="col-xs-2">
+                <li>Производительность: {{ avgSpeed2 }}</li>
+                <li>Недоливы:</li>
+                <li>Переливы:</li>
+                <li>Пустые:</li>
+                <li>Сливы:</li>
+
+            </th>
+            <th><div  style="font-size:small">{{ sumProstoy2 }}</div></th>
+                <tr class="vertical">
+
+
+
+
+        </tbody>
+    </table>
+    {#    <h3>4</h3>#}
+    {#    <ul class="col">#}
+    {#        <ul style="margin-bottom:15px ">#}
+    {#            <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy4 }}</b></li>#}
+    {#            <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork4 }}</b></li>#}
+    {#        </ul>#}
+    {#        <ul>#}
+    {#            <li>Средняя производительность:<b style="font-size: 120%;"> {{ avgSpeed4 }}</b></li>#}
+    {#            <li>Количество продукции:<b style="font-size: 120%;"> {{ allProd4 }}</b></li>#}
+    {#            <li>Процент выполнения:<b style="font-size: 120%;"> {{ procent4 }}</b></li>#}
+    {#            {% for el in plan4 %}#}
+    {#                <li>План продукции:<b style="font-size: 120%" ;> {{ el.Quantity }}</b></li>#}
+    {#            {% endfor %}#}
+    {#            {% for el in nomenklatura4 %}#}
+    {#                <li>Номенклатура:<b style="font-size: 120%" ;> {{ el }}</b></li>#}
+    {#            {% endfor %}#}
+    {##}
+    {#        </ul>#}
+    {#    </ul>#}
+    {#    <h3>2</h3>#}
+    {#    <ul class="col">#}
+    {#        <ul style="margin-bottom:15px ">#}
+    {#            <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy2 }}</b></li>#}
+    {#            <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork2 }}</b></li>#}
+    {#        </ul>#}
+    {#        <ul>#}
+    {#            <li>Средняя производительность:<b style="font-size: 120%;"> {{ avgSpeed2 }}</b></li>#}
+    {#            <li>Количество продукции:<b style="font-size: 120%;"> {{ allProd2 }}</b></li>#}
+    {#            <li>Процент выполнения:<b style="font-size: 120%;"> {{ procent2 }} </b></li>#}
+    {##}
+    {#            {% for el in plan2 %}#}
+    {#                <li>План продукции:<b style="font-size: 120%" ;> {{ el.Quantity }}</b></li>#}
+    {#            {% endfor %}#}
+    {#            {% for el in nomenklatura2 %}#}
+    {#                <li>Номенклатура:<b style="font-size: 120%" ;> {{ el }}</b></li>#}
+    {#            {% endfor %}#}
+    {#        </ul>#}
+    {#    </ul>#}
+{#    <li>#}
+        <a media="print" onclick="window.print()" style="margin-top: 20px;">Распечатать
+        </a>
+        <h1 media="print"></h1>
+        <h4>Линия 5</h4>
+        <table media="print" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+
+                <th class="col-xs-1">Время начала простоя</th>
+                <th class="col-xs-1">Время простоя</th>
+                <th class="col-xs-2">Участок</th>
+
+                <th class="col-xs-2">Ответст. подразделение</th>
+                <th class="col-xs-2">Причина</th>
+                <th class="col-xs-2">Комментарий</th>
+            </thead>
+            <tbody>
+            {% for row in table5 %}
+                <tr>
+
+                    <td>{{ row.starttime }}</td>
+                    <td>{{ row.prostoy }}
+                    </td>
+
+                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                    <td data-name="otv_pod" class="otv_pod" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+                    <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                    <td data-name="comment" class="comment" data-type="textarea"
+                        data-pk="{{ row.id }}">{{ row.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <h1 media="print"></h1>
+        <h4>Линия 4</h4>
+        <table media="print" id="sample_data4" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+
+                <th class="col-xs-1">Время начала простоя</th>
+                <th class="col-xs-1">Время простоя</th>
+                <th class="col-xs-2">Участок</th>
+
+                <th class="col-xs-2">Ответст. подразделение</th>
+                <th class="col-xs-2">Причина</th>
+                <th class="col-xs-2">Комментарий</th>
+            </thead>
+            <tbody>
+            {% for row in table4 %}
+                <tr>
+
+                    <td>{{ row.starttime }}</td>
+                    <td>{{ row.prostoy }}
+                    </td>
+
+                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                    <td data-name="otv_pod" class="otv_pod" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+                    <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                    <td data-name="comment" class="comment" data-type="textarea"
+                        data-pk="{{ row.id }}">{{ row.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <h1 media="print"></h1>
+        <h4>Линия 2</h4>
+        <table media="print" id="sample_data2" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+
+                <th class="col-xs-1">Время начала простоя</th>
+                <th class="col-xs-1">Время простоя</th>
+                <th class="col-xs-2">Участок</th>
+
+                <th class="col-xs-2">Ответст. подразделение</th>
+                <th class="col-xs-2">Причина</th>
+                <th class="col-xs-2">Комментарий</th>
+            </thead>
+            <tbody>
+            {% for row in table2 %}
+                <tr>
+
+                    <td>{{ row.starttime }}</td>
+                    <td>{{ row.prostoy }}
+                    </td>
+
+                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                    <td data-name="otv_pod" class="otv_pod" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+                    <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                    <td data-name="comment" class="comment" data-type="textarea"
+                        data-pk="{{ row.id }}">{{ row.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+        <style>
+            @media print {
+
+                table{
+                    font-size: xx-small;
+                }
+
+                tr.vertical {
+                    writing-mode: tb-rl;
+                    background: #fff;
+
+                }
+
+                a {
+                    visibility: hidden;
+                }
+            }
+
+            h1 {
+                page-break-before: always
+            }
+
+
+            @page {
+                size: landscape;
+            }
+
+        </style>
+{% endblock %}

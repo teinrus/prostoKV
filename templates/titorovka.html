@@ -1,26 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{#    {% if user.username == 'operator31' %}#}
-{#        {% include 'Line31/line31.html' %}#}
-{#    {% endif %}#}
-{##}
-{#    {% if user.username == 'operator33' %}#}
-{#        {% include 'Line33/line33.html' %}#}
-{#    {% endif %}#}
-{##}
-{##}
-{#    {% if user.username == 'masterS' or user.username == 'admin' %}#}
-{#        {% include 'masterS.html' %}#}
-{#    {% endif %}#}
-{##}
-{##}
-{#    {% if not user.is_authenticated %}#}
-{#        {% include 'Line31/Chart31.html' %}#}
-{##}
-{#        {% include 'Line33/Chart33.html' %}#}
-{#    {% endif %}#}
-{##}
+
+
+    {% if user.username == 'masterS' or user.username == 'admin' %}
+        {% include 'masterS.html' %}
+    {% endif %}
+
+    {% if not user.is_authenticated  %}
+        {% include 'Line31/Chart31.html' %}
+    {% endif %}
+
 
 {% endblock %}
 

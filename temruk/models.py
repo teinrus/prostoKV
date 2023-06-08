@@ -179,16 +179,7 @@ class Speed4(models.Model):
     class Meta:
         verbose_name_plural = "Производительность линии 4"
 
-class bottleExplosion(models.Model):
-    data = models.DateField('Дата')
-    time = models.TimeField('Время')
-    bottle = models.IntegerField('Взрыв')
 
-    def __str__(self):
-        return str(self.data)+'_' + str(self.time)
-
-    class Meta:
-        verbose_name_plural = "Взрывы бутылок"
 
 class bottleExplosion5(models.Model):
     data = models.DateField('Дата')

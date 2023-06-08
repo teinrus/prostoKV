@@ -5,9 +5,10 @@ from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
-from temruk.models import *
+from temruk.models import bottling_plan
+from titorovka.models import *
 from  pyModbusTCP.client import ModbusClient
-slave_address='192.168.88.230'
+slave_address='192.168.94.114'
 port = 502
 unit_id = 1
 modbus_client = ModbusClient(host=slave_address, port=port,unit_id=unit_id,auto_open=True)
@@ -46,7 +47,7 @@ def proc(startSmena, spotSmena, plan, colProduct):
 
 
 # изменение в таблице
-def update4(request):
+def update31(request):
     if request.method == 'POST':
 
         pk = request.POST.get('pk')
@@ -55,43 +56,43 @@ def update4(request):
 
         if name == 'uchastok':
             try:
-                a = Table4.objects.get(id=pk)
+                a = Table1.objects.get(id=pk)
                 a.uchastok = v
                 a.save()
             except:
-                a = Table4(uchastok=v, id=pk)
+                a = Table1(uchastok=v, id=pk)
                 a.save()
         elif name == 'prichina':
             try:
 
-                a = Table4.objects.get(id=pk)
+                a = Table1.objects.get(id=pk)
                 a.prichina = v
                 a.save()
             except:
-                a = Table4(prichina=v, id=pk)
+                a = Table1(prichina=v, id=pk)
                 a.save()
         elif name == 'otv_pod':
             try:
-                a = Table4.objects.get(id=pk)
+                a = Table1.objects.get(id=pk)
                 a.otv_pod = v
                 a.save()
             except:
-                a = Table4(otv_pod=v, id=pk)
+                a = Table1(otv_pod=v, id=pk)
                 a.save()
         elif name == 'comment':
             try:
-                a = Table4.objects.get(id=pk)
+                a = Table1.objects.get(id=pk)
                 a.comment = v
                 a.save()
             except:
-                a = Table4(comment=v, id=pk)
+                a = Table1(comment=v, id=pk)
                 a.save()
 
     return HttpResponse('yes')
 
 
 # получение данных в таблицу
-def update_items4(request):
+def update_items31(request):
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
         spotSmena = datetime.time(16, 30, 0)
@@ -102,33 +103,15 @@ def update_items4(request):
         startSmena = datetime.time(00, 00, 00)
         spotSmena = datetime.time(8, 00, 00)
 
-    table4 = Table4.objects.filter(startdata=datetime.date.today(),
+    table31 = Table1.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
 
-    list = []
-    for table in table4:
-        table_info = {
-            'id': table.id,
-            'startdata': table.startdata,
-            'starttime': table.starttime,
-            'prostoy': table.prostoy,
-
-            'uchastok': table.uchastok,
-            'otv_pod': table.otv_pod,
-            'prichina': table.prichina,
-            'comment': table.comment,
-        }
-        list.append(table_info)
-
-    table_dic = {}
-    table_dic['data'] = list
-
-    return render(request, 'Line4/table_body4.html', {'table4': table4})
+    return render(request, 'Line31/table_body31.html', {'table31': table31})
 
 
 # получение данных для графика и ячеек
-def getData4(requst):
+def getData31(requst):
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
         spotSmena = datetime.time(16, 30, 0)
@@ -144,7 +127,7 @@ def getData4(requst):
 
     try:
         plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-                                         GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
+                                         # GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
                                          ShiftNumber=Smena)
         plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
         if plan== None:
@@ -154,77 +137,82 @@ def getData4(requst):
         plan=31000
 
 
-    table4 = Table4.objects.filter(startdata=datetime.date.today(),
+    table31 = Table1.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
-    speed4 = Speed4.objects.filter(data=datetime.date.today(),
+
+    speed31 = Speed1.objects.filter(data=datetime.date.today(),
                                    time__gte=startSmena,
                                    time__lte=spotSmena)
-    productionOutput4 = ProductionOutput4.objects.filter(data=datetime.date.today(),
+    productionOutput31 = ProductionOutput1.objects.filter(data=datetime.date.today(),
                                                          time__gte=startSmena,
                                                          time__lte=spotSmena)
 
+
+
     try:
-        count4 = 0
+        count31 = 0
         avg = 0
-        for el in speed4:
+        for el in speed31:
             if el.triblok != 0:
-                count4 += 1
+                count31 += 1
                 avg += el.triblok
 
-        avgSpeed = round(avg / count4, 2)
+        avgSpeed31 = round(avg / count31, 2)
     except:
-        avgSpeed = 0
+        avgSpeed31 = 0
     try:
-        sumProstoy = table4.aggregate(Sum('prostoy')).get('prostoy__sum')
+        sumProstoy = table31.aggregate(Sum('prostoy')).get('prostoy__sum')
 
         if (sumProstoy == None):
             sumProstoy = '00:00'
     except:
         sumProstoy = '00:00'
     try:
-        sumProduct4 = productionOutput4.aggregate(Sum('production')).get('production__sum')
-        if (sumProduct4 == None):
-            sumProduct4 = '0'
+        sumProduct31 = productionOutput31.aggregate(Sum('production')).get('production__sum')
+        if (sumProduct31 == None):
+            sumProduct31 = '0'
     except:
-        sumProduct4 = 0
+        sumProduct31 = 0
     try:
-        allProc4 = proc(startSmena, spotSmena, plan, sumProduct4)
+        allProc31 = proc(startSmena, spotSmena, plan, sumProduct31)
     except:
-        allProc4 = 0
+        allProc31 = 0
 
-    lableChart4 = []
-    dataChart4_triblok = []
-    dataChart4_kapsula = []
-    dataChart4_eticetka = []
-    dataChart4_ukladchik = []
-    dataChart4_zakleichik = []
+    lableChart31 = []
+    dataChart31_triblok = []
+    dataChart31_kapsula = []
+    dataChart31_eticetka = []
+    dataChart31_ukladchik = []
+    dataChart31_zakleichik = []
 
-    for sp in speed4:
-        lableChart4.append(str(sp.time))
-        dataChart4_triblok.append(sp.triblok)
-        dataChart4_kapsula.append(sp.kapsula)
-        dataChart4_eticetka.append(sp.eticetka)
-        dataChart4_ukladchik.append(sp.ukladchik)
-        dataChart4_zakleichik.append(sp.zakleichik)
+    for sp in speed31:
+        lableChart31.append(str(sp.time))
+        dataChart31_triblok.append(sp.triblok)
+        dataChart31_kapsula.append(sp.kapsula)
+        dataChart31_eticetka.append(sp.eticetka)
+        dataChart31_ukladchik.append(sp.ukladchik)
+        dataChart31_zakleichik.append(sp.zakleichik)
 
     result = {
-        "allProc4": allProc4,
-        'sumProstoy4': str(sumProstoy),
-        'avgSpeed4': avgSpeed,
-        'sumProduct4': sumProduct4,
+        "allProc31": allProc31,
+        'sumProstoy31': str(sumProstoy),
+        'avgSpeed31': avgSpeed31,
+        'sumProduct31': sumProduct31,
 
-        'lableChart4': lableChart4,
-        'dataChart4_triblok': dataChart4_triblok,
-        'dataChart4_kapsula': dataChart4_kapsula,
-        'dataChart4_eticetka': dataChart4_eticetka,
-        'dataChart4_ukladchik': dataChart4_ukladchik,
-        'dataChart4_zakleichik': dataChart4_zakleichik,
+        'lableChart31': lableChart31,
+        'dataChart31_triblok': dataChart31_triblok,
+        'dataChart31_kapsula': dataChart31_kapsula,
+        'dataChart31_eticetka': dataChart31_eticetka,
+        'dataChart31_ukladchik': dataChart31_ukladchik,
+        'dataChart31_zakleichik': dataChart31_zakleichik,
 
     }
     return JsonResponse(result)
-def getBtn4(requst):
-    buttons_reg = modbus_client.read_input_registers(1)
+
+def getBtn31(requst):
+
+    buttons_reg = modbus_client.read_input_registers(0)
     result = {
         'buttons_reg':buttons_reg
               }

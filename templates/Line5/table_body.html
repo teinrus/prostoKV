@@ -3,7 +3,6 @@
 
 {% for row in table5|dictsort:"id"  reversed %}
     <tr>
-        <td data-pk="{{ row.id }}">{{ row.id }}</td>
         <td data-name="startdata" class="startdata" data-type="text"
             data-pk="{{ row.id }}">{{ row.startdata }}</td>
         <td data-name="starttime" class="starttime" data-type="text"

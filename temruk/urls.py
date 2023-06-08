@@ -30,6 +30,7 @@ urlpatterns = [
     path('getBtn5', views5.getBtn5, name='getBtn5'),
 
     path('otchet', views.otchet, name='otchet'),
+    path('otchetSmena', views.otchetSmena, name='otchetSmena'),
 
     path('start_perenaladka5/', start_perenaladka5, name='start_perenaladka5'),
     path('start_donaladka5/', start_donaladka5, name='start_donaladka5'),
