@@ -69,15 +69,18 @@
     <ul class="ul-bar">
 
         <li>
+             {% if not user.username  ==  'masterS'%}
             <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'temruk' %}'">
                 Темрюк
             </button>
+            {% endif %}
         </li>
         <li>
+             {% if not user.username  ==  'master'%}
             <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'titorovka' %}'">
                 Старотиторовская
             </button>
-
+            {% endif %}
 
         <li>
             {% if request.get_full_path == "/temruk" or request.get_full_path == " " %}
@@ -95,10 +98,11 @@
         </li>
 
         <li>
+            {% if user.username == 'master' or user.username == 'admin' %}
             <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchetSmena' %}'">
                 Сменный отчет
             </button>
-
+            {% endif %}
         </li>
         <li>
             {% if user.is_authenticated %}
