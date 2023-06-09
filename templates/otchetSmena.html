@@ -133,32 +133,30 @@
                 <li>Сливы:</li>
 
             </th>
+
             <th><div  style="font-size:small">{{ sumProstoy2 }}</div></th>
                 <tr class="vertical">
 
 
 
-                    <th>Итого:</th>
+                    <th style="height: 70px"></th>
 
-                <th class="col-xs-2"></th>
+                <th class="col-xs-2" ></th>
 
-            <th>{% for el in plan2 %}
-                <li style="font-size:small" >{{ itog_plan}}</li>
-            {% endfor %} </th>
-            <th class="col-xs-1"><div  style="font-size:small">{{ itog_fact }}</div></th>
+            <th></th>
+            <th class="col-xs-1"><div  style="font-size:small"></div></th>
             <th class="col-xs-1">
-                <div  style="font-size:small">{{ itog_otcl }}</div>
+                <div  style="font-size:small"></div>
             </th>
             <th class="col-xs-1">
-                <div  style="font-size:small">{{ itog_proc }}%</div>
+                <div  style="font-size:small"></div>
 
             </th>
             <th>
-                Факт:
 
             </th>
             <th>
-                План:
+
 
             </th>
             <th class="col-xs-2">
@@ -167,6 +165,42 @@
             </th>
             <th><div  style="font-size:small"></div></th>
                 <tr class="vertical">
+                    <th style="height: 50px">Итого:</th>
+
+                    <th class="col-xs-2"></th>
+
+                    <th>{% for el in plan2 %}
+                        <li style="font-size:small">{{ itog_plan }}</li>
+                    {% endfor %} </th>
+                    <th class="col-xs-1">
+                        <div style="font-size:small">{{ itog_fact }}</div>
+                    </th>
+                    <th class="col-xs-1">
+                        <div style="font-size:small">{{ itog_otcl }}</div>
+                    </th>
+                    <th class="col-xs-1">
+                        <div style="font-size:small">{{ itog_proc }}%</div>
+
+                    </th>
+                    <th>
+                        Факт:
+
+                    </th>
+                    <th>
+                        План:
+
+                    </th>
+                    <th class="col-xs-2">
+
+
+                    </th>
+                    <th>
+                        <div style="font-size:small"></div>
+                    </th>
+        <tr class="vertical">
+
+
+
 
 
 
