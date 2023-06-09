@@ -29,9 +29,12 @@
 
         <tr class="vertical">
             <th>5</th>
-            {% for el in nomenklatura %}
-                <th class="col-xs-2">{{ el }}</th>
-            {% endfor %}
+
+                <th class="col-xs-2">{% for el in nomenklatura %}
+                    <li style="font-size:small" > {{ el }} </li>
+                {% endfor %}
+                </th>
+
             <th>{% for el in plan %}
                 <li style="font-size:small" >{{ el.Quantity }}</li>
             {% endfor %} </th>
@@ -64,9 +67,10 @@
                 <tr class="vertical">
 
             <th>4</th>
-            {% for el in nomenklatura4 %}
-                <th class="col-xs-2">{{ el }}</th>
-            {% endfor %}
+                    <th class="col-xs-2">{% for el in nomenklatura4 %}
+                    <li style="font-size:small" > {{ el }} </li>
+                {% endfor %}
+                </th>
             <th>{% for el in plan4 %}
                 <li style="font-size:small" >{{ el.Quantity }}</li>
             {% endfor %} </th>
@@ -98,9 +102,10 @@
                 <tr class="vertical">
 
                     <th>2</th>
-            {% for el in nomenklatura2 %}
-                <th class="col-xs-2">{{ el }}</th>
-            {% endfor %}
+                     <th class="col-xs-2">{% for el in nomenklatura2 %}
+                    <li style="font-size:small" > {{ el }} </li>
+                {% endfor %}
+                </th>
             <th>{% for el in plan2 %}
                 <li style="font-size:small" >{{ el.Quantity }}</li>
             {% endfor %} </th>

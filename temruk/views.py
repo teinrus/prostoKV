@@ -774,7 +774,9 @@ def otchetSmena(request):
 
     try:
         for el in plan:
-            nomenklatura=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
+            nomenklatura+=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
+
+
     except:
         nomenklatura= "План отсутствует"
 
@@ -789,7 +791,7 @@ def otchetSmena(request):
 
     try:
         for el in plan4:
-            nomenklatura4=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
+            nomenklatura4+=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
 
     except:
         nomenklatura4= "План отсутствует"
@@ -805,8 +807,8 @@ def otchetSmena(request):
 
     try:
         for el in plan2:
-            print(el)
-            nomenklatura2=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
+
+            nomenklatura2+=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
 
     except:
         nomenklatura2= "План отсутствует"
