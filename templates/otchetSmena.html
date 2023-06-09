@@ -9,7 +9,7 @@
 
     <table class="table table-bordered table-striped">
         <thead>
-         <th colspan="3"> ОП Темрюк ООО "Кубань-вино"</th>
+         <th colspan="5"> ОП Темрюк ООО "Кубань-вино"</th>
          <th colspan="3"> План-факт выполнения работ</th>
          <th colspan="4">Дата:{{ dataTemp }}, смена: {{ smena }} </th>
         </thead>
@@ -17,10 +17,14 @@
         <tbody>
         <th> №</th>
         <th>Номенклатура:</th>
-        <th>План продукции:</th>
+
+        <th style="width: 50px">Партия</th>
+        <th >Акратофор</th>
+
+        <th class="plan-prod">План продукции:</th>
         <th>Факт продукции:</th>
         <th>Отклонение:</th>
-        <th>Процент выполнения:</th>
+        <th style="width: 50px">Процент:</th>
         <th colspan="2">Количество людей:</th>
         <th class="col-xs-2">Доп информация:</th>
         <th>Время простоя:</th>
@@ -34,7 +38,8 @@
                     <li> {{ el }} </li>
                 {% endfor %}
                 </th>
-
+            <th></th>
+        <th></th>
             <th>{% for el in plan %}
                 <li style="font-size:small" >{{ el.Quantity }}</li>
             {% endfor %} </th>
@@ -71,6 +76,8 @@
                     <li> {{ el }} </li>
                 {% endfor %}
                 </th>
+                <th></th>
+        <th></th>
             <th>{% for el in plan4 %}
                 <li style="font-size:small" >{{ el.Quantity }}</li>
             {% endfor %} </th>
@@ -106,6 +113,8 @@
                     <li> {{ el }} </li>
                 {% endfor %}
                 </th>
+                <th></th>
+        <th></th>
             <th>{% for el in plan2 %}
                 <li style="font-size:small" >{{ el.Quantity }}</li>
             {% endfor %} </th>
@@ -145,6 +154,8 @@
 
             <th></th>
             <th class="col-xs-1"><div  style="font-size:small"></div></th>
+                    <th></th>
+        <th></th>
             <th class="col-xs-1">
                 <div  style="font-size:small"></div>
             </th>
@@ -159,7 +170,7 @@
 
 
             </th>
-            <th class="col-xs-2">
+            <th >
 
 
             </th>
@@ -167,11 +178,13 @@
                 <tr class="vertical">
                     <th style="height: 50px">Итого:</th>
 
-                    <th class="col-xs-2"></th>
-
-                    <th>{% for el in plan2 %}
+                    <th></th>
+<th class="col-xs-1"></th>
+        <th></th>
+                    <th class="col-xs-1">{% for el in plan2 %}
                         <li style="font-size:small">{{ itog_plan }}</li>
                     {% endfor %} </th>
+
                     <th class="col-xs-1">
                         <div style="font-size:small">{{ itog_fact }}</div>
                     </th>
