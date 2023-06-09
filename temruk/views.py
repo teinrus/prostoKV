@@ -927,9 +927,26 @@ def otchetSmena(request):
     except:
         avgSpeed2=0
 
+    try:
+        itog_plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')+\
+                  plan4.aggregate(Sum('Quantity')).get('Quantity__sum')+\
+                  plan2.aggregate(Sum('Quantity')).get('Quantity__sum')
+    except:
+        itog_plan=0
+    try:
+        itog_fact=prod5.aggregate(Sum('production')).get('production__sum')+\
+                  prod4.aggregate(Sum('production')).get('production__sum')+\
+                  prod2.aggregate(Sum('production')).get('production__sum')
+    except:
+        itog_fact=0
+    itog_otcl=itog_fact-itog_plan
+    itog_proc=int(itog_fact / itog_plan* 100)
     return render(request, "otchetSmena.html", {
 
-
+        "itog_plan": itog_plan,
+        "itog_fact": itog_fact,
+        "itog_otcl": itog_otcl,
+        "itog_proc": itog_proc,
 
         'otklonenie':otklonenie,
         'otklonenie4': otklonenie4,

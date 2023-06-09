@@ -302,6 +302,8 @@ def Sotchet(request):
         'form': form,
 
 
+
+
         'line':line,
         'smena':smena,
         'nachaloOt':nachaloOt,
