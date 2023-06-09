@@ -928,21 +928,58 @@ def otchetSmena(request):
         avgSpeed2 = round((allProd2 / timeWork2.total_seconds() * 3600), 2)
     except:
         avgSpeed2=0
+    try:
+        plan_t5=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+        if plan_t5== None:
+            plan_t5=0
+    except:
+        plan_t5=0
+    try:
+        plan_t4 = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+        if plan_t4 == None:
+            plan_t4 = 0
+    except:
+        plan_t4 = 0
+    try:
+        plan_t2 = plan2.aggregate(Sum('Quantity')).get('Quantity__sum')
+        if plan_t2 == None:
+            plan_t2 = 0
+    except:
+        plan_t2 = 0
+
 
     try:
-        itog_plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')+\
-                  plan4.aggregate(Sum('Quantity')).get('Quantity__sum')+\
-                  plan2.aggregate(Sum('Quantity')).get('Quantity__sum')
+        itog_plan=plan_t5+plan_t4+plan_t2
+
     except:
         itog_plan=0
+
     try:
-        itog_fact=prod5.aggregate(Sum('production')).get('production__sum')+\
-                  prod4.aggregate(Sum('production')).get('production__sum')+\
-                  prod2.aggregate(Sum('production')).get('production__sum')
+        itog_fact5 =prod5.aggregate(Sum('production')).get('production__sum')
+        if itog_fact5 == None:
+            itog_fact5 = 0
+    except:
+        itog_fact5 = 0
+    try:
+        itog_fact4 =prod4.aggregate(Sum('production')).get('production__sum')
+        if itog_fact4 == None:
+            itog_fact4 = 0
+    except:
+        itog_fact4 = 0
+    try:
+        itog_fact2 =prod2.aggregate(Sum('production')).get('production__sum')
+        if itog_fact2 == None:
+            itog_fact2 = 0
+    except:
+        itog_fact2 = 0
+    try:
+        itog_fact=itog_fact2+itog_fact4+itog_fact5
     except:
         itog_fact=0
-    itog_otcl=itog_fact-itog_plan
-    itog_proc=int(itog_fact / itog_plan* 100)
+
+    itog_otcl=otklonenie+otklonenie4+otklonenie2
+    itog_proc=int(itog_plan/itog_fact*100)
+
     return render(request, "otchetSmena.html", {
 
         "itog_plan": itog_plan,
