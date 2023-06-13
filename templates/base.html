@@ -69,7 +69,7 @@
     <ul class="ul-bar">
 
         <li>
-             {% if not user.username  ==  'masterS'%}
+             {% if not user.username  ==  'masterS' and not user.username  ==  'naladchikS' %}
             <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'temruk' %}'">
                 Темрюк
             </button>
