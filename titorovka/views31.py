@@ -127,12 +127,11 @@ def getData31(requst):
 
     try:
         plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-                                         # GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
+                                         GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
                                          ShiftNumber=Smena)
         plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
         if plan== None:
             plan=31000
-        # print(plan)
     except:
         plan=31000
 
