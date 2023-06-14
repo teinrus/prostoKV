@@ -680,6 +680,7 @@ def otchet(request):
 
 def otchetSmena(request):
     nomenklatura=[]
+    nomenklatura1 = []
     nomenklatura4=[]
     nomenklatura2=[]
 
@@ -776,9 +777,10 @@ def otchetSmena(request):
         for el in plan:
             nomenklatura+=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
 
-
+        len5=len(nomenklatura)
     except:
         nomenklatura= "План отсутствует"
+        len5=0
 
 
     try:
@@ -792,9 +794,10 @@ def otchetSmena(request):
     try:
         for el in plan4:
             nomenklatura4+=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
-
+        len4 = len(nomenklatura4)
     except:
         nomenklatura4= "План отсутствует"
+        len4 =0
 
     try:
         plan2 = bottling_plan.objects.filter(Data__gte=start_data,
@@ -809,9 +812,10 @@ def otchetSmena(request):
         for el in plan2:
 
             nomenklatura2+=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
-
+        len2 = len(nomenklatura2)
     except:
         nomenklatura2= "План отсутствует"
+        len4 = 0
 
 
 
@@ -1012,6 +1016,10 @@ def otchetSmena(request):
         'nomenklatura':     nomenklatura,
         'nomenklatura4':    nomenklatura4,
         'nomenklatura2':    nomenklatura2,
+
+        "len5":len5,
+        "len4": len4,
+        "len2": len2,
 
         'plan':             plan,
         'plan4':            plan4,

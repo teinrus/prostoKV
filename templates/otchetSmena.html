@@ -9,9 +9,9 @@
 
     <table class="table table-bordered table-striped">
         <thead>
-         <th colspan="5"> ОП Темрюк ООО "Кубань-вино"</th>
-         <th colspan="3"> План-факт выполнения работ</th>
-         <th colspan="4">Дата:{{ dataTemp }}, смена: {{ smena }} </th>
+        <th colspan="5"> ОП Темрюк ООО "Кубань-вино"</th>
+        <th colspan="3"> План-факт выполнения работ</th>
+        <th colspan="4">Дата:{{ dataTemp }}, смена: {{ smena }} </th>
         </thead>
 
         <tbody>
@@ -19,7 +19,7 @@
         <th>Номенклатура:</th>
 
         <th style="width: 50px">Партия</th>
-        <th >Акратофор</th>
+        <th>Акратофор</th>
 
         <th class="plan-prod">План продукции:</th>
         <th>Факт продукции:</th>
@@ -30,25 +30,27 @@
         <th>Время простоя:</th>
 
 
-
-        <tr class="vertical">
+        {% if len5 > 0 %}
+            <tr class="vertical">
             <th>5</th>
 
-                <th class="col-xs-2"  style="font-size:xx-small">{% for el in nomenklatura %}
-                    <li> {{ el }} </li>
-                {% endfor %}
-                </th>
+            <th class="col-xs-2" style="font-size:xx-small">{% for el in nomenklatura %}
+                <li> {{ el }} </li>
+            {% endfor %}
+            </th>
             <th></th>
-        <th></th>
+            <th></th>
             <th>{% for el in plan %}
-                <li style="font-size:small" >{{ el.Quantity }}</li>
+                <li style="font-size:small">{{ el.Quantity }}</li>
             {% endfor %} </th>
-            <th class="col-xs-1"><div  style="font-size:small">{{ allProd }}</div></th>
             <th class="col-xs-1">
-                <div  style="font-size:small">{{ otklonenie }}</div>
+                <div style="font-size:small">{{ allProd }}</div>
             </th>
             <th class="col-xs-1">
-                <div  style="font-size:small">{{ procent }}%</div>
+                <div style="font-size:small">{{ otklonenie }}</div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small">{{ procent }}%</div>
 
             </th>
             <th>
@@ -68,25 +70,31 @@
                 <li>Сливы:</li>
 
             </th>
-            <th><div  style="font-size:small">{{ sumProstoy }}</div></th>
-                <tr class="vertical">
+            <th>
+                <div style="font-size:small">{{ sumProstoy }}</div>
+            </th>
+        {% endif %}
+        {% if len4 > 0 %}
+            <tr class="vertical">
 
             <th>4</th>
-                    <th class="col-xs-2"  style="font-size:xx-small">{% for el in nomenklatura4 %}
-                    <li> {{ el }} </li>
-                {% endfor %}
-                </th>
-                <th></th>
-        <th></th>
+            <th class="col-xs-2" style="font-size:xx-small">{% for el in nomenklatura4 %}
+                <li> {{ el }} </li>
+            {% endfor %}
+            </th>
+            <th></th>
+            <th></th>
             <th>{% for el in plan4 %}
-                <li style="font-size:small" >{{ el.Quantity }}</li>
+                <li style="font-size:small">{{ el.Quantity }}</li>
             {% endfor %} </th>
-            <th class="col-xs-1"><div  style="font-size:small">{{ allProd4 }}</div></th>
             <th class="col-xs-1">
-                <div  style="font-size:small">{{ otklonenie4 }}</div>
+                <div style="font-size:small">{{ allProd4 }}</div>
             </th>
             <th class="col-xs-1">
-                <div  style="font-size:small">{{ procent4 }}%</div>
+                <div style="font-size:small">{{ otklonenie4 }}</div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small">{{ procent4 }}%</div>
 
             </th>
             <th>
@@ -105,25 +113,31 @@
                 <li>Сливы:</li>
 
             </th>
-            <th><div  style="font-size:small">{{ sumProstoy4 }}</div></th>
-                <tr class="vertical">
+            <th>
+                <div style="font-size:small">{{ sumProstoy4 }}</div>
+            </th>
+        {% endif %}
+        {% if len2 > 0 %}
+            <tr class="vertical">
 
-                    <th>2</th>
-                     <th class="col-xs-2"  style="font-size:xx-small">{% for el in nomenklatura2 %}
-                    <li> {{ el }} </li>
-                {% endfor %}
-                </th>
-                <th></th>
-        <th></th>
+            <th>2</th>
+            <th class="col-xs-2" style="font-size:xx-small">{% for el in nomenklatura2 %}
+                <li> {{ el }} </li>
+            {% endfor %}
+            </th>
+            <th></th>
+            <th></th>
             <th>{% for el in plan2 %}
-                <li style="font-size:small" >{{ el.Quantity }}</li>
+                <li style="font-size:small">{{ el.Quantity }}</li>
             {% endfor %} </th>
-            <th class="col-xs-1"><div  style="font-size:small">{{ allProd2 }}</div></th>
             <th class="col-xs-1">
-                <div  style="font-size:small">{{ otklonenie2 }}</div>
+                <div style="font-size:small">{{ allProd2 }}</div>
             </th>
             <th class="col-xs-1">
-                <div  style="font-size:small">{{ procent2 }}%</div>
+                <div style="font-size:small">{{ otklonenie2 }}</div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small">{{ procent2 }}%</div>
 
             </th>
             <th>
@@ -143,24 +157,27 @@
 
             </th>
 
-            <th><div  style="font-size:small">{{ sumProstoy2 }}</div></th>
-                <tr class="vertical">
+            <th>
+                <div style="font-size:small">{{ sumProstoy2 }}</div>
+            </th>
+        {% endif %}
+        {% if len5 == 0 %}
+                    <tr class="vertical">
+            <th style="height: 70px"></th>
 
-
-
-                    <th style="height: 70px"></th>
-
-                <th class="col-xs-2" ></th>
+            <th class="col-xs-2"></th>
 
             <th></th>
-            <th class="col-xs-1"><div  style="font-size:small"></div></th>
-                    <th></th>
-        <th></th>
             <th class="col-xs-1">
-                <div  style="font-size:small"></div>
+                <div style="font-size:small"></div>
+            </th>
+            <th></th>
+            <th></th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
             </th>
             <th class="col-xs-1">
-                <div  style="font-size:small"></div>
+                <div style="font-size:small"></div>
 
             </th>
             <th>
@@ -170,52 +187,169 @@
 
 
             </th>
-            <th >
+            <th>
 
 
             </th>
-            <th><div  style="font-size:small"></div></th>
-                <tr class="vertical">
-                    <th style="height: 50px">Итого:</th>
-
-                    <th></th>
-<th class="col-xs-1"></th>
-        <th></th>
-                    <th class="col-xs-1">
-                        <li style="font-size:small"></li>
-                   </th>
-
-                    <th class="col-xs-1">
-                        <div style="font-size:small">{{ itog_fact }}</div>
-                    </th>
-                    <th class="col-xs-1">
-                        <div style="font-size:small">{{ itog_otcl }}</div>
-                    </th>
-                    <th class="col-xs-1">
-                        <div style="font-size:small">{{ itog_proc }}%</div>
-
-                    </th>
-                    <th>
-                        Факт:
-
-                    </th>
-                    <th>
-                        План:
-
-                    </th>
-                    <th class="col-xs-2">
+            <th>
+                <div style="font-size:small"></div>
+            </th>
 
 
-                    </th>
-                    <th>
-                        <div style="font-size:small"></div>
-                    </th>
+        </tr>
+        {% endif %}
+        {% if len4 == 0 %}
+                    <tr class="vertical">
+            <th style="height: 70px"></th>
+
+            <th class="col-xs-2"></th>
+
+            <th></th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th></th>
+            <th></th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+
+            </th>
+            <th>
+
+
+            </th>
+            <th>
+                <div style="font-size:small"></div>
+            </th>
+
+
+        </tr>
+        {% endif %}
+        {% if len2 == 0 %}
+                    <tr class="vertical">
+            <th style="height: 70px"></th>
+
+            <th class="col-xs-2"></th>
+
+            <th></th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th></th>
+            <th></th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+
+            </th>
+            <th>
+
+
+            </th>
+            <th>
+                <div style="font-size:small"></div>
+            </th>
+
+
+        </tr>
+        {% endif %}
+
+
+
+
+
         <tr class="vertical">
 
 
+            <th style="height: 70px"></th>
+
+            <th class="col-xs-2"></th>
+
+            <th></th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th></th>
+            <th></th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+
+            </th>
+            <th>
+
+            </th>
+            <th>
 
 
+            </th>
+            <th>
 
+
+            </th>
+            <th>
+                <div style="font-size:small"></div>
+            </th>
+
+
+        <tr class="vertical">
+            <th style="height: 50px">Итого:</th>
+
+            <th></th>
+            <th class="col-xs-1"></th>
+            <th></th>
+            <th class="col-xs-1">
+                <li style="font-size:small"></li>
+            </th>
+
+            <th class="col-xs-1">
+                <div style="font-size:small">{{ itog_fact }}</div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small">{{ itog_otcl }}</div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small">{{ itog_proc }}%</div>
+
+            </th>
+            <th>
+                Факт:
+
+            </th>
+            <th>
+                План:
+
+            </th>
+            <th class="col-xs-2">
+
+
+            </th>
+            <th>
+                <div style="font-size:small"></div>
+            </th>
+        </tr>
+        <tr>
 
         </tbody>
     </table>
@@ -223,150 +357,150 @@
     _________________________________________________________________________________________________________________________
 
 
-        <h5>Мастер цеха(розлива):________________________________</h5>
-        <h5>Слесарь наладчик:___________________________________</h5>
-        <h5>Спец.помарочного учета:______________________________</h5>
-        <a media="print" onclick="window.print()" style="margin-top: 20px;">Распечатать
-        </a>
-        <h1 media="print"></h1>
-        <h4>Линия 5</h4>
-        <table media="print" class="table table-bordered table-striped">
-            <thead>
+    <h5>Мастер цеха(розлива):________________________________</h5>
+    <h5>Слесарь наладчик:___________________________________</h5>
+    <h5>Спец.помарочного учета:______________________________</h5>
+    <a media="print" onclick="window.print()" style="margin-top: 20px;">Распечатать
+    </a>
+    <h1 media="print"></h1>
+    <h4>Линия 5</h4>
+    <table media="print" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+
+            <th class="col-xs-1">Время начала простоя</th>
+            <th class="col-xs-1">Время простоя</th>
+            <th class="col-xs-2">Участок</th>
+
+            <th class="col-xs-2">Ответст. подразделение</th>
+            <th class="col-xs-2">Причина</th>
+            <th class="col-xs-2">Комментарий</th>
+        </thead>
+        <tbody>
+        {% for row in table5 %}
             <tr>
 
-                <th class="col-xs-1">Время начала простоя</th>
-                <th class="col-xs-1">Время простоя</th>
-                <th class="col-xs-2">Участок</th>
+                <td>{{ row.starttime }}</td>
+                <td>{{ row.prostoy }}
+                </td>
 
-                <th class="col-xs-2">Ответст. подразделение</th>
-                <th class="col-xs-2">Причина</th>
-                <th class="col-xs-2">Комментарий</th>
-            </thead>
-            <tbody>
-            {% for row in table5 %}
-                <tr>
+                <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                <td data-name="otv_pod" class="otv_pod" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.otv_pod }}
+                </td>
+                <td data-name="prichina" class="prichina" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.prichina }}</td>
 
-                    <td>{{ row.starttime }}</td>
-                    <td>{{ row.prostoy }}
-                    </td>
+                <td data-name="comment" class="comment" data-type="textarea"
+                    data-pk="{{ row.id }}">{{ row.comment }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <h1 media="print"></h1>
+    <h4>Линия 4</h4>
+    <table media="print" id="sample_data4" class="table table-bordered table-striped">
+        <thead>
+        <tr>
 
-                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
-                    <td data-name="otv_pod" class="otv_pod" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.otv_pod }}
-                    </td>
-                    <td data-name="prichina" class="prichina" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+            <th class="col-xs-1">Время начала простоя</th>
+            <th class="col-xs-1">Время простоя</th>
+            <th class="col-xs-2">Участок</th>
 
-                    <td data-name="comment" class="comment" data-type="textarea"
-                        data-pk="{{ row.id }}">{{ row.comment }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <h1 media="print"></h1>
-        <h4>Линия 4</h4>
-        <table media="print" id="sample_data4" class="table table-bordered table-striped">
-            <thead>
+            <th class="col-xs-2">Ответст. подразделение</th>
+            <th class="col-xs-2">Причина</th>
+            <th class="col-xs-2">Комментарий</th>
+        </thead>
+        <tbody>
+        {% for row in table4 %}
             <tr>
 
-                <th class="col-xs-1">Время начала простоя</th>
-                <th class="col-xs-1">Время простоя</th>
-                <th class="col-xs-2">Участок</th>
+                <td>{{ row.starttime }}</td>
+                <td>{{ row.prostoy }}
+                </td>
 
-                <th class="col-xs-2">Ответст. подразделение</th>
-                <th class="col-xs-2">Причина</th>
-                <th class="col-xs-2">Комментарий</th>
-            </thead>
-            <tbody>
-            {% for row in table4 %}
-                <tr>
+                <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                <td data-name="otv_pod" class="otv_pod" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.otv_pod }}
+                </td>
+                <td data-name="prichina" class="prichina" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.prichina }}</td>
 
-                    <td>{{ row.starttime }}</td>
-                    <td>{{ row.prostoy }}
-                    </td>
+                <td data-name="comment" class="comment" data-type="textarea"
+                    data-pk="{{ row.id }}">{{ row.comment }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <h1 media="print"></h1>
+    <h4>Линия 2</h4>
+    <table media="print" id="sample_data2" class="table table-bordered table-striped">
+        <thead>
+        <tr>
 
-                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
-                    <td data-name="otv_pod" class="otv_pod" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.otv_pod }}
-                    </td>
-                    <td data-name="prichina" class="prichina" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+            <th class="col-xs-1">Время начала простоя</th>
+            <th class="col-xs-1">Время простоя</th>
+            <th class="col-xs-2">Участок</th>
 
-                    <td data-name="comment" class="comment" data-type="textarea"
-                        data-pk="{{ row.id }}">{{ row.comment }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <h1 media="print"></h1>
-        <h4>Линия 2</h4>
-        <table media="print" id="sample_data2" class="table table-bordered table-striped">
-            <thead>
+            <th class="col-xs-2">Ответст. подразделение</th>
+            <th class="col-xs-2">Причина</th>
+            <th class="col-xs-2">Комментарий</th>
+        </thead>
+        <tbody>
+        {% for row in table2 %}
             <tr>
 
-                <th class="col-xs-1">Время начала простоя</th>
-                <th class="col-xs-1">Время простоя</th>
-                <th class="col-xs-2">Участок</th>
+                <td>{{ row.starttime }}</td>
+                <td>{{ row.prostoy }}
+                </td>
 
-                <th class="col-xs-2">Ответст. подразделение</th>
-                <th class="col-xs-2">Причина</th>
-                <th class="col-xs-2">Комментарий</th>
-            </thead>
-            <tbody>
-            {% for row in table2 %}
-                <tr>
+                <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                <td data-name="otv_pod" class="otv_pod" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.otv_pod }}
+                </td>
+                <td data-name="prichina" class="prichina" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.prichina }}</td>
 
-                    <td>{{ row.starttime }}</td>
-                    <td>{{ row.prostoy }}
-                    </td>
-
-                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
-                    <td data-name="otv_pod" class="otv_pod" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.otv_pod }}
-                    </td>
-                    <td data-name="prichina" class="prichina" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
-
-                    <td data-name="comment" class="comment" data-type="textarea"
-                        data-pk="{{ row.id }}">{{ row.comment }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                <td data-name="comment" class="comment" data-type="textarea"
+                    data-pk="{{ row.id }}">{{ row.comment }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 
-        <style>
-            @media print {
+    <style>
+        @media print {
 
-                table{
-                    font-size: xx-small;
-                }
-
-                tr.vertical {
-                    writing-mode: tb-rl;
-                    background: #fff;
-
-                }
-
-                a {
-                    visibility: hidden;
-                }
+            table {
+                font-size: xx-small;
             }
 
-            h1 {
-                page-break-before: always
+            tr.vertical {
+                writing-mode: tb-rl;
+                background: #fff;
+
             }
 
-
-            @page {
-                size: landscape;
+            a {
+                visibility: hidden;
             }
+        }
 
-        </style>
+        h1 {
+            page-break-before: always
+        }
+
+
+        @page {
+            size: landscape;
+        }
+
+    </style>
 {% endblock %}
