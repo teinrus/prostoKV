@@ -1008,7 +1008,7 @@ def otchetSmena(request):
         itog_fact=0
 
     itog_otcl=otklonenie+otklonenie4+otklonenie2
-    itog_proc=int(itog_plan/itog_fact*100)
+    itog_proc=int(itog_fact/itog_plan*100)
 
     return render(request, "otchetSmena.html", {
 
