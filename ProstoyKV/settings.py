@@ -75,7 +75,7 @@ DATABASES = {
     },
     'titorovka_db': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'titorovka',
+        'NAME': 'stit',
         'USER': 'postgres',
         'PASSWORD': '12345',
         'HOST': '192.168.94.115',

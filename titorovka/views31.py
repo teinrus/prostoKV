@@ -56,36 +56,36 @@ def update31(request):
 
         if name == 'uchastok':
             try:
-                a = Table1.objects.get(id=pk)
+                a = Table31.objects.get(id=pk)
                 a.uchastok = v
                 a.save()
             except:
-                a = Table1(uchastok=v, id=pk)
+                a = Table31(uchastok=v, id=pk)
                 a.save()
         elif name == 'prichina':
             try:
 
-                a = Table1.objects.get(id=pk)
+                a = Table31.objects.get(id=pk)
                 a.prichina = v
                 a.save()
             except:
-                a = Table1(prichina=v, id=pk)
+                a = Table31(prichina=v, id=pk)
                 a.save()
         elif name == 'otv_pod':
             try:
-                a = Table1.objects.get(id=pk)
+                a = Table31.objects.get(id=pk)
                 a.otv_pod = v
                 a.save()
             except:
-                a = Table1(otv_pod=v, id=pk)
+                a = Table31(otv_pod=v, id=pk)
                 a.save()
         elif name == 'comment':
             try:
-                a = Table1.objects.get(id=pk)
+                a = Table31.objects.get(id=pk)
                 a.comment = v
                 a.save()
             except:
-                a = Table1(comment=v, id=pk)
+                a = Table31(comment=v, id=pk)
                 a.save()
 
     return HttpResponse('yes')
@@ -103,7 +103,7 @@ def update_items31(request):
         startSmena = datetime.time(00, 00, 00)
         spotSmena = datetime.time(8, 00, 00)
 
-    table31 = Table1.objects.filter(startdata=datetime.date.today(),
+    table31 = Table31.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
 
@@ -136,14 +136,14 @@ def getData31(requst):
         plan=31000
 
 
-    table31 = Table1.objects.filter(startdata=datetime.date.today(),
+    table31 = Table31.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
 
-    speed31 = Speed1.objects.filter(data=datetime.date.today(),
+    speed31 = Speed31.objects.filter(data=datetime.date.today(),
                                    time__gte=startSmena,
                                    time__lte=spotSmena)
-    productionOutput31 = ProductionOutput1.objects.filter(data=datetime.date.today(),
+    productionOutput31 = ProductionOutput31.objects.filter(data=datetime.date.today(),
                                                          time__gte=startSmena,
                                                          time__lte=spotSmena)
 

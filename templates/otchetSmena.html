@@ -161,6 +161,50 @@
                 <div style="font-size:small">{{ sumProstoy2 }}</div>
             </th>
         {% endif %}
+                {% if len1 > 0 %}
+            <tr class="vertical">
+
+            <th>1</th>
+            <th class="col-xs-2" style="font-size:xx-small">{% for el in nomenklatura1 %}
+                <li> {{ el }} </li>
+            {% endfor %}
+            </th>
+            <th></th>
+            <th></th>
+            <th>{% for el in plan1 %}
+                <li style="font-size:small">{{ el.Quantity }}</li>
+            {% endfor %} </th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small">___%</div>
+
+            </th>
+            <th>
+                Факт:
+
+            </th>
+            <th>
+                План:
+
+            </th>
+            <th class="col-xs-2">
+                <li>Производительность: </li>
+                <li>Недоливы:</li>
+                <li>Переливы:</li>
+
+                <li>Сливы:</li>
+
+            </th>
+
+            <th>
+                <div style="font-size:small"></div>
+            </th>
+        {% endif %}
         {% if len5 == 0 %}
                     <tr class="vertical">
             <th style="height: 70px"></th>
@@ -272,6 +316,43 @@
 
         </tr>
         {% endif %}
+                {% if len1 == 0 %}
+                    <tr class="vertical">
+            <th style="height: 70px"></th>
+
+            <th class="col-xs-2"></th>
+
+            <th></th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th></th>
+            <th></th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+            </th>
+            <th class="col-xs-1">
+                <div style="font-size:small"></div>
+
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+
+            </th>
+            <th>
+
+
+            </th>
+            <th>
+                <div style="font-size:small"></div>
+            </th>
+
+
+        </tr>
+        {% endif %}
 
 
 
@@ -320,7 +401,7 @@
             <th class="col-xs-1"></th>
             <th></th>
             <th class="col-xs-1">
-                <li style="font-size:small"></li>
+                <li style="font-size:small">{{ itog_plan }}</li>
             </th>
 
             <th class="col-xs-1">

@@ -103,7 +103,7 @@ def temruk(request):
 
     prich = list(prichAll.values())
     uch = uchastok.objects.all()
-    uch_vino=uchastok.objects.exclude(uchastok="Мюзле")
+    uch_vino=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
     return render(request, "temruk.html", {
 
         'otv_p':otv_p ,
@@ -629,7 +629,7 @@ def otchet(request):
 
 
     uch = uchastok.objects.all()
-    uch_vino=uchastok.objects.exclude(uchastok="Мюзле")
+    uch_vino=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
 
     prichAll = prichina.objects.all()
     podrazdeleniaEl = []
@@ -685,7 +685,7 @@ def otchetSmena(request):
     nomenklatura2=[]
 
     if  datetime.time(hour=8)< datetime.datetime.now().time()<datetime.time(hour=16,minute=30):
-        print('3')
+
         smena=3
         start_data = datetime.datetime.today()
         finish_data = datetime.datetime.today()
@@ -696,7 +696,7 @@ def otchetSmena(request):
 
 
     elif datetime.datetime.now().time()>datetime.time(hour=16,minute=29):
-        print('1')
+
         smena = 1
         start_data = datetime.datetime.today()
         finish_data = datetime.datetime.today()
@@ -705,7 +705,7 @@ def otchetSmena(request):
         timeTemp = datetime.timedelta(hours=8,minutes=30)
         dataTemp= datetime.datetime.today()
     else:
-        print('2')
+
         smena = 2
         start_data = datetime.datetime.today()-datetime.timedelta(days=1)
         finish_data = datetime.datetime.today()-datetime.timedelta(days=1)
@@ -764,6 +764,25 @@ def otchetSmena(request):
                                   data__lte=finish_data,
                                   time__gte=start_time,
                                   time__lte=finish_time)
+    try:
+        plan1 = bottling_plan.objects.filter(Data__gte=start_data,
+                                            Data__lte=finish_data,
+                                            GIUDLine='d5cda256-1113-11e6-b0ff-005056ac2c77',
+                                            ShiftNumber= smena)
+
+    except:
+        plan1 = 0
+
+    try:
+        for el in plan1:
+            nomenklatura1+=Nomenclature.objects.filter(GUID=el.GUIDNomenсlature)
+
+        len1=len(nomenklatura1)
+
+    except:
+        nomenklatura1= "План отсутствует"
+        len1=0
+
     try:
         plan = bottling_plan.objects.filter(Data__gte=start_data,
                                             Data__lte=finish_data,
@@ -939,7 +958,7 @@ def otchetSmena(request):
     except:
         plan_t5=0
     try:
-        plan_t4 = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+        plan_t4 = plan4.aggregate(Sum('Quantity')).get('Quantity__sum')
         if plan_t4 == None:
             plan_t4 = 0
     except:
@@ -950,10 +969,17 @@ def otchetSmena(request):
             plan_t2 = 0
     except:
         plan_t2 = 0
+    try:
+        plan_t1 = plan1.aggregate(Sum('Quantity')).get('Quantity__sum')
+        if plan_t1 == None:
+            plan_t1 = 0
+    except:
+        plan_t1 = 0
 
 
     try:
-        itog_plan=plan_t5+plan_t4+plan_t2
+        itog_plan=plan_t5+plan_t4+plan_t2+plan_t1
+
 
     except:
         itog_plan=0
@@ -1014,14 +1040,17 @@ def otchetSmena(request):
         'timeWork2': timeWork2,
 
         'nomenklatura':     nomenklatura,
+        'nomenklatura1': nomenklatura1,
         'nomenklatura4':    nomenklatura4,
         'nomenklatura2':    nomenklatura2,
 
         "len5":len5,
         "len4": len4,
         "len2": len2,
+        "len1": len1,
 
         'plan':             plan,
+        'plan1': plan1,
         'plan4':            plan4,
         'plan2':            plan2,
 

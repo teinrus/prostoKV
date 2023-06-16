@@ -149,7 +149,7 @@ def getData4(requst):
         plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
         if plan== None:
             plan=31000
-        # print(plan)
+
     except:
         plan=31000
 

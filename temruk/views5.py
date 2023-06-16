@@ -103,7 +103,7 @@ def getData(requst):
     speed = Speed5.objects.filter(data=datetime.date.today(),
                                   time__gte=startSmena,
                                   time__lte=spotSmena)
-    print(speed)
+
     boom = bottleExplosion5.objects.filter(data=datetime.date.today(),
                                           time__gte=startSmena,
                                           time__lte=spotSmena)
@@ -146,7 +146,7 @@ def getData(requst):
     except:
         sumProduct = 0
     try:
-        print(plan)
+
         allProc = proc(startSmena, spotSmena, plan, sumProduct),
     except:
 

@@ -1,7 +1,12 @@
 from django.contrib import admin
 
-from .models import ProductionOutput1, Table1, Speed1
+from .models import *
 
-admin.site.register(Table1)
-admin.site.register(ProductionOutput1)
-admin.site.register(Speed1)
+admin.site.register(Table31)
+admin.site.register(Speed31)
+admin.site.register(ProductionOutput31)
+
+admin.site.register(Table33)
+admin.site.register(Speed33)
+admin.site.register(ProductionOutput33)
+

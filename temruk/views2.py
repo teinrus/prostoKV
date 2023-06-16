@@ -165,6 +165,8 @@ def getData2(requst):
         sumProstoy = '00:00'
     try:
         sumProduct2 = productionOutput2.aggregate(Sum('production')).get('production__sum')
+        if sumProduct2 == None:
+            sumProduct2=0
     except:
         sumProduct2 = 0
     try:
@@ -202,7 +204,7 @@ def getData2(requst):
     return JsonResponse(result)
 def getBtn2(requst):
     buttons_reg = modbus_client.read_input_registers(2)
-    print(buttons_reg)
+
     result = {
         'buttons_reg':buttons_reg
               }
