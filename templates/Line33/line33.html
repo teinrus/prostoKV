@@ -21,7 +21,7 @@
                 value: "Не выбрано",
                 source:
                     [
-                        {% for el in uch33 %}
+                        {% for el in uch_v %}
                             {value: "{{ el }}", text: "{{ el }}"},
                         {% endfor %}],
                 validate: function (value) {
@@ -99,8 +99,6 @@
         </script>
     {% endif %}
 
-
-
     <body>
 
     {% include 'Line33/Chart33.html' %}
@@ -124,7 +122,42 @@
     </table>
     </body>
 
+{% if not user.username == 'naladchikS'%}
+  <input type="button" id="start_perenaladka33" value="Старт переналадка"/>
+    <input type="button" id="start_donaladka33" value="Cтарт доналадка"/>
+    <input type="button" id="TO33" value="ТО"/>
+    <input type="button" id="rabota33" value="Работа"/>
+{% endif %}
 
+     <script>
+        $('#start_perenaladka33').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_perenaladka33' %}",
+
+            });
+        })
+ $('#start_donaladka33').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_donaladka33' %}",
+
+            });
+        })
+        $('#rabota33').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'rabota33' %}",
+            });
+        })
+        $('#TO33').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'TO33' %}",
+            });
+        })
+
+    </script>
 
 
 {% endblock %}

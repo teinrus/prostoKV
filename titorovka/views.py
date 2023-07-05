@@ -9,7 +9,7 @@ from temruk.models import bottling_plan, prichina, uchastok
 from .forms import Otchet
 
 # Create your views here.
-from titorovka.models import  Table31,  ProductionOutput31,Speed31
+from titorovka.models import Table31, ProductionOutput31, Speed31, Table33, Speed33, ProductionOutput33
 
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 30, 0)
@@ -65,6 +65,12 @@ def index(request):
         speed31 = Speed31.objects.filter(data=datetime.date.today(),
                                       time__gte=startSmena,
                                       time__lte=spotSmena)
+        table33 = Table33.objects.filter(startdata=datetime.date.today(),
+                                      starttime__gte=startSmena,
+                                      starttime__lte=spotSmena)
+        speed33 = Speed33.objects.filter(data=datetime.date.today(),
+                                      time__gte=startSmena,
+                                      time__lte=spotSmena)
 
 
 
@@ -86,13 +92,16 @@ def index(request):
 
         'table31': table31,
         'speed31': speed31,
+        'table33': table33,
+        'speed33': speed33,
 
 
     })
 
 def Sotchet(request):
-    plan=0
-    table31=[]
+
+    plan = 0
+    table = []
     timeTemp = 0
     form = Otchet(request.GET)
     if form.is_valid():
@@ -101,29 +110,29 @@ def Sotchet(request):
                 form.cleaned_data["LineF"] == 'Линиия 31'):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
-                    table31 = Table31.objects.filter(starttime__gte=datetime.time(0),
+                    table = Table31.objects.filter(starttime__gte=datetime.time(0),
                                                   starttime__lte=datetime.time(23, 59),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
                                                   ).order_by('startdata', 'starttime')
 
-                    speed31 = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(0),
                                                   time__lte=datetime.time(23, 59))
 
-                    prod31 = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(0),
                                                   time__lte=datetime.time(23, 59))
                     try:
-                        plan31 = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
                                                             GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
                                                             )
-                        plan31 = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
                     except:
-                        plan31 = 0
+                        plan = 0
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
@@ -135,28 +144,28 @@ def Sotchet(request):
                         timeTemp = 0
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
-                    table31 = Table31.objects.filter(starttime__gte=datetime.time(8),
+                    table = Table31.objects.filter(starttime__gte=datetime.time(8),
                                                   starttime__lte=datetime.time(16, 30),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
                                                   ).order_by('startdata', 'starttime')
-                    speed31 = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(8),
                                                   time__lte=datetime.time(16, 30))
 
-                    prod31 = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(8),
                                                   time__lte=datetime.time(16, 30))
                     try:
-                        plan31 = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
                                                             GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
                                                             ShiftNumber=1)
-                        plan31 = plan31.aggregate(Sum('Quantity')).get('Quantity__sum')
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
                     except:
-                        plan31 = 0
+                        plan = 0
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
@@ -165,28 +174,28 @@ def Sotchet(request):
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
-                    table31 = Table31.objects.filter(starttime__gte=datetime.time(16, 30),
+                    table = Table31.objects.filter(starttime__gte=datetime.time(16, 30),
                                                   starttime__lte=datetime.time(23, 59),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
                                                   ).order_by('startdata', 'starttime')
-                    speed31 = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(16, 30),
                                                   time__lte=datetime.time(23, 59))
 
-                    prod31 = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(16, 30),
                                                   time__lte=datetime.time(23, 59))
                     try:
-                        plan31 = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
                                                             GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
                                                             ShiftNumber=2)
-                        plan31 = plan31.aggregate(Sum('Quantity')).get('Quantity__sum')
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
                     except:
-                        plan31 = 0
+                        plan = 0
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
@@ -196,28 +205,157 @@ def Sotchet(request):
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
-                    table31 = Table31.objects.filter(starttime__gte=datetime.time(00, 00),
+                    table = Table31.objects.filter(starttime__gte=datetime.time(00, 00),
                                                   starttime__lte=datetime.time(8, 00),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
                                                   ).order_by('startdata', 'starttime')
-                    speed31 = Speed31.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
+                    speed = Speed31.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(00, 00),
                                                   time__lte=datetime.time(8, 00))
 
-                    prod31 = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                    prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(00, 00),
                                                   time__lte=datetime.time(8, 00))
                     try:
-                        plan31 = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
                                                             GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
                                                             ShiftNumber=3)
-                        plan31 = plan31.aggregate(Sum('Quantity')).get('Quantity__sum')
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
                     except:
-                        plan31 = 0
+                        plan = 0
+
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count=timeTemp.total_seconds()/3600/24+1
+
+                        timeTemp=datetime.timedelta(hours=(8*count))
+                    except:
+                        timeTemp = 0
+        elif form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
+                form.cleaned_data["LineF"] == 'Линиия 33'):
+            if form.cleaned_data["SmenaF"]:
+                if form.cleaned_data["SmenaF"] == 'Смена 0':
+                    table = Table33.objects.filter(starttime__gte=datetime.time(0),
+                                                  starttime__lte=datetime.time(23, 59),
+                                                  startdata__gte=form.cleaned_data["start_data"],
+                                                  startdata__lte=form.cleaned_data["finish_data"]
+                                                  ).order_by('startdata', 'starttime')
+
+                    speed = Speed33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(0),
+                                                  time__lte=datetime.time(23, 59))
+
+                    prod = ProductionOutput33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(0),
+                                                  time__lte=datetime.time(23, 59))
+                    try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='d65654f8-2e89-4044-bb10-4342a9d1b722',
+                                                            )
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
+
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                            "start_data"] + datetime.timedelta(days=1)
+
+
+
+                    except:
+                        timeTemp = 0
+
+                if form.cleaned_data["SmenaF"] == 'Смена 1':
+                    table = Table33.objects.filter(starttime__gte=datetime.time(8),
+                                                  starttime__lte=datetime.time(16, 30),
+                                                  startdata__gte=form.cleaned_data["start_data"],
+                                                  startdata__lte=form.cleaned_data["finish_data"]
+                                                  ).order_by('startdata', 'starttime')
+                    speed = Speed33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(8),
+                                                  time__lte=datetime.time(16, 30))
+
+                    prod = ProductionOutput33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(8),
+                                                  time__lte=datetime.time(16, 30))
+                    try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='d65654f8-2e89-4044-bb10-4342a9d1b722',
+                                                            ShiftNumber=1)
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
+
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count=1+timeTemp.total_seconds()/3600/24
+                        timeTemp=datetime.timedelta(hours=(8*count),minutes=30*count)
+                    except:
+                        timeTemp = 0
+                if form.cleaned_data["SmenaF"] == 'Смена 2':
+                    table = Table33.objects.filter(starttime__gte=datetime.time(16, 30),
+                                                  starttime__lte=datetime.time(23, 59),
+                                                  startdata__gte=form.cleaned_data["start_data"],
+                                                  startdata__lte=form.cleaned_data["finish_data"]
+                                                  ).order_by('startdata', 'starttime')
+                    speed = Speed33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(16, 30),
+                                                  time__lte=datetime.time(23, 59))
+
+                    prod = ProductionOutput33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(16, 30),
+                                                  time__lte=datetime.time(23, 59))
+                    try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='d65654f8-2e89-4044-bb10-4342a9d1b722',
+                                                            ShiftNumber=2)
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
+
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count=timeTemp.total_seconds()/3600/24+1
+
+                        timeTemp=datetime.timedelta(hours=(7*count),minutes=30*count)
+                    except:
+                        timeTemp = 0
+                if form.cleaned_data["SmenaF"] == 'Смена 3':
+                    table = Table33.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                  starttime__lte=datetime.time(8, 00),
+                                                  startdata__gte=form.cleaned_data["start_data"],
+                                                  startdata__lte=form.cleaned_data["finish_data"]
+                                                  ).order_by('startdata', 'starttime')
+                    speed = Speed33.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(00, 00),
+                                                  time__lte=datetime.time(8, 00))
+
+                    prod = ProductionOutput33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(00, 00),
+                                                  time__lte=datetime.time(8, 00))
+                    try:
+                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                            Data__lte=form.cleaned_data["finish_data"],
+                                                            GIUDLine='d65654f8-2e89-4044-bb10-4342a9d1b722',
+                                                            ShiftNumber=3)
+                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                    except:
+                        plan = 0
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
@@ -228,22 +366,23 @@ def Sotchet(request):
                         timeTemp = 0
 
 
+
     lableChart = []
     dataChart = []
 
     #Общее количество  продукции
     try:
-        allProd31 = prod31.aggregate(Sum('production')).get('production__sum')
-        if (allProd31 == None):
-            allProd31 = 0
+        allProd = prod.aggregate(Sum('production')).get('production__sum')
+        if (allProd == None):
+            allProd = 0
     except:
-        allProd31 = 0
+        allProd = 0
 
 
 
     #Общее время простоя
     try:
-        sumProstoy = table31.aggregate(Sum('prostoy')).get('prostoy__sum')
+        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
         if sumProstoy== None:
             sumProstoy=datetime.timedelta(0)
     except:
@@ -258,7 +397,7 @@ def Sotchet(request):
     except:
         timeWork=0
     try:
-        avgSpeed =round((allProd31 / timeWork.total_seconds() * 3600),2)
+        avgSpeed =round((allProd / timeWork.total_seconds() * 3600),2)
 
     except:
         avgSpeed=0
@@ -269,7 +408,7 @@ def Sotchet(request):
     # Данные для графика
 
     try:
-        for sp in speed31:
+        for sp in speed:
             lableChart.append(str(sp.time))
             dataChart.append(sp.triblok)
     except:
@@ -280,7 +419,7 @@ def Sotchet(request):
 
 
     uch = uchastok.objects.all()
-    uch31=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
+    uch_v=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
 
     prichAll = prichina.objects.all()
     podrazdeleniaEl = []
@@ -298,7 +437,7 @@ def Sotchet(request):
 
 
     return render(request, "Sotchet.html", {
-        'table': table31,
+        'table': table,
         'form': form,
 
 
@@ -317,7 +456,7 @@ def Sotchet(request):
 
 
 
-        'allProd': allProd31,
+        'allProd': allProd,
 
         'lableChart': lableChart,
         'dataChart': dataChart,
@@ -325,7 +464,7 @@ def Sotchet(request):
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
-        'uch31':uch31,
+        'uch_v':uch_v,
 
 
 
@@ -344,6 +483,20 @@ def rabota31(request):
     return HttpResponse('yes')
 def TO31(request):
     mod_bus(0,8)
+    return HttpResponse('yes')
+
+def start_perenaladka33(request):
+    mod_bus(1,1)
+    return HttpResponse('yes')
+def start_donaladka33(request):
+    mod_bus(1,2)
+    return HttpResponse('yes')
+
+def rabota33(request):
+    mod_bus(1,4)
+    return HttpResponse('yes')
+def TO33(request):
+    mod_bus(1,8)
     return HttpResponse('yes')
 
 

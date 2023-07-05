@@ -98,6 +98,106 @@
 
         </script>
     {% endif %}
+    {% if user.username == 'masterS' or user.username == 'admin' %}
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+
+            var dataTable31 = $('#sample_data33').DataTable();
+
+
+            $('#sample_data33').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: 'update33',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+                        {% for el in uch_vino %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data33').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: 'update33',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data33').editable({
+
+                container: 'body',
+                selector: 'td.prichina',
+                url: 'update33',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+                }
+            });
+
+            $('#sample_data33').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: 'update33',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+
+
+        </script>
+    {% endif %}
+
+
     <script>
         $(document).ready(function () {
             setInterval(function () {
@@ -126,7 +226,7 @@
                         if (data.buttons_reg[0] == 4) {
                             $('#rabota31').attr('style', 'color:green; border: 1px solid blue;')
                             $('#start_perenaladka31').attr('style', 'color:black;')
-                            $('#start_donaladka4').attr('style', 'color:black;')
+                            $('#start_donaladka31').attr('style', 'color:black;')
                             $('#TO31').attr('style', 'color:black; ')
                         }
                         if (data.buttons_reg[0] == 0) {
@@ -162,7 +262,6 @@
             });
 
 
-
         });
     </script>
     <script>
@@ -193,8 +292,103 @@
 
     </script>
 
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                $.ajax({
+                    url: 'getBtn33',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka33').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_donaladka33').attr('style', 'color:black;')
+                            $('#TO33').attr('style', 'color:black; ')
+                            $('#rabota33').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 2) {
+                            $('#start_donaladka33').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_perenaladka33').attr('style', 'color:black;')
+                            $('#TO33').attr('style', 'color:black; ')
+                            $('#rabota33').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 8) {
+                            $('#TO33').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_perenaladka33').attr('style', 'color:black;')
+                            $('#start_donaladka33').attr('style', 'color:black;')
+                            $('#rabota33').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 4) {
+                            $('#rabota33').attr('style', 'color:green; border: 1px solid blue;')
+                            $('#start_perenaladka33').attr('style', 'color:black;')
+                            $('#start_donaladka33').attr('style', 'color:black;')
+                            $('#TO33').attr('style', 'color:black; ')
+                        }
+                        if (data.buttons_reg[0] == 0) {
+                            $('#start_perenaladka33').attr('style', 'color:black;')
+                            $('#start_donaladka33').attr('style', 'color:black;')
+                            $('#TO33').attr('style', 'color:black; ')
+                            $('#rabota33').attr('style', 'color:black; ')
+                        }
+
+                    }
+                });
+            }, 1000);
+
+
+            $.ajax({
+                url: 'getBtn33',
+                method: 'post',
+                success: function (data) {
+                    if (data.buttons_reg[0] == 1) {
+                        $('#start_perenaladka33').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 2) {
+                        $('#start_donaladka33').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 8) {
+                        $('#TO33').attr('style', 'color:red; border: 1px solid blue;')
+                    }
+                    if (data.buttons_reg[0] == 4) {
+                        $('#rabota33').attr('style', 'color:green; border: 1px solid blue;')
+                    }
+
+                }
+            });
+
+
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            var item_num33 = $(this).attr('id');
+            update_item(item_num33)
+            setInterval(function () {
+                if (!$(".popover-title").is(':visible')) {
+                    item_num33 = $(this).attr('id');
+                    update_item(item_num33);
+
+                }
+
+            }, 30000);
+
+            function update_item(item_num33) {
+                $('#sample_data33 tbody').load(
+                    "{% url 'update_items33' %}?item_num33=" + item_num33
+                );
+
+
+            }
+
+
+        });
+
+
+    </script>
+
 
     {% include 'Line31/line31.html' %}
+    {% include 'Line33/line33.html' %}
 
 
 

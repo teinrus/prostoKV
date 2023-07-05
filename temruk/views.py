@@ -615,8 +615,9 @@ def otchet(request):
 
 
 
-    # Данные для графика
 
+
+    # Данные для графика
     try:
         for sp in speed:
             lableChart.append(str(sp.time))
@@ -1004,12 +1005,26 @@ def otchetSmena(request):
         itog_fact2 = 0
     try:
         itog_fact=itog_fact2+itog_fact4+itog_fact5
+
     except:
         itog_fact=0
 
     itog_otcl=otklonenie+otklonenie4+otklonenie2
     itog_proc=int(itog_fact/itog_plan*100)
 
+
+    # tableTest = Table5.objects.all()
+    # speedTest=Speed5.objects.all()
+
+    import csv
+    # with open('prostoy.csv', 'w') as file:
+    #     writer = csv.writer(file, delimiter=',')  # lineterminator='\n',
+    #     for i in tableTest:
+    #         writer.writerow(["Дата ", i.startdata, i.starttime,"Время простоя ", i.prostoy])
+    # with open('proizvod.csv', 'w') as file:
+    #     writer = csv.writer(file, delimiter=',')  # lineterminator='\n',
+    #     for i in speedTest:
+    #         writer.writerow(["Дата ", i.data, i.time,"Кол ", int(i.triblok)/20])
     return render(request, "otchetSmena.html", {
 
         "itog_plan": itog_plan,

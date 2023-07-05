@@ -22,7 +22,7 @@
                 value: "Не выбрано",
                 source:
                     [
-                        {% for el in uch31 %}
+                        {% for el in uch_v %}
                             {value: "{{ el }}", text: "{{ el }}"},
                         {% endfor %}],
                 validate: function (value) {
@@ -84,6 +84,104 @@
                 container: 'body',
                 selector: 'td.comment',
                 url: 'update31',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+
+
+        </script>
+    {% endif %}
+    {% if user.username == 'masterS' or user.username == 'admin' %}
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+
+            var dataTable31 = $('#sample_data33').DataTable();
+
+
+            $('#sample_data33').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: 'update33',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+                        {% for el in uch_v %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data33').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: 'update33',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data33').editable({
+
+                container: 'body',
+                selector: 'td.prichina',
+                url: 'update33',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+                }
+            });
+
+            $('#sample_data33').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: 'update33',
                 title: 'comment',
                 type: 'POST',
                 value: "",

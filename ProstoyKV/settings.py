@@ -82,10 +82,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-# DATABASE_ROUTERS=['route.db_routers.DB_Temruk','route.db_routers.DB_S_Titorovskaya']
+
 DATABASE_ROUTERS=['route.db_routers.DB_S_Titorovskaya']
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -115,12 +113,9 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
