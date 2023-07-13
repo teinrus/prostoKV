@@ -1,3 +1,4 @@
+import csv
 import datetime
 
 
@@ -75,13 +76,6 @@ def index(request):
 
 
 def temruk(request):
-    acr= NapAcratofori.objects.filter(data=datetime.date.today())
-    print(acr)
-    import csv
-    with open('acr.csv', 'w') as file:
-        writer = csv.writer(file, delimiter=',')
-        for i in acr:
-            writer.writerow([i.time, i.acr63_temp,])
     if request.method == 'GET':
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
                                       starttime__gte=startSmena,
@@ -327,44 +321,20 @@ def otchet(request):
                 form.cleaned_data["LineF"] == 'Линиия 2'):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
-                    if form.cleaned_data["start_data"]== form.cleaned_data["finish_data"]:
-                        table2_1 = Table2.objects.filter(starttime__gte=datetime.time(8,00),
+                    table2 = Table2.objects.filter(starttime__gte=datetime.time(0),
                                                    starttime__lte=datetime.time(23, 59),
-                                                   startdata=form.cleaned_data["start_data"],
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
                                                    ).order_by('startdata', 'starttime')
-
-
-                        table2_2 = Table2.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                     starttime__lte=datetime.time(8, 00),
-                                                     startdata=form.cleaned_data["finish_data"] + datetime.timedelta(days=1)
-                                                     ).order_by('startdata', 'starttime')
-                    else:
-                        table2_1 = Table2.objects.filter(starttime__gte=datetime.time(8, 00),
-                                                         starttime__lte=datetime.time(23, 59),
-                                                         startdata=form.cleaned_data["start_data"],
-                                                         )
-                        table2_2 = Table2.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                         starttime__lte=datetime.time(8, 00),
-                                                         startdata=form.cleaned_data[
-                                                                       "finish_data"] + datetime.timedelta(days=1)
-                                                         ).order_by('startdata', 'starttime')\
-                                   |Table2.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                         starttime__lte=datetime.time(23, 59),
-                                                         startdata__range=(form.cleaned_data[
-                                                                       "start_data"] + datetime.timedelta(days=1),form.cleaned_data[
-                                                                       "finish_data"])
-                                                         ).order_by('startdata', 'starttime')
-
-                    table2 = (table2_1| table2_2).order_by('startdata', 'starttime')
 
                     speed2 = Speed2.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(0),
                                                    time__lte=datetime.time(23, 59))
                     productionOutput2 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                   data__lte=form.cleaned_data["finish_data"])
-
-
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(0),
+                                                   time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -372,27 +342,26 @@ def otchet(request):
                         plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
                     except:
                         plan = 0
+
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
-
-
                     except:
                         timeTemp = 0
             if form.cleaned_data["SmenaF"] == 'Смена 1':
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(8),
-                                               starttime__lte=datetime.time(20, 00),
+                                               starttime__lte=datetime.time(16, 30),
                                                startdata__gte=form.cleaned_data["start_data"],
                                                startdata__lte=form.cleaned_data["finish_data"]
                                                ).order_by('startdata', 'starttime')
                 speed2 = Speed2.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(8),
-                                               time__lte=datetime.time(20, 00))
+                                               time__lte=datetime.time(16, 30))
                 productionOutput2 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(8),
-                                               time__lte=datetime.time(20, 00))
+                                               time__lte=datetime.time(16, 30))
                 try:
                     plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                         Data__lte=form.cleaned_data["finish_data"],
@@ -400,54 +369,29 @@ def otchet(request):
                                                         ShiftNumber=1)
                     plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
                 except:
-                    plan = 0
+                    plan=0
                 try:
+
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(12*count))
+                    timeTemp = datetime.timedelta(hours=(8*count),minutes=30*count)
                 except:
                     timeTemp = 0
             if form.cleaned_data["SmenaF"] == 'Смена 2':
-                table2_1 = Table2.objects.filter(starttime__gte=datetime.time(20, 00),
+                table2 = Table2.objects.filter(starttime__gte=datetime.time(16, 30),
                                                starttime__lte=datetime.time(23, 59),
                                                startdata__gte=form.cleaned_data["start_data"],
                                                startdata__lte=form.cleaned_data["finish_data"]
                                                ).order_by('startdata', 'starttime')
-
-                table2_2 = Table2.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                 starttime__lte=datetime.time(8, 00),
-                                                 startdata__gte=form.cleaned_data["start_data"]+datetime.timedelta(days=1),
-                                                 startdata__lte=form.cleaned_data["finish_data"]+datetime.timedelta(days=1)
-                                                 ).order_by('startdata', 'starttime')
-                table2 = (table2_1|table2_2).order_by('startdata', 'starttime')
-
-
-                speed2_1 = Speed2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                speed2 = Speed2.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                data__lte=form.cleaned_data["finish_data"],
-                                               time__gte=datetime.time(20, 00),
+                                               time__gte=datetime.time(16, 30),
                                                time__lte=datetime.time(23, 59))
-                speed2_2 = Speed2.objects.filter(data__gte=form.cleaned_data["start_data"]+datetime.timedelta(days=1),
-                                                 data__lte=form.cleaned_data["finish_data"]+datetime.timedelta(days=1),
-                                                 time__gte=datetime.time(00, 00),
-                                                 time__lte=datetime.time(8, 00))
-                speed2 = (speed2_1|speed2_2).order_by('data', 'time')
-
-
-                productionOutput2_1 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                productionOutput2 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                data__lte=form.cleaned_data["finish_data"],
-                                               time__gte=datetime.time(20, 00),
+                                               time__gte=datetime.time(16, 30),
                                                time__lte=datetime.time(23, 59))
-                productionOutput2_2=ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"]+datetime.timedelta(days=1),
-                                                                       data__lte=form.cleaned_data["finish_data"]+datetime.timedelta(days=1),
-                                                                       time__gte=datetime.time(00, 00),
-                                                                       time__lte=datetime.time(8, 00))
-
-                productionOutput2 = productionOutput2_1|productionOutput2_2
-
-
-
-
                 try:
                     plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                         Data__lte=form.cleaned_data["finish_data"],
@@ -455,16 +399,47 @@ def otchet(request):
                                                         ShiftNumber=2)
                     plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
                 except:
-                    plan = 0
+                    plan=0
+
+                try:
+
+                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+
+                    timeTemp = datetime.timedelta(hours=(7*count),minutes=30*count)
+                except:
+                    timeTemp = 0
+
+
+            if form.cleaned_data["SmenaF"] == 'Смена 3':
+                table2 = Table2.objects.filter(starttime__gte=datetime.time(00, 00),
+                                               starttime__lte=datetime.time(8, 00),
+                                               startdata__gte=form.cleaned_data["start_data"],
+                                               startdata__lte=form.cleaned_data["finish_data"]
+                                               ).order_by('startdata', 'starttime')
+                speed2 = Speed2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(00, 00),
+                                               time__lte=datetime.time(8, 00))
+                productionOutput2 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(00, 00),
+                                               time__lte=datetime.time(8, 00))
+                try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
+                                                        ShiftNumber=3)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan=0
                 try:
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(12*count))
-
+                    timeTemp = datetime.timedelta(hours=(8 * count))
                 except:
                     timeTemp = 0
-
 
             table=table2
             speed=speed2
@@ -474,35 +449,11 @@ def otchet(request):
                 form.cleaned_data["LineF"] == 'Линиия 4'):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
-                    if form.cleaned_data["start_data"]== form.cleaned_data["finish_data"]:
-                        table4_1 = Table4.objects.filter(starttime__gte=datetime.time(8,00),
+                    table4 = Table4.objects.filter(starttime__gte=datetime.time(0),
                                                    starttime__lte=datetime.time(23, 59),
-                                                   startdata=form.cleaned_data["start_data"],
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
                                                    ).order_by('startdata', 'starttime')
-
-
-                        table4_2 = Table4.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                     starttime__lte=datetime.time(8, 00),
-                                                     startdata=form.cleaned_data["finish_data"] + datetime.timedelta(days=1)
-                                                     ).order_by('startdata', 'starttime')
-                    else:
-                        table4_1 = Table4.objects.filter(starttime__gte=datetime.time(8, 00),
-                                                         starttime__lte=datetime.time(23, 59),
-                                                         startdata=form.cleaned_data["start_data"],
-                                                         )
-                        table4_2 = Table4.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                         starttime__lte=datetime.time(8, 00),
-                                                         startdata=form.cleaned_data[
-                                                                       "finish_data"] + datetime.timedelta(days=1)
-                                                         ).order_by('startdata', 'starttime')\
-                                   |Table4.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                         starttime__lte=datetime.time(23, 59),
-                                                         startdata__range=(form.cleaned_data[
-                                                                       "start_data"] + datetime.timedelta(days=1),form.cleaned_data[
-                                                                       "finish_data"])
-                                                         ).order_by('startdata', 'starttime')
-
-                    table4 = (table4_1| table4_2).order_by('startdata', 'starttime')
 
                     speed4 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
@@ -528,18 +479,18 @@ def otchet(request):
                         timeTemp = 0
             if form.cleaned_data["SmenaF"] == 'Смена 1':
                 table4 = Table4.objects.filter(starttime__gte=datetime.time(8),
-                                               starttime__lte=datetime.time(20, 00),
+                                               starttime__lte=datetime.time(16, 30),
                                                startdata__gte=form.cleaned_data["start_data"],
                                                startdata__lte=form.cleaned_data["finish_data"]
                                                ).order_by('startdata', 'starttime')
                 speed4 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(8),
-                                               time__lte=datetime.time(20, 00))
+                                               time__lte=datetime.time(16, 30))
                 productionOutput4 = ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(8),
-                                               time__lte=datetime.time(20, 00))
+                                               time__lte=datetime.time(16, 30))
                 try:
                     plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                         Data__lte=form.cleaned_data["finish_data"],
@@ -552,49 +503,23 @@ def otchet(request):
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(12*count))
+                    timeTemp = datetime.timedelta(hours=(8*count),minutes=30*count)
                 except:
                     timeTemp = 0
             if form.cleaned_data["SmenaF"] == 'Смена 2':
-                table4_1 = Table4.objects.filter(starttime__gte=datetime.time(20, 00),
+                table4 = Table4.objects.filter(starttime__gte=datetime.time(16, 30),
                                                starttime__lte=datetime.time(23, 59),
                                                startdata__gte=form.cleaned_data["start_data"],
                                                startdata__lte=form.cleaned_data["finish_data"]
                                                ).order_by('startdata', 'starttime')
-
-                table4_2 = Table4.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                 starttime__lte=datetime.time(8, 00),
-                                                 startdata__gte=form.cleaned_data["start_data"]+datetime.timedelta(days=1),
-                                                 startdata__lte=form.cleaned_data["finish_data"]+datetime.timedelta(days=1)
-                                                 ).order_by('startdata', 'starttime')
-                table4 = (table4_1|table4_2).order_by('startdata', 'starttime')
-
-
-                speed4_1 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                speed4 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                data__lte=form.cleaned_data["finish_data"],
-                                               time__gte=datetime.time(20, 00),
+                                               time__gte=datetime.time(16, 30),
                                                time__lte=datetime.time(23, 59))
-                speed4_2 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"]+datetime.timedelta(days=1),
-                                                 data__lte=form.cleaned_data["finish_data"]+datetime.timedelta(days=1),
-                                                 time__gte=datetime.time(00, 00),
-                                                 time__lte=datetime.time(8, 00))
-                speed4 = (speed4_1|speed4_2).order_by('data', 'time')
-
-
-                productionOutput4_1 = ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                productionOutput4 = ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                data__lte=form.cleaned_data["finish_data"],
-                                               time__gte=datetime.time(20, 00),
+                                               time__gte=datetime.time(16, 30),
                                                time__lte=datetime.time(23, 59))
-                productionOutput4_2=ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"]+datetime.timedelta(days=1),
-                                                                       data__lte=form.cleaned_data["finish_data"]+datetime.timedelta(days=1),
-                                                                       time__gte=datetime.time(00, 00),
-                                                                       time__lte=datetime.time(8, 00))
-
-                productionOutput4 = productionOutput4_1|productionOutput4_2
-
-
-
-
                 try:
                     plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                         Data__lte=form.cleaned_data["finish_data"],
@@ -607,11 +532,40 @@ def otchet(request):
                     timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
                     count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(12*count))
-
+                    timeTemp = datetime.timedelta(hours=(7*count),minutes=30*count)
                 except:
                     timeTemp = 0
 
+
+            if form.cleaned_data["SmenaF"] == 'Смена 3':
+                table4 = Table4.objects.filter(starttime__gte=datetime.time(00, 00),
+                                               starttime__lte=datetime.time(8, 00),
+                                               startdata__gte=form.cleaned_data["start_data"],
+                                               startdata__lte=form.cleaned_data["finish_data"]
+                                               ).order_by('startdata', 'starttime')
+                speed4 = Speed4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(00, 00),
+                                               time__lte=datetime.time(8, 00))
+                productionOutput4 = ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(00, 00),
+                                               time__lte=datetime.time(8, 00))
+                try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
+                                                        ShiftNumber=3)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan = 0
+                try:
+                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+
+                    timeTemp = datetime.timedelta(hours=(8 * count))
+                except:
+                    timeTemp = 0
 
             table=table4
             speed=speed4
@@ -622,12 +576,12 @@ def otchet(request):
 
     #Общее количество  продукции
     try:
-
         allProd = prod.aggregate(Sum('production')).get('production__sum')
         if (allProd == None):
             allProd = 0
     except:
         allProd = 0
+
 
     #Общее количество  врывов бутылок
     try:
@@ -691,7 +645,20 @@ def otchet(request):
     smena=form.cleaned_data["SmenaF"]
     nachaloOt = form.cleaned_data["start_data"]
     okonchanieOt = form.cleaned_data["finish_data"]
+    temp=Table5.objects.all()
+    tempS=Speed5.objects.all()
 
+    #
+    # with open('prostoy.csv', 'w', newline='') as csvfile:
+    #     spamwriter = csv.writer(csvfile, delimiter=' ',
+    #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    #     for el in temp:
+    #         spamwriter.writerow([el.startdata,el.starttime,el.prostoy,el.uchastok  ])
+    with open('proizvod.csv', 'w', newline='') as csvfile2:
+        spamwriter = csv.writer(csvfile2, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for el in tempS:
+            spamwriter.writerow([el.data,el.time,'|',int(int(el.triblok)/20)])
 
 
     return render(request, "otchet.html", {
@@ -1063,11 +1030,11 @@ def otchetSmena(request):
     # tableTest = Table5.objects.all()
     # speedTest=Speed5.objects.all()
 
-    # import csv
+    import csv
     # with open('prostoy.csv', 'w') as file:
-    #     writer = csv.writer(file, delimiter=',')
+    #     writer = csv.writer(file, delimiter=',')  # lineterminator='\n',
     #     for i in tableTest:
-    #         writer.writerow(["Дата ", i.startdata, i.starttime,"Время простоя ", i.prostoy,"Участок",[i.uchastok]],)
+    #         writer.writerow(["Дата ", i.startdata, i.starttime,"Время простоя ", i.prostoy])
     # with open('proizvod.csv', 'w') as file:
     #     writer = csv.writer(file, delimiter=',')  # lineterminator='\n',
     #     for i in speedTest:

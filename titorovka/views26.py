@@ -14,14 +14,14 @@ unit_id = 1
 modbus_client = ModbusClient(host=slave_address, unit_id=unit_id,auto_open=True)
 
 start1 = datetime.time(8, 00, 0)
-start2 = datetime.time(16, 30, 0)
+start2 = datetime.time(16, 00, 0)
 start3 = datetime.time(23, 59, 0)
 
 if start1 <= datetime.datetime.now().time() <= start2:
     startSmena = datetime.time(8, 00, 0)
-    spotSmena = datetime.time(16, 30, 0)
+    spotSmena = datetime.time(16, 00, 0)
 elif start2 <= datetime.datetime.now().time() <= start3:
-    startSmena = datetime.time(16, 30, 0)
+    startSmena = datetime.time(16, 00, 0)
     spotSmena = datetime.time(23, 59, 0)
 else:
     startSmena = datetime.time(00, 00, 00)
@@ -95,9 +95,9 @@ def update26(request):
 def update_items26(request):
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
+        spotSmena = datetime.time(16, 00, 0)
     elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
+        startSmena = datetime.time(16, 00, 0)
         spotSmena = datetime.time(23, 59, 0)
     else:
         startSmena = datetime.time(00, 00, 00)
@@ -114,10 +114,10 @@ def update_items26(request):
 def getData26(requst):
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
+        spotSmena = datetime.time(16, 00, 0)
         Smena = 1
     elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
+        startSmena = datetime.time(16, 00, 0)
         spotSmena = datetime.time(23, 59, 0)
         Smena = 2
     else:
