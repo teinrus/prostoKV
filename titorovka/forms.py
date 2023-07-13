@@ -15,3 +15,15 @@ class Otchet(forms.Form):
 
     Line = (('Линиия 31', 'Линиия 31'),('Линиия 33', 'Линиия 33'),)
     LineF = forms.ChoiceField(choices=Line, required=False, label='Линиия')
+class OtchetIgr(forms.Form):
+
+    start_data = forms.DateField(widget=NumberInput(attrs={'type':'date'}),required=False,label="Начало")
+
+    finish_data= forms.DateField(required=False,widget=NumberInput(attrs={'type':'date'}),label='Конец')
+
+    Smena = (('Смена 0', 'Все'),('Смена 1', 'Смена 1'), ('Смена 2', 'Смена 2'),('Смена 3', 'Смена 3'),)
+    SmenaF = forms.ChoiceField(choices=Smena,required=False,label='Смена')
+
+    Line = (('Линиия 24', 'Линиия 24'),('Линиия 25', 'Линиия 25'),('Линиия 26', 'Линиия 26'),)
+    LineF = forms.ChoiceField(choices=Line, required=False, label='Линиия')
+

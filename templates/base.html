@@ -57,9 +57,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"
             integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<SCRIPT>
+    <SCRIPT>
 
-</SCRIPT>
+    </SCRIPT>
 
 </head>
 
@@ -69,39 +69,52 @@
     <ul class="ul-bar">
 
         <li>
-             {% if not user.username  ==  'masterS' and not user.username  ==  'naladchikS' %}
-            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'temruk' %}'">
-                Темрюк
-            </button>
+            {% if not user.username  ==  'masterS' and not user.username  ==  'naladchikS' and not user.username  ==  'masterI' %}
+                <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'temruk' %}'">
+                    Темрюк
+                </button>
             {% endif %}
         </li>
         <li>
-             {% if not user.username  ==  'master'%}
-            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'titorovka' %}'">
-                Старотиторовская
-            </button>
+            {% if not user.username  ==  'master' %}
+                <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'titorovka' %}'">
+                    Старотиторовская
+                </button>
             {% endif %}
 
         <li>
             {% if request.get_full_path == "/temruk" or request.get_full_path == " " %}
                 <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchet' %}'">
-                Отчет
+                    Отчет
+                </button>
+            {% else %}
+                {% if  user.username  ==  'masterS' %}
+                    <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'Sotchet' %}'">Отчет
+            </button>
+                {% elif user.username  ==  'masterI' %}
+                    <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'SotchetIgr' %}'">
+                    Отчет
             </button>
                 {% else %}
-                 <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'Sotchet' %}'">
-                Отчет
+                    <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'SotchetIgr' %}'">
+                    Отчет Игристые
             </button>
-        {% endif %}
+                    <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'Sotchet' %}'">
+                    Отчет Тихие
+            </button>
+                {% endif %}
 
+
+            {% endif %}
 
 
         </li>
 
         <li>
             {% if user.username == 'master' or user.username == 'admin' %}
-            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchetSmena' %}'">
-                Сменный отчет
-            </button>
+                <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchetSmena' %}'">
+                    Сменный отчет
+                </button>
             {% endif %}
         </li>
         <li>

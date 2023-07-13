@@ -1,0 +1,166 @@
+{% block content %}
+
+    {% if user.username == 'masterI' or user.username == 'admin'%}
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+
+            var dataTable25 = $('#sample_data25').DataTable();
+
+
+            $('#sample_data25').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: '/update25',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+                        {% for el in uch_v %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data25').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: '/update25',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data25').editable({
+
+                container: 'body',
+                selector: 'td.prichina',
+                url: '/update25',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+                }
+            });
+
+            $('#sample_data25').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: '/update25',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+
+
+        </script>
+    {% endif %}
+
+    <body>
+
+    {% include 'Line25/Chart25.html' %}
+
+    <table id="sample_data25" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>Дата</th>
+            <th>Время начала простоя</th>
+            <th>Время простоя</th>
+            <th>Участок</th>
+
+            <th>Ответст. подразделение</th>
+            <th>Причина</th>
+            <th>Комментарий</th>
+        </thead>
+        <tbody>
+        {% include 'Line25/table_body25.html' %}
+        </tbody>
+    </table>
+    </body>
+
+{% if not user.username == 'naladchikS'%}
+  <input type="button" id="start_perenaladka25" value="Старт переналадка"/>
+    <input type="button" id="start_donaladka25" value="Cтарт доналадка"/>
+    <input type="button" id="TO25" value="ТО"/>
+    <input type="button" id="rabota25" value="Работа"/>
+{% endif %}
+
+     <script>
+        $('#start_perenaladka25').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_perenaladka25' %}",
+
+            });
+        })
+ $('#start_donaladka25').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_donaladka25' %}",
+
+            });
+        })
+        $('#rabota25').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'rabota25' %}",
+            });
+        })
+        $('#TO25').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'TO25' %}",
+            });
+        })
+
+    </script>
+
+
+{% endblock %}
+
+
+</style>

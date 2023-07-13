@@ -8,10 +8,9 @@ from django.shortcuts import render
 from temruk.models import bottling_plan
 from titorovka.models import *
 from  pyModbusTCP.client import ModbusClient
-slave_address='192.168.94.114'
-port = 502
+slave_address='10.36.20.2'
 unit_id = 1
-modbus_client = ModbusClient(host=slave_address, port=port,unit_id=unit_id,auto_open=True)
+modbus_client = ModbusClient(host=slave_address,unit_id=unit_id,auto_open=True)
 
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 30, 0)
@@ -210,8 +209,8 @@ def getData31(requst):
     return JsonResponse(result)
 
 def getBtn31(requst):
-
     buttons_reg = modbus_client.read_input_registers(0)
+    print(buttons_reg)
     result = {
         'buttons_reg':buttons_reg
               }

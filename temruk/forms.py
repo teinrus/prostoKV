@@ -10,7 +10,7 @@ class Otchet(forms.Form):
 
     finish_data= forms.DateField(required=False,widget=NumberInput(attrs={'type':'date'}),label='Конец')
 
-    Smena = (('Смена 0', 'Все'),('Смена 1', 'Смена 1'), ('Смена 2', 'Смена 2'),('Смена 3', 'Смена 3'),)
+    Smena = (('Смена 0', 'Все'),('Смена 1', 'Смена 1'), ('Смена 2', 'Смена 2'),)
     SmenaF = forms.ChoiceField(choices=Smena,required=False,label='Смена')
 
     Line = (('Линиия 5', 'Линиия 5'), ('Линиия 2', 'Линиия 2'),('Линиия 4', 'Линиия 4'),)

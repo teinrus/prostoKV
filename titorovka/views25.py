@@ -14,14 +14,14 @@ unit_id = 1
 modbus_client = ModbusClient(host=slave_address, unit_id=unit_id,auto_open=True)
 
 start1 = datetime.time(8, 00, 0)
-start2 = datetime.time(16, 30, 0)
+start2 = datetime.time(16, 00, 0)
 start3 = datetime.time(23, 59, 0)
 
 if start1 <= datetime.datetime.now().time() <= start2:
     startSmena = datetime.time(8, 00, 0)
-    spotSmena = datetime.time(16, 30, 0)
+    spotSmena = datetime.time(16, 00, 0)
 elif start2 <= datetime.datetime.now().time() <= start3:
-    startSmena = datetime.time(16, 30, 0)
+    startSmena = datetime.time(16, 00, 0)
     spotSmena = datetime.time(23, 59, 0)
 else:
     startSmena = datetime.time(00, 00, 00)
@@ -47,7 +47,7 @@ def proc(startSmena, spotSmena, plan, colProduct):
 
 
 # изменение в таблице
-def update33(request):
+def update25(request):
     if request.method == 'POST':
 
         pk = request.POST.get('pk')
@@ -56,68 +56,68 @@ def update33(request):
 
         if name == 'uchastok':
             try:
-                a = Table33.objects.get(id=pk)
+                a = Table25.objects.get(id=pk)
                 a.uchastok = v
                 a.save()
             except:
-                a = Table33(uchastok=v, id=pk)
+                a = Table25(uchastok=v, id=pk)
                 a.save()
         elif name == 'prichina':
             try:
 
-                a = Table33.objects.get(id=pk)
+                a = Table25.objects.get(id=pk)
                 a.prichina = v
                 a.save()
             except:
-                a = Table33(prichina=v, id=pk)
+                a = Table25(prichina=v, id=pk)
                 a.save()
         elif name == 'otv_pod':
             try:
-                a = Table33.objects.get(id=pk)
+                a = Table25.objects.get(id=pk)
                 a.otv_pod = v
                 a.save()
             except:
-                a = Table33(otv_pod=v, id=pk)
+                a = Table25(otv_pod=v, id=pk)
                 a.save()
         elif name == 'comment':
             try:
-                a = Table33.objects.get(id=pk)
+                a = Table25.objects.get(id=pk)
                 a.comment = v
                 a.save()
             except:
-                a = Table33(comment=v, id=pk)
+                a = Table25(comment=v, id=pk)
                 a.save()
 
     return HttpResponse('yes')
 
 
 # получение данных в таблицу
-def update_items33(request):
+def update_items25(request):
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
+        spotSmena = datetime.time(16, 00, 0)
     elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
+        startSmena = datetime.time(16, 00, 0)
         spotSmena = datetime.time(23, 59, 0)
     else:
         startSmena = datetime.time(00, 00, 00)
         spotSmena = datetime.time(8, 00, 00)
 
-    table33 = Table33.objects.filter(startdata=datetime.date.today(),
+    table25 = Table25.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
 
-    return render(request, 'Line33/table_body33.html', {'table33': table33})
+    return render(request, 'Line25/table_body25.html', {'table25': table25})
 
 
 # получение данных для графика и ячеек
-def getData33(requst):
+def getData25(requst):
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
+        spotSmena = datetime.time(16, 00, 0)
         Smena = 1
     elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
+        startSmena = datetime.time(16, 00, 0)
         spotSmena = datetime.time(23, 59, 0)
         Smena = 2
     else:
@@ -127,7 +127,7 @@ def getData33(requst):
 
     try:
         plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-                                         GIUDLine='d65654f8-2e89-4044-bb10-4342a9d1b722',
+                                         GIUDLine='33b39bdb-a94a-4baf-bf9c-31ab906efb9e',
                                          ShiftNumber=Smena)
         plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
         if plan== None:
@@ -136,80 +136,80 @@ def getData33(requst):
         plan=31000
 
 
-    table33 = Table33.objects.filter(startdata=datetime.date.today(),
+    table25 = Table25.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
 
-    speed33 = Speed33.objects.filter(data=datetime.date.today(),
+    speed25 = Speed25.objects.filter(data=datetime.date.today(),
                                    time__gte=startSmena,
                                    time__lte=spotSmena)
-    productionOutput33 = ProductionOutput33.objects.filter(data=datetime.date.today(),
+    productionOutput25 = ProductionOutput25.objects.filter(data=datetime.date.today(),
                                                          time__gte=startSmena,
                                                          time__lte=spotSmena)
 
 
 
     try:
-        count33 = 0
+        count25 = 0
         avg = 0
-        for el in speed33:
+        for el in speed25:
             if el.triblok != 0:
-                count33 += 1
+                count25 += 1
                 avg += el.triblok
 
-        avgSpeed33 = round(avg / count33, 2)
+        avgSpeed25 = round(avg / count25, 2)
     except:
-        avgSpeed33 = 0
+        avgSpeed25 = 0
     try:
-        sumProstoy = table33.aggregate(Sum('prostoy')).get('prostoy__sum')
+        sumProstoy = table25.aggregate(Sum('prostoy')).get('prostoy__sum')
 
         if (sumProstoy == None):
             sumProstoy = '00:00'
     except:
         sumProstoy = '00:00'
     try:
-        sumProduct33 = productionOutput33.aggregate(Sum('production')).get('production__sum')
-        if (sumProduct33 == None):
-            sumProduct33= '0'
+        sumProduct25 = productionOutput25.aggregate(Sum('production')).get('production__sum')
+        if (sumProduct25 == None):
+            sumProduct25= '0'
     except:
-        sumProduct33 = 0
+        sumProduct25 = 0
     try:
-        allProc33 = proc(startSmena, spotSmena, plan, sumProduct33)
+        allProc25 = proc(startSmena, spotSmena, plan, sumProduct25)
     except:
-        allProc33 = 0
+        allProc25 = 0
 
-    lableChart33 = []
-    dataChart33_triblok = []
-    dataChart33_kapsula = []
-    dataChart33_eticetka = []
-    dataChart33_ukladchik = []
-    dataChart33_zakleichik = []
+    lableChart25 = []
+    dataChart25_triblok = []
+    dataChart25_kapsula = []
+    dataChart25_eticetka = []
+    dataChart25_ukladchik = []
+    dataChart25_zakleichik = []
 
-    for sp in speed33:
-        lableChart33.append(str(sp.time))
-        dataChart33_triblok.append(sp.triblok)
-        dataChart33_kapsula.append(sp.kapsula)
-        dataChart33_eticetka.append(sp.eticetka)
-        dataChart33_ukladchik.append(sp.ukladchik)
-        dataChart33_zakleichik.append(sp.zakleichik)
+    for sp in speed25:
+        lableChart25.append(str(sp.time))
+        dataChart25_triblok.append(sp.triblok)
+        dataChart25_kapsula.append(sp.kapsula)
+        dataChart25_eticetka.append(sp.eticetka)
+        dataChart25_ukladchik.append(sp.ukladchik)
+        dataChart25_zakleichik.append(sp.zakleichik)
 
     result = {
-        "allProc33": allProc33,
-        'sumProstoy33': str(sumProstoy),
-        'avgSpeed33': avgSpeed33,
-        'sumProduct33': sumProduct33,
+        "allProc25": allProc25,
+        'sumProstoy25': str(sumProstoy),
+        'avgSpeed25': avgSpeed25,
+        'sumProduct25': sumProduct25,
 
-        'lableChart33': lableChart33,
-        'dataChart33_triblok': dataChart33_triblok,
-        'dataChart33_kapsula': dataChart33_kapsula,
-        'dataChart33_eticetka': dataChart33_eticetka,
-        'dataChart33_ukladchik': dataChart33_ukladchik,
-        'dataChart33_zakleichik': dataChart33_zakleichik,
+        'lableChart25': lableChart25,
+        'dataChart25_triblok': dataChart25_triblok,
+        'dataChart25_kapsula': dataChart25_kapsula,
+        'dataChart25_eticetka': dataChart25_eticetka,
+        'dataChart25_ukladchik': dataChart25_ukladchik,
+        'dataChart25_zakleichik': dataChart25_zakleichik,
 
     }
     return JsonResponse(result)
 
-def getBtn33(requst):
+def getBtn25(requst):
     buttons_reg = modbus_client.read_input_registers(1)
     result = {
         'buttons_reg':buttons_reg

@@ -13,18 +13,11 @@ unit_id = 1
 modbus_client = ModbusClient(host=slave_address, port=port,unit_id=unit_id,auto_open=True)
 
 start1 = datetime.time(8, 00, 0)
-start2 = datetime.time(16, 30, 0)
+start2 = datetime.time(20, 00, 0)
 start3 = datetime.time(23, 59, 0)
 
-if start1 <= datetime.datetime.now().time() <= start2:
-    startSmena = datetime.time(8, 00, 0)
-    spotSmena = datetime.time(16, 30, 0)
-elif start2 <= datetime.datetime.now().time() <= start3:
-    startSmena = datetime.time(16, 30, 0)
-    spotSmena = datetime.time(23, 59, 0)
-else:
-    startSmena = datetime.time(00, 00, 00)
-    spotSmena = datetime.time(8, 00, 00)
+
+
 
 
 # функция формирования процентов за текущию смену
@@ -92,19 +85,30 @@ def update4(request):
 
 # получение данных в таблицу
 def update_items4(request):
-    if start1 <= datetime.datetime.now().time() <= start2:
+    if start1 <= datetime.datetime.now().time() < start2:
         startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
-    elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
+        spotSmena = datetime.time(20, 00, 0)
+        table4 = Table4.objects.filter(startdata=datetime.date.today(),
+                                       starttime__gte=startSmena,
+                                       starttime__lte=spotSmena)
+    elif start2 <= datetime.datetime.now().time():
+        startSmena = datetime.time(20, 00, 0)
         spotSmena = datetime.time(23, 59, 0)
-    else:
-        startSmena = datetime.time(00, 00, 00)
-        spotSmena = datetime.time(8, 00, 00)
+        table4 = Table4.objects.filter(startdata=datetime.date.today(),
+                                       starttime__gte=startSmena,
+                                       starttime__lte=spotSmena)
 
-    table4 = Table4.objects.filter(startdata=datetime.date.today(),
-                                   starttime__gte=startSmena,
-                                   starttime__lte=spotSmena)
+
+    elif datetime.datetime.now().time() > start1:
+        table4_1 = Table4.objects.filter(startdata=datetime.date.today()-1,
+                                       starttime__gte=datetime.time(20, 00, 0),
+                                       starttime__lte=datetime.time(23, 59, 0))
+        table4_2 = Table4.objects.filter(startdata=datetime.date.today(),
+                                       starttime__gte=datetime.time(00, 00, 0),
+                                       starttime__lte=datetime.time(8, 00, 0))
+        table4=table4_1+table4_2
+
+
 
     list = []
     for table in table4:
@@ -129,18 +133,62 @@ def update_items4(request):
 
 # получение данных для графика и ячеек
 def getData4(requst):
-    if start1 <= datetime.datetime.now().time() <= start2:
+
+    if start1 <= datetime.datetime.now().time() < start2:
         startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
-        Smena = 1
-    elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
+        spotSmena = datetime.time(20, 00, 0)
+        table4 = Table4.objects.filter(startdata=datetime.date.today(),
+                                       starttime__gte=startSmena,
+                                       starttime__lte=spotSmena)
+        speed4 = Speed4.objects.filter(data=datetime.date.today(),
+                                       time__gte=startSmena,
+                                       time__lte=spotSmena)
+        productionOutput4 = ProductionOutput4.objects.filter(data=datetime.date.today(),
+                                                             time__gte=startSmena,
+                                                             time__lte=spotSmena)
+        Smena=1
+    elif start2 <= datetime.datetime.now().time():
+        startSmena = datetime.time(20, 00, 0)
         spotSmena = datetime.time(23, 59, 0)
+        table4 = Table4.objects.filter(startdata=datetime.date.today(),
+                                       starttime__gte=startSmena,
+                                       starttime__lte=spotSmena)
+        table4 = Table4.objects.filter(startdata=datetime.date.today(),
+                                       starttime__gte=startSmena,
+                                       starttime__lte=spotSmena)
+        speed4 = Speed4.objects.filter(data=datetime.date.today(),
+                                       time__gte=startSmena,
+                                       time__lte=spotSmena)
+        productionOutput4 = ProductionOutput4.objects.filter(data=datetime.date.today(),
+                                                             time__gte=startSmena,
+                                                             time__lte=spotSmena)
+
         Smena = 2
-    else:
-        startSmena = datetime.time(00, 00, 00)
-        spotSmena = datetime.time(8, 00, 00)
-        Smena = 3
+    elif datetime.datetime.now().time() < start1:
+
+        Smena = 2
+        print(Smena)
+        table4_1 = Table4.objects.filter(startdata=datetime.date.today()-datetime.timedelta(days=1),
+                                       starttime__gte=datetime.time(20, 00, 0),
+                                       starttime__lte=datetime.time(23, 59, 0))
+        table4_2 = Table4.objects.filter(startdata=datetime.date.today(),
+                                       starttime__gte=datetime.time(00, 00, 0),
+                                       starttime__lte=datetime.time(8, 00, 0))
+        table4=table4_1|table4_2
+        speed4_1 = Speed4.objects.filter(startdata=datetime.date.today() - datetime.timedelta(days=1),
+                                         starttime__gte=datetime.time(20, 00, 0),
+                                         starttime__lte=datetime.time(23, 59, 0))
+        speed4_2 = Speed4.objects.filter(startdata=datetime.date.today(),
+                                         starttime__gte=datetime.time(00, 00, 0),
+                                         starttime__lte=datetime.time(8, 00, 0))
+        speed4 = speed4_1|speed4_2
+        productionOutput4_1 = ProductionOutput4.objects.filter(startdata=datetime.date.today() - datetime.timedelta(days=1),
+                                         starttime__gte=datetime.time(20, 00, 0),
+                                         starttime__lte=datetime.time(23, 59, 0))
+        productionOutput4_2 = ProductionOutput4.objects.filter(startdata=datetime.date.today(),
+                                         starttime__gte=datetime.time(00, 00, 0),
+                                         starttime__lte=datetime.time(8, 00, 0))
+        productionOutput4 = productionOutput4_1|productionOutput4_2
 
     try:
         plan = bottling_plan.objects.filter(Data=datetime.date.today(),
@@ -154,15 +202,8 @@ def getData4(requst):
         plan=31000
 
 
-    table4 = Table4.objects.filter(startdata=datetime.date.today(),
-                                   starttime__gte=startSmena,
-                                   starttime__lte=spotSmena)
-    speed4 = Speed4.objects.filter(data=datetime.date.today(),
-                                   time__gte=startSmena,
-                                   time__lte=spotSmena)
-    productionOutput4 = ProductionOutput4.objects.filter(data=datetime.date.today(),
-                                                         time__gte=startSmena,
-                                                         time__lte=spotSmena)
+
+
 
     try:
         count4 = 0

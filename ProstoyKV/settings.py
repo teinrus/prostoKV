@@ -78,7 +78,7 @@ DATABASES = {
         'NAME': 'stit',
         'USER': 'postgres',
         'PASSWORD': '12345',
-        'HOST': '192.168.94.115',
+        'HOST': '10.36.20.10',
         'PORT': '5432',
     }
 }
@@ -107,6 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Asia/Damascus'
+
 
 USE_I18N = True
 

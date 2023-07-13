@@ -1,0 +1,176 @@
+{% block content %}
+
+
+    <h1 style="text-align:center">Простои линии 26</h1>
+
+
+    {% if not user.username == 'masterI' and not user.username == 'admin' and not user.username == 'naladchikS' %}
+        <div class="col__wrapper"
+             style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
+            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
+                <canvas id="Chart26"></canvas>
+            </div>
+            <ul class="col__list">
+                <li class="col__item">
+                    <ul>
+                        <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
+                        <li id="avgSpeeds26"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+                    </ul>
+                </li>
+                <li class="col__item">
+                    <ul>
+                        <li style="text-align: center;font-size:23px">Количество продукции</li>
+                        <li id="sumProduct26"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProduct26 }}</li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
+                        <li id="sumProstoy26" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
+                        <li id="allProc26" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+
+            </ul>
+        </div>
+    {% endif %}
+
+
+    <script>//ajax для перезагрузки графика
+    $(document).ready(function () {
+        var ctx26 = document.getElementById("Chart26").getContext("2d");
+        var config26;
+        var chart26 = [];
+        $.ajax({
+            url: 'getData26',
+            method: 'post',
+            success: function (data) {
+
+                $('#avgSpeeds26').html(data.avgSpeed26);
+                $('#allProc26').html(data.allProc26);
+                $('#sumProduct26').html(data.sumProduct26);
+                $('#sumProstoy26').html(data.sumProstoy26);
+                config26 = {
+                    type: 'bar',
+                    data: {
+
+                        labels: data.lableChart26,
+                        datasets: [{
+                            label: '# Производительность триблок',
+                            data: data.dataChart26_triblok,
+                            borderWidth: 3,
+                            borderColor: 'rgb(76,125,268)',
+                        }],
+                {#{#}
+                {#            label: '# Производительность капсула',#}
+                {#            data: data.dataChart26_kapsula,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,130,268)',#}
+                {#            },{#}
+                {#            label: '# Производительность этикетировка',#}
+                {#            data: data.dataChart26_eticetka,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,268,216)',#}
+                {#             },{#}
+                {#            label: '# Производительность укладчик',#}
+                {#            data: data.dataChart26_ukladchik,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,268,145)',#}
+                {#            },{#}
+                {#            label: '# Производительность заклейщик',#}
+                {#            data: data.dataChart26_zakleichik,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(87,268,76)',#}
+                {##}
+                {#        }]#}
+                    },
+                    options: {
+
+                        elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+                chart26 = new Chart(ctx26, config26);
+                dataUpdater();
+
+
+            }
+        });
+        setInterval(function () {
+
+            $.ajax({
+                url: 'getData26',
+                method: 'post',
+                success: function (data) {
+
+                    $('#avgSpeeds26').html(data.avgSpeed26);
+                    $('#allProc26').html(data.allProc26);
+                    $('#sumProstoy26').html(data.sumProstoy26);
+                    $('#sumProduct26').html(data.sumProduct26);
+                    dataUpdater();
+                }
+            });
+
+        }, 15000);
+
+
+        function dataUpdater() {
+            $.ajax({
+                type: "post",
+                url: 'getData26',
+            }).done(function (newData) {
+                chart26.data.labels = newData.lableChart26;
+                chart26.data.datasets[0].data = newData.dataChart26_triblok;
+                {#chart26.data.datasets[1].data = newData.dataChart26_kapsula;#}
+                {#chart26.data.datasets[2].data = newData.dataChart26_eticetka;#}
+                {#chart26.data.datasets[3].data = newData.dataChart26_ukladchik;#}
+                {#chart26.data.datasets[4].data = newData.dataChart26_zakleichik;#}
+                chart26.update();
+            });
+
+        }
+    })
+    ;
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+            var item_num26 = $(this).attr('id');
+            update_item(item_num26)
+            setInterval(function () {
+                if (!$(".popover-title").is(':visible')) {
+                    item_num26 = $(this).attr('id');
+                    update_item(item_num26);
+
+                }
+
+            }, 15000);
+
+            function update_item(item_num26) {
+                $('#sample_data26 tbody').load(
+                    "{% url 'update_items26' %}?item_num26=" + item_num26
+                );
+
+
+            }
+
+
+        });
+
+
+    </script>
+
+{% endblock %}

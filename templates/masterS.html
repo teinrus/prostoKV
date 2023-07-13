@@ -107,7 +107,7 @@
             {{ prich|safe }}
             var temp = '%'
 
-            var dataTable31 = $('#sample_data33').DataTable();
+            var dataTable33 = $('#sample_data33').DataTable();
 
 
             $('#sample_data33').editable({
@@ -197,6 +197,580 @@
         </script>
     {% endif %}
 
+    {% if user.username == 'masterI' or user.username == 'admin' %}
+        <script>
+
+            $(document).ready(function () {
+                var item_num24 = $(this).attr('id');
+                update_item(item_num24)
+                setInterval(function () {
+                    if (!$(".popover-title").is(':visible')) {
+                        item_num24 = $(this).attr('id');
+                        update_item(item_num24);
+
+                    }
+
+                }, 30000);
+
+                function update_item(item_num24) {
+                    $('#sample_data33 tbody').load(
+                        "{% url 'update_items24' %}?item_num24=" + item_num24
+                    );
+
+
+                }
+
+
+            });
+
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                setInterval(function () {
+                    $.ajax({
+                        url: 'getBtn24',
+                        method: 'post',
+                        success: function (data) {
+                            if (data.buttons_reg[0] == 1) {
+                                $('#start_perenaladka24').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_donaladka24').attr('style', 'color:black;')
+                                $('#TO24').attr('style', 'color:black; ')
+                                $('#rabota24').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 2) {
+                                $('#start_donaladka24').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka24').attr('style', 'color:black;')
+                                $('#TO24').attr('style', 'color:black; ')
+                                $('#rabota24').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 8) {
+                                $('#TO24').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka24').attr('style', 'color:black;')
+                                $('#start_donaladka24').attr('style', 'color:black;')
+                                $('#rabota24').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 4) {
+                                $('#rabota24').attr('style', 'color:green; border: 1px solid blue;')
+                                $('#start_perenaladka24').attr('style', 'color:black;')
+                                $('#start_donaladka24').attr('style', 'color:black;')
+                                $('#TO24').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 0) {
+                                $('#start_perenaladka24').attr('style', 'color:black;')
+                                $('#start_donaladka24').attr('style', 'color:black;')
+                                $('#TO24').attr('style', 'color:black; ')
+                                $('#rabota24').attr('style', 'color:black; ')
+                            }
+
+                        }
+                    });
+                }, 2000);
+
+
+                $.ajax({
+                    url: 'getBtn24',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka24').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 2) {
+                            $('#start_donaladka24').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 8) {
+                            $('#TO24').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 4) {
+                            $('#rabota24').attr('style', 'color:green; border: 1px solid blue;')
+                        }
+
+                    }
+                });
+
+
+            });
+        </script>
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+
+            var dataTable24 = $('#sample_data24').DataTable();
+
+
+            $('#sample_data24').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: 'update24',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+                        {% for el in uch %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data24').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: 'update24',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data24').editable({
+
+                container: 'body',
+                selector: 'td.prichina',
+                url: 'update24',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+                }
+            });
+
+            $('#sample_data24').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: 'update24',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+
+
+        </script>
+    {% endif %}
+    {% if user.username == 'masterI' or user.username == 'admin' %}
+        <script>
+
+            $(document).ready(function () {
+                var item_num25 = $(this).attr('id');
+                update_item(item_num25)
+                setInterval(function () {
+                    if (!$(".popover-title").is(':visible')) {
+                        item_num25 = $(this).attr('id');
+                        update_item(item_num25);
+
+                    }
+
+                }, 30000);
+
+                function update_item(item_num25) {
+                    $('#sample_data33 tbody').load(
+                        "{% url 'update_items25' %}?item_num25=" + item_num25
+                    );
+
+
+                }
+
+
+            });
+
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                setInterval(function () {
+                    $.ajax({
+                        url: 'getBtn25',
+                        method: 'post',
+                        success: function (data) {
+                            if (data.buttons_reg[0] == 1) {
+                                $('#start_perenaladka25').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_donaladka25').attr('style', 'color:black;')
+                                $('#TO25').attr('style', 'color:black; ')
+                                $('#rabota25').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 2) {
+                                $('#start_donaladka25').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka25').attr('style', 'color:black;')
+                                $('#TO25').attr('style', 'color:black; ')
+                                $('#rabota25').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 8) {
+                                $('#TO25').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka25').attr('style', 'color:black;')
+                                $('#start_donaladka25').attr('style', 'color:black;')
+                                $('#rabota25').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 4) {
+                                $('#rabota25').attr('style', 'color:green; border: 1px solid blue;')
+                                $('#start_perenaladka25').attr('style', 'color:black;')
+                                $('#start_donaladka25').attr('style', 'color:black;')
+                                $('#TO25').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 0) {
+                                $('#start_perenaladka25').attr('style', 'color:black;')
+                                $('#start_donaladka25').attr('style', 'color:black;')
+                                $('#TO25').attr('style', 'color:black; ')
+                                $('#rabota25').attr('style', 'color:black; ')
+                            }
+
+                        }
+                    });
+                }, 2000);
+
+
+                $.ajax({
+                    url: 'getBtn25',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka25').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 2) {
+                            $('#start_donaladka25').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 8) {
+                            $('#TO25').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 4) {
+                            $('#rabota25').attr('style', 'color:green; border: 1px solid blue;')
+                        }
+
+                    }
+                });
+
+
+            });
+        </script>
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+
+            var dataTable25 = $('#sample_data25').DataTable();
+
+
+            $('#sample_data25').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: 'update25',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+                        {% for el in uch %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data25').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: 'update25',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data25').editable({
+
+                container: 'body',
+                selector: 'td.prichina',
+                url: 'update25',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+                }
+            });
+
+            $('#sample_data25').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: 'update25',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+
+
+        </script>
+    {% endif %}
+    {% if user.username == 'masterI' or user.username == 'admin' %}
+        <script>
+
+            $(document).ready(function () {
+                var item_num26 = $(this).attr('id');
+                update_item(item_num26)
+                setInterval(function () {
+                    if (!$(".popover-title").is(':visible')) {
+                        item_num26 = $(this).attr('id');
+                        update_item(item_num26);
+
+                    }
+
+                }, 30000);
+
+                function update_item(item_num26) {
+                    $('#sample_data26 tbody').load(
+                        "{% url 'update_items26' %}?item_num26=" + item_num26
+                    );
+
+
+                }
+
+
+            });
+
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                setInterval(function () {
+                    $.ajax({
+                        url: 'getBtn26',
+                        method: 'post',
+                        success: function (data) {
+                            if (data.buttons_reg[1] == 1) {
+                                $('#start_perenaladka26').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_donaladka26').attr('style', 'color:black;')
+                                $('#TO26').attr('style', 'color:black; ')
+                                $('#rabota26').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[1] == 2) {
+                                $('#start_donaladka26').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka26').attr('style', 'color:black;')
+                                $('#TO26').attr('style', 'color:black; ')
+                                $('#rabota26').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[1] == 8) {
+                                $('#TO26').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka26').attr('style', 'color:black;')
+                                $('#start_donaladka26').attr('style', 'color:black;')
+                                $('#rabota26').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[1] == 4) {
+                                $('#rabota26').attr('style', 'color:green; border: 1px solid blue;')
+                                $('#start_perenaladka26').attr('style', 'color:black;')
+                                $('#start_donaladka26').attr('style', 'color:black;')
+                                $('#TO26').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[1] == 0) {
+                                $('#start_perenaladka26').attr('style', 'color:black;')
+                                $('#start_donaladka26').attr('style', 'color:black;')
+                                $('#TO26').attr('style', 'color:black; ')
+                                $('#rabota26').attr('style', 'color:black; ')
+                            }
+
+                        }
+                    });
+                }, 2000);
+
+
+                $.ajax({
+                    url: 'getBtn26',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[1] == 1) {
+                            $('#start_perenaladka26').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[1] == 2) {
+                            $('#start_donaladka26').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[1] == 8) {
+                            $('#TO26').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[1] == 4) {
+                            $('#rabota26').attr('style', 'color:green; border: 1px solid blue;')
+                        }
+
+                    }
+                });
+
+
+            });
+        </script>
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+
+            var dataTable26 = $('#sample_data26').DataTable();
+
+
+            $('#sample_data26').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: 'update26',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+                        {% for el in uch %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data26').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: 'update26',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data26').editable({
+
+                container: 'body',
+                selector: 'td.prichina',
+                url: 'update26',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+                }
+            });
+
+            $('#sample_data26').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: 'update26',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+
+
+        </script>
+    {% endif %}
+
 
     <script>
         $(document).ready(function () {
@@ -238,7 +812,7 @@
 
                     }
                 });
-            }, 1000);
+            }, 2000);
 
 
             $.ajax({
@@ -332,7 +906,7 @@
 
                     }
                 });
-            }, 1000);
+            }, 2000);
 
 
             $.ajax({
@@ -387,9 +961,20 @@
     </script>
 
 
-    {% include 'Line31/line31.html' %}
-    {% include 'Line33/line33.html' %}
 
+
+
+    {% if user.username == 'masterS' or user.username == 'admin' %}
+        {% include 'Line31/line31.html' %}
+        {% include 'Line33/line33.html' %}
+    {% endif %}
+
+    {% if user.username == 'masterI' or user.username == 'admin' %}
+        {% include 'Line24/line24.html' %}
+        {% include 'Line25/line25.html' %}
+        {% include 'Line26/line26.html' %}
+
+    {% endif %}
 
 
 

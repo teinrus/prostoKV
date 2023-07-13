@@ -1,0 +1,176 @@
+{% block content %}
+
+
+    <h1 style="text-align:center">Простои линии 24</h1>
+
+
+    {% if not user.username == 'masterI' and not user.username == 'admin' and not user.username == 'naladchikS' %}
+        <div class="col__wrapper"
+             style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
+            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
+                <canvas id="Chart24"></canvas>
+            </div>
+            <ul class="col__list">
+                <li class="col__item">
+                    <ul>
+                        <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
+                        <li id="avgSpeeds24"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+                    </ul>
+                </li>
+                <li class="col__item">
+                    <ul>
+                        <li style="text-align: center;font-size:23px">Количество продукции</li>
+                        <li id="sumProduct24"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProduct24 }}</li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
+                        <li id="sumProstoy24" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
+                        <li id="allProc24" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+
+            </ul>
+        </div>
+    {% endif %}
+
+
+    <script>//ajax для перезагрузки графика
+    $(document).ready(function () {
+        var ctx24 = document.getElementById("Chart24").getContext("2d");
+        var config24;
+        var chart24 = [];
+        $.ajax({
+            url: 'getData24',
+            method: 'post',
+            success: function (data) {
+
+                $('#avgSpeeds24').html(data.avgSpeed24);
+                $('#allProc24').html(data.allProc24);
+                $('#sumProduct24').html(data.sumProduct24);
+                $('#sumProstoy24').html(data.sumProstoy24);
+                config24 = {
+                    type: 'bar',
+                    data: {
+
+                        labels: data.lableChart24,
+                        datasets: [{
+                            label: '# Производительность триблок',
+                            data: data.dataChart24_triblok,
+                            borderWidth: 3,
+                            borderColor: 'rgb(76,125,248)',
+                        }],
+                {#{#}
+                {#            label: '# Производительность капсула',#}
+                {#            data: data.dataChart24_kapsula,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,130,248)',#}
+                {#            },{#}
+                {#            label: '# Производительность этикетировка',#}
+                {#            data: data.dataChart24_eticetka,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,248,216)',#}
+                {#             },{#}
+                {#            label: '# Производительность укладчик',#}
+                {#            data: data.dataChart24_ukladchik,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(76,248,145)',#}
+                {#            },{#}
+                {#            label: '# Производительность заклейщик',#}
+                {#            data: data.dataChart24_zakleichik,#}
+                {#            borderWidth: 3,#}
+                {#            borderColor: 'rgb(87,248,76)',#}
+                {##}
+                {#        }]#}
+                    },
+                    options: {
+
+                        elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+                chart24 = new Chart(ctx24, config24);
+                dataUpdater();
+
+
+            }
+        });
+        setInterval(function () {
+
+            $.ajax({
+                url: 'getData24',
+                method: 'post',
+                success: function (data) {
+
+                    $('#avgSpeeds24').html(data.avgSpeed24);
+                    $('#allProc24').html(data.allProc24);
+                    $('#sumProstoy24').html(data.sumProstoy24);
+                    $('#sumProduct24').html(data.sumProduct24);
+                    dataUpdater();
+                }
+            });
+
+        }, 15000);
+
+
+        function dataUpdater() {
+            $.ajax({
+                type: "post",
+                url: 'getData24',
+            }).done(function (newData) {
+                chart24.data.labels = newData.lableChart24;
+                chart24.data.datasets[0].data = newData.dataChart24_triblok;
+                {#chart24.data.datasets[1].data = newData.dataChart24_kapsula;#}
+                {#chart24.data.datasets[2].data = newData.dataChart24_eticetka;#}
+                {#chart24.data.datasets[3].data = newData.dataChart24_ukladchik;#}
+                {#chart24.data.datasets[4].data = newData.dataChart24_zakleichik;#}
+                chart24.update();
+            });
+
+        }
+    })
+    ;
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+            var item_num24 = $(this).attr('id');
+            update_item(item_num24)
+            setInterval(function () {
+                if (!$(".popover-title").is(':visible')) {
+                    item_num24 = $(this).attr('id');
+                    update_item(item_num24);
+
+                }
+
+            }, 15000);
+
+            function update_item(item_num24) {
+                $('#sample_data24 tbody').load(
+                    "{% url 'update_items24' %}?item_num24=" + item_num24
+                );
+
+
+            }
+
+
+        });
+
+
+    </script>
+
+{% endblock %}

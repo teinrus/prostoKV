@@ -1,11 +1,13 @@
 from django.urls import path
-from titorovka import views, views31, views33
+from titorovka import views, views31, views33, views24, views26, views25
 from titorovka.views import start_perenaladka31, start_donaladka31, rabota31, TO31, start_perenaladka33, rabota33, TO33, \
-    start_donaladka33
+    start_donaladka33, start_perenaladka24, start_donaladka24, rabota24, TO24, start_perenaladka26, start_donaladka26, \
+    rabota26, TO26, start_perenaladka25, start_donaladka25, rabota25, TO25
 
 urlpatterns = [
     path('', views.index, name='titorovka'),
     path('otchet', views.Sotchet, name='Sotchet'),
+    path('otchetIgr', views.SotchetIgr, name='SotchetIgr'),
 
     path('update_items31/', views31.update_items31, name='update_items31'),
     path('getData31', views31.getData31, name='getData31'),
@@ -24,5 +26,32 @@ urlpatterns = [
     path('start_donaladka33/', start_donaladka33, name='start_donaladka33'),
     path('rabota33/', rabota33, name='rabota33'),
     path('TO33/', TO33, name='TO33'),
+
+    path('update_items24/', views24.update_items24, name='update_items24'),
+    path('getData24', views24.getData24, name='getData24'),
+    path(r'update24', views24.update24, name='update24'),
+    path('getBtn24', views24.getBtn24, name='getBtn24'),
+    path('start_perenaladka24/', start_perenaladka24, name='start_perenaladka24'),
+    path('start_donaladka24/', start_donaladka24, name='start_donaladka24'),
+    path('rabota24/', rabota24, name='rabota24'),
+    path('TO24/', TO24, name='TO24'),
+
+    path('update_items26/', views26.update_items26, name='update_items26'),
+    path('getData26', views26.getData26, name='getData26'),
+    path(r'update26', views26.update26, name='update26'),
+    path('getBtn26', views26.getBtn26, name='getBtn26'),
+    path('start_perenaladka26/', start_perenaladka26, name='start_perenaladka26'),
+    path('start_donaladka26/', start_donaladka26, name='start_donaladka26'),
+    path('rabota26/', rabota26, name='rabota26'),
+    path('TO26/', TO26, name='TO26'),
+
+    path('update_items25/', views25.update_items25, name='update_items25'),
+    path('getData25', views25.getData25, name='getData25'),
+    path(r'update25', views25.update25, name='update25'),
+    path('getBtn25', views25.getBtn25, name='getBtn25'),
+    path('start_perenaladka25/', start_perenaladka25, name='start_perenaladka25'),
+    path('start_donaladka25/', start_donaladka25, name='start_donaladka25'),
+    path('rabota25/', rabota25, name='rabota25'),
+    path('TO25/', TO25, name='TO25'),
 
 ]
