@@ -389,99 +389,8 @@
         </script>
     {% endif %}
     {% if user.username == 'masterI' or user.username == 'admin' %}
-        <script>
-
-            $(document).ready(function () {
-                var item_num25 = $(this).attr('id');
-                update_item(item_num25)
-                setInterval(function () {
-                    if (!$(".popover-title").is(':visible')) {
-                        item_num25 = $(this).attr('id');
-                        update_item(item_num25);
-
-                    }
-
-                }, 30000);
-
-                function update_item(item_num25) {
-                    $('#sample_data33 tbody').load(
-                        "{% url 'update_items25' %}?item_num25=" + item_num25
-                    );
 
 
-                }
-
-
-            });
-
-
-        </script>
-        <script>
-            $(document).ready(function () {
-                setInterval(function () {
-                    $.ajax({
-                        url: 'getBtn25',
-                        method: 'post',
-                        success: function (data) {
-                            if (data.buttons_reg[0] == 1) {
-                                $('#start_perenaladka25').attr('style', 'color:red; border: 1px solid blue;')
-                                $('#start_donaladka25').attr('style', 'color:black;')
-                                $('#TO25').attr('style', 'color:black; ')
-                                $('#rabota25').attr('style', 'color:black; ')
-                            }
-                            if (data.buttons_reg[0] == 2) {
-                                $('#start_donaladka25').attr('style', 'color:red; border: 1px solid blue;')
-                                $('#start_perenaladka25').attr('style', 'color:black;')
-                                $('#TO25').attr('style', 'color:black; ')
-                                $('#rabota25').attr('style', 'color:black; ')
-                            }
-                            if (data.buttons_reg[0] == 8) {
-                                $('#TO25').attr('style', 'color:red; border: 1px solid blue;')
-                                $('#start_perenaladka25').attr('style', 'color:black;')
-                                $('#start_donaladka25').attr('style', 'color:black;')
-                                $('#rabota25').attr('style', 'color:black; ')
-                            }
-                            if (data.buttons_reg[0] == 4) {
-                                $('#rabota25').attr('style', 'color:green; border: 1px solid blue;')
-                                $('#start_perenaladka25').attr('style', 'color:black;')
-                                $('#start_donaladka25').attr('style', 'color:black;')
-                                $('#TO25').attr('style', 'color:black; ')
-                            }
-                            if (data.buttons_reg[0] == 0) {
-                                $('#start_perenaladka25').attr('style', 'color:black;')
-                                $('#start_donaladka25').attr('style', 'color:black;')
-                                $('#TO25').attr('style', 'color:black; ')
-                                $('#rabota25').attr('style', 'color:black; ')
-                            }
-
-                        }
-                    });
-                }, 2000);
-
-
-                $.ajax({
-                    url: 'getBtn25',
-                    method: 'post',
-                    success: function (data) {
-                        if (data.buttons_reg[0] == 1) {
-                            $('#start_perenaladka25').attr('style', 'color:red; border: 1px solid blue;')
-                        }
-                        if (data.buttons_reg[0] == 2) {
-                            $('#start_donaladka25').attr('style', 'color:red; border: 1px solid blue;')
-                        }
-                        if (data.buttons_reg[0] == 8) {
-                            $('#TO25').attr('style', 'color:red; border: 1px solid blue;')
-                        }
-                        if (data.buttons_reg[0] == 4) {
-                            $('#rabota25').attr('style', 'color:green; border: 1px solid blue;')
-                        }
-
-                    }
-                });
-
-
-            });
-        </script>
         <script> // зависимости выпадающих списков таблицы
         $(document).ready(function () {
             var sor = [];
@@ -579,6 +488,100 @@
 
         </script>
     {% endif %}
+    <script>
+            $(document).ready(function () {
+                setInterval(function () {
+                    $.ajax({
+                        url: 'getBtn25',
+                        method: 'post',
+                        success: function (data) {
+                            if (data.buttons_reg[0] == 1) {
+                                $('#start_perenaladka25').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_donaladka25').attr('style', 'color:black;')
+                                $('#TO25').attr('style', 'color:black; ')
+                                $('#rabota25').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 2) {
+                                $('#start_donaladka25').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka25').attr('style', 'color:black;')
+                                $('#TO25').attr('style', 'color:black; ')
+                                $('#rabota25').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 8) {
+                                $('#TO25').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka25').attr('style', 'color:black;')
+                                $('#start_donaladka25').attr('style', 'color:black;')
+                                $('#rabota25').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 4) {
+                                $('#rabota25').attr('style', 'color:green; border: 1px solid blue;')
+                                $('#start_perenaladka25').attr('style', 'color:black;')
+                                $('#start_donaladka25').attr('style', 'color:black;')
+                                $('#TO25').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 0) {
+                                $('#start_perenaladka25').attr('style', 'color:black;')
+                                $('#start_donaladka25').attr('style', 'color:black;')
+                                $('#TO25').attr('style', 'color:black; ')
+                                $('#rabota25').attr('style', 'color:black; ')
+                            }
+
+                        }
+                    });
+
+                }, 2000);
+
+
+                $.ajax({
+                    url: 'getBtn25',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka25').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 2) {
+                            $('#start_donaladka25').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 8) {
+                            $('#TO25').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 4) {
+                            $('#rabota25').attr('style', 'color:green; border: 1px solid blue;')
+                        }
+
+                    }
+                });
+
+
+            });
+        </script>
+    <script>
+
+            $(document).ready(function () {
+                var item_num25 = $(this).attr('id');
+                update_item(item_num25)
+                setInterval(function () {
+                    if (!$(".popover-title").is(':visible')) {
+                        item_num25 = $(this).attr('id');
+                        update_item(item_num25);
+
+                    }
+
+                }, 30000);
+
+                function update_item(item_num25) {
+                    $('#sample_data25 tbody').load(
+                        "{% url 'update_items25' %}?item_num25=" + item_num25
+                    );
+
+
+                }
+
+
+            });
+
+
+        </script>
     {% if user.username == 'masterI' or user.username == 'admin' %}
         <script>
 
@@ -964,12 +967,12 @@
 
 
 
-    {% if user.username == 'masterS' or user.username == 'admin' %}
+    {% if user.username == 'masterS' or user.username == 'admin' or user.username == 'naladchikS'  %}
         {% include 'Line31/line31.html' %}
         {% include 'Line33/line33.html' %}
     {% endif %}
 
-    {% if user.username == 'masterI' or user.username == 'admin' %}
+    {% if user.username == 'masterI' or user.username == 'admin' or user.username == 'naladchikS' %}
         {% include 'Line24/line24.html' %}
         {% include 'Line25/line25.html' %}
         {% include 'Line26/line26.html' %}

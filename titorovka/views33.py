@@ -9,7 +9,6 @@ from temruk.models import bottling_plan
 from titorovka.models import *
 from  pyModbusTCP.client import ModbusClient
 slave_address='10.36.20.2'
-
 unit_id = 1
 modbus_client = ModbusClient(host=slave_address, unit_id=unit_id,auto_open=True)
 

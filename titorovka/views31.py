@@ -210,7 +210,7 @@ def getData31(requst):
 
 def getBtn31(requst):
     buttons_reg = modbus_client.read_input_registers(0)
-    print(buttons_reg)
+
     result = {
         'buttons_reg':buttons_reg
               }

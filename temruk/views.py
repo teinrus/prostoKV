@@ -61,6 +61,7 @@ def proc(startSmena, spotSmena, plan, colProduct):
 
 # стартовая страница
 def index(request):
+
     if request.method == 'GET':
         user_ip = request.META.get('HTTP_X_FORWARDED_FOR')
         if user_ip:
@@ -76,6 +77,14 @@ def index(request):
 
 
 def temruk(request):
+    acr = NapAcratofori.objects.filter(data=datetime.datetime(year=2023,month=7,day=14))
+
+    with open('acr.csv', 'w', newline='') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        spamwriter.writerow([14.07, 69])
+        for el in acr:
+            spamwriter.writerow([el.time,el.acr69_temp,])
     if request.method == 'GET':
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
                                       starttime__gte=startSmena,
@@ -645,8 +654,8 @@ def otchet(request):
     smena=form.cleaned_data["SmenaF"]
     nachaloOt = form.cleaned_data["start_data"]
     okonchanieOt = form.cleaned_data["finish_data"]
-    temp=Table5.objects.all()
-    tempS=Speed5.objects.all()
+    # temp=Table5.objects.all()
+    # tempS=Speed5.objects.all()
 
     #
     # with open('prostoy.csv', 'w', newline='') as csvfile:
@@ -654,11 +663,11 @@ def otchet(request):
     #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
     #     for el in temp:
     #         spamwriter.writerow([el.startdata,el.starttime,el.prostoy,el.uchastok  ])
-    with open('proizvod.csv', 'w', newline='') as csvfile2:
-        spamwriter = csv.writer(csvfile2, delimiter=' ',
-                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        for el in tempS:
-            spamwriter.writerow([el.data,el.time,'|',int(int(el.triblok)/20)])
+    # with open('proizvod.csv', 'w', newline='') as csvfile2:
+    #     spamwriter = csv.writer(csvfile2, delimiter=' ',
+    #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    #     for el in tempS:
+    #         spamwriter.writerow([el.data,el.time,'|',int(int(el.triblok)/20)])
 
 
     return render(request, "otchet.html", {
