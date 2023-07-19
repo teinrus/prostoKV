@@ -1083,6 +1083,9 @@ def rabota25(request):
 def TO25(request):
     mod_bus_igristoe(1,8)
     return HttpResponse('yes')
+def vid25(request):
+    mod_bus_igristoe(1,16)
+    return HttpResponse('yes')
 
 
 

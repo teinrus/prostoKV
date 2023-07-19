@@ -500,30 +500,42 @@
                                 $('#start_donaladka25').attr('style', 'color:black;')
                                 $('#TO25').attr('style', 'color:black; ')
                                 $('#rabota25').attr('style', 'color:black; ')
+                                $('#vid25').attr('style', 'color:black; ')
                             }
                             if (data.buttons_reg[0] == 2) {
                                 $('#start_donaladka25').attr('style', 'color:red; border: 1px solid blue;')
                                 $('#start_perenaladka25').attr('style', 'color:black;')
                                 $('#TO25').attr('style', 'color:black; ')
                                 $('#rabota25').attr('style', 'color:black; ')
+                                $('#vid25').attr('style', 'color:black; ')
                             }
                             if (data.buttons_reg[0] == 8) {
                                 $('#TO25').attr('style', 'color:red; border: 1px solid blue;')
                                 $('#start_perenaladka25').attr('style', 'color:black;')
                                 $('#start_donaladka25').attr('style', 'color:black;')
                                 $('#rabota25').attr('style', 'color:black; ')
+                                $('#vid25').attr('style', 'color:black; ')
                             }
                             if (data.buttons_reg[0] == 4) {
                                 $('#rabota25').attr('style', 'color:green; border: 1px solid blue;')
                                 $('#start_perenaladka25').attr('style', 'color:black;')
                                 $('#start_donaladka25').attr('style', 'color:black;')
                                 $('#TO25').attr('style', 'color:black; ')
+                                $('#vid25').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 16) {
+                                $('#rabota25').attr('style', 'color:black; ')
+                                $('#start_perenaladka25').attr('style', 'color:black;')
+                                $('#start_donaladka25').attr('style', 'color:black;')
+                                $('#TO25').attr('style', 'color:black; ')
+                                $('#vid25').attr('style', 'color:red; border: 1px solid blue;')
                             }
                             if (data.buttons_reg[0] == 0) {
                                 $('#start_perenaladka25').attr('style', 'color:black;')
                                 $('#start_donaladka25').attr('style', 'color:black;')
                                 $('#TO25').attr('style', 'color:black; ')
                                 $('#rabota25').attr('style', 'color:black; ')
+                                $('#vid25').attr('style', 'color:black; ')
                             }
 
                         }
@@ -555,6 +567,7 @@
 
             });
         </script>
+{#    таблица 25#}
     <script>
 
             $(document).ready(function () {
@@ -582,6 +595,7 @@
 
 
         </script>
+{#    линия 26#}
     {% if user.username == 'masterI' or user.username == 'admin' %}
         <script>
 
@@ -774,7 +788,7 @@
         </script>
     {% endif %}
 
-
+{#кнопки 31#}
     <script>
         $(document).ready(function () {
             setInterval(function () {
@@ -841,6 +855,7 @@
 
         });
     </script>
+{#    таблица 31#}
     <script>
 
         $(document).ready(function () {
@@ -868,7 +883,7 @@
 
 
     </script>
-
+{#кнопки 33#}
     <script>
         $(document).ready(function () {
             setInterval(function () {
@@ -935,6 +950,7 @@
 
         });
     </script>
+{#    таблица 33#}
     <script>
 
         $(document).ready(function () {

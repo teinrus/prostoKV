@@ -126,7 +126,9 @@
   <input type="button" id="start_perenaladka25" value="Старт переналадка"/>
     <input type="button" id="start_donaladka25" value="Cтарт доналадка"/>
     <input type="button" id="TO25" value="ТО"/>
+    <input type="button" id="vid25" value="Выдержанное"/>
     <input type="button" id="rabota25" value="Работа"/>
+
 {% endif %}
 
      <script>
@@ -154,6 +156,12 @@
             $.ajax({
                 type: "POST",
                 url: "{% url 'TO25' %}",
+            });
+        })
+         $('#vid25').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'vid25' %}",
             });
         })
 
