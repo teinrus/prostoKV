@@ -1,33 +1,75 @@
-import datetime
+from datetime import datetime
 
-from django.db.models import  Sum, Avg
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Sum
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from temruk.models import Table5, Speed5, ProductionOutput5, bottling_plan, bottleExplosion5
+from pyModbusTCP.client import ModbusClient
 
-from temruk.models import *
-
-from  pyModbusTCP.client import ModbusClient
-slave_address='192.168.88.230'
+slave_address = '192.168.88.230'
 port = 502
 unit_id = 1
-modbus_client = ModbusClient(host=slave_address, port=port,unit_id=unit_id,auto_open=True)
+modbus_client = ModbusClient(host=slave_address, port=port, unit_id=unit_id, auto_open=True)
 
-start1 = datetime.time(8, 00, 0)
-start2 = datetime.time(16, 30, 0)
-start3 = datetime.time(23, 59, 0)
 
-if start1 <= datetime.datetime.now().time() <= start2:
-    startSmena = datetime.time(8, 00, 0)
-    spotSmena = datetime.time(16, 30, 0)
-elif start2 <= datetime.datetime.now().time() <= start3:
-    startSmena = datetime.time(16, 30, 0)
-    spotSmena = datetime.time(23, 59, 0)
-else:
-    startSmena = datetime.time(00, 00, 00)
-    spotSmena = datetime.time(8, 00, 00)
+import time
+import datetime
+def get_boom_out(boom):
+    try:
+        return boom.aggregate(Sum('bottle')).get('bottle__sum') or 0
+    except ObjectDoesNotExist:
+        return 0
 
-# функция формирования процентов за текущию смену
-def proc(startSmena, spotSmena, plan, colProduct):
+def get_shift_times():
+    now_time = time.localtime().tm_hour * 3600 + time.localtime().tm_min * 60 + time.localtime().tm_sec
+
+    if 0 <= now_time < 8 * 3600:
+        return datetime.time(0, 0),datetime.time(8, 0)
+    elif 8 * 3600 <= now_time < 16 * 3600 + 30 * 60:
+        return datetime.time(8, 0),datetime.time(16, 30)
+    else:
+        return datetime.time(16, 0),datetime.time(23, 59, 59)
+
+
+
+def get_shift_number():
+    if 0 <= time.localtime().tm_hour < 8:
+        return 3
+    elif 8 <= time.localtime().tm_hour < 16:
+        return 1
+    else:
+        return 2
+
+def get_plan_quantity():
+    try:
+        today = time.localtime().tm_yday
+        shift_number = get_shift_number()
+        plan = bottling_plan.objects.filter(Data__day=today, GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
+        plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
+        return plan_quantity
+    except Exception as e:
+        return 31000
+
+def get_average_speed(speed5_queryset):
+    count = 0
+    total_speed = 0
+    for el in speed5_queryset:
+        if el.triblok != 0:
+            count += 1
+            total_speed += el.triblok
+
+    return round(total_speed / count, 2) if count > 0 else 0
+
+def get_total_prostoy(table5_queryset):
+    sum_prostoy = table5_queryset.aggregate(Sum('prostoy'))['prostoy__sum']
+    return str(sum_prostoy) if sum_prostoy else '00:00'
+
+def get_total_product(production_output5_queryset):
+    sum_product = production_output5_queryset.aggregate(Sum('production'))['production__sum']
+    return sum_product if sum_product else 0
+
+def calculate_production_percentage(plan, total_product, startSmena, spotSmena):
     today = datetime.date.today()
     # количество продукции вып в сек
     d_start1 = datetime.datetime.combine(today, startSmena)
@@ -36,218 +78,76 @@ def proc(startSmena, spotSmena, plan, colProduct):
 
     planProdSec = (plan / diff1.total_seconds())
     # количество времени которое прошло
-    d_start2 = datetime.datetime.combine(today, startSmena)
-    d_end2 = datetime.datetime.combine(today, datetime.datetime.now().time())
-    diff2 = d_end2 - d_start2
+    d_start5 = datetime.datetime.combine(today, startSmena)
+    d_end5 = datetime.datetime.combine(today, datetime.datetime.now().time())
+    diff5 = d_end5 - d_start5
 
     # проц вып продукции
-    return int(colProduct / ((int(diff2.total_seconds()) * planProdSec) / 100))
+    return int(total_product / ((int(diff5.total_seconds()) * planProdSec) / 100))
 
-# получение данных в таблицу
-def update_items5(request):
-    if start1 <= datetime.datetime.now().time() <= start2:
-        startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
-    elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
-        spotSmena = datetime.time(23, 59, 0)
-    else:
-        startSmena = datetime.time(00, 00, 00)
-        spotSmena = datetime.time(8, 00, 00)
-
-    table5 = Table5.objects.filter(startdata=datetime.date.today(),
-                                   starttime__gte=startSmena,
-                                   starttime__lte=spotSmena)
-    list = []
-    for table in table5:
-        table_info = {
-            'id': table.id,
-            'startdata': table.startdata,
-            'starttime': table.starttime,
-            'prostoy': table.prostoy,
-
-            'uchastok': table.uchastok,
-            'otv_pod': table.otv_pod,
-            'prichina': table.prichina,
-            'comment': table.comment,
-        }
-        list.append(table_info)
-
-    table_dic = {}
-    table_dic['data'] = list
-
-    return render(request, 'Line5/table_body.html', {'table5': table5})
-
-
-
-# получение данных для 4 блоков и графика
-def getData(requst):
-
-
-    if start1 < datetime.datetime.now().time() <= start2:
-        startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
-        Smena=1
-    elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
-        spotSmena = datetime.time(23, 59, 0)
-        Smena=2
-    else:
-        startSmena = datetime.time(00, 00, 00)
-        spotSmena = datetime.time(8, 00, 00)
-        Smena=3
-
-    table = Table5.objects.filter(startdata=datetime.date.today(),
-                                  starttime__gte=startSmena,
-                                  starttime__lte=spotSmena)
-    speed = Speed5.objects.filter(data=datetime.date.today(),
-                                  time__gte=startSmena,
-                                  time__lte=spotSmena)
-
-    boom = bottleExplosion5.objects.filter(data=datetime.date.today(),
-                                          time__gte=startSmena,
-                                          time__lte=spotSmena)
-    productionOutput5 = ProductionOutput5.objects.filter(data=datetime.date.today(),
-                                  time__gte=startSmena,
-                                  time__lte=spotSmena)
-    try:
-        plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-                                         GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
-                                         ShiftNumber=Smena)
-        plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-        if plan== None:
-            plan=31000
-    except:
-        plan=31000
-
-    try:
-        count5=0
-        avg=0
-        for el in speed:
-            if el.triblok!=0:
-                count5+=1
-                avg+=el.triblok
-
-        avgSpeed = round(avg/count5, 2)
-    except:
-        avgSpeed = 0
-    try:
-        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
-
-        if (sumProstoy == None):
-            sumProstoy = '00:00'
-    except:
-        sumProstoy = '00:00'
-    try:
-        sum=0
-        sumProduct = productionOutput5.aggregate(Sum('production')).get('production__sum')
-        for el in productionOutput5:
-            sum+=el.production
-    except:
-        sumProduct = 0
-    try:
-
-        allProc = proc(startSmena, spotSmena, plan, sumProduct),
-    except:
-
-        allProc = 0
-
-    try:
-        boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
-        if (boomOut == None):
-            boomOut = 0
-    except:
-        boomOut = 0
-
-    lableChart = []
-    dataChart_triblok = []
-    dataChart_muzle = []
-    dataChart_termotunel = []
-    dataChart4_kapsula = []
-    dataChart4_eticetka = []
-    dataChart4_ukladchik = []
-    dataChart4_zakleichik = []
-
-    for sp in speed:
-        lableChart.append(str(sp.time))
-        dataChart_triblok.append(sp.triblok)
-        dataChart_muzle.append(sp.muzle)
-        dataChart_termotunel.append(sp.termotunel)
-        dataChart4_kapsula.append(sp.kapsula)
-        dataChart4_eticetka.append(sp.eticetka)
-        dataChart4_ukladchik.append(sp.ukladchik)
-        dataChart4_zakleichik.append(sp.zakleichik)
-
-
-    result = {"allProc": allProc,
-              "boomOut": boomOut,
-              'sumProstoy': str(sumProstoy),
-              'sumProduct': sumProduct,
-              'avgSpeed': avgSpeed,
-
-              'lableChart': lableChart,
-
-              'dataChart_triblok': dataChart_triblok,
-              'dataChart_muzle':dataChart_muzle,
-              'dataChart_termotunel' :dataChart_termotunel,
-              'dataChart4_kapsula' :dataChart4_kapsula,
-              'dataChart4_eticetka':dataChart4_eticetka,
-              'dataChart4_ukladchik':dataChart4_ukladchik,
-              'dataChart4_zakleichik':dataChart4_zakleichik,
-
-
-              }
-    return JsonResponse(result)
-
-
-
-# блок внесения изменения в таблицу
 def update(request):
     if request.method == 'POST':
-
         pk = request.POST.get('pk')
         name = request.POST.get('name')
-        v = request.POST.get('value')
+        value = request.POST.get('value')
 
-        if name == 'uchastok':
-            try:
-                a = Table5.objects.get(id=pk)
-                a.uchastok = v
-                a.save()
-            except:
-                a = Table5(uchastok=v, id=pk)
-                a.save()
-        elif name == 'prichina':
-            try:
+        try:
+            a = Table5.objects.get(id=pk)
+            setattr(a, name, value)
+        except Table5.DoesNotExist:
+            a = Table5(id=pk, **{name: value})
 
-                a = Table5.objects.get(id=pk)
-                a.prichina = v
-                a.save()
-            except:
-                a = Table5(prichina=v, id=pk)
-                a.save()
-        elif name == 'otv_pod':
-            try:
-                a = Table5.objects.get(id=pk)
-                a.otv_pod = v
-                a.save()
-            except:
-                a = Table5(otv_pod=v, id=pk)
-                a.save()
-        elif name == 'comment':
-            try:
-                a = Table5.objects.get(id=pk)
-                a.comment = v
-                a.save()
-            except:
-                a = Table5(comment=v, id=pk)
-                a.save()
+        a.save()
+        return HttpResponse('yes')
 
-    return HttpResponse('yes')
 
-def getBtn5(requst):
-    buttons_reg = modbus_client.read_input_registers(0)
+def update_items5(request):
+    start_time, stop_time = get_shift_times()
+
+    today = datetime.date.today().isoformat()  # Convert to string representation (YYYY-MM-DD)
+    table5_queryset = Table5.objects.filter(startdata=today, starttime__gte=start_time, starttime__lte=stop_time)
+    return render(request, 'Line5/table_body.html', {'table5': table5_queryset})
+
+
+
+def getData(request):
+    start_time, stop_time = get_shift_times()
+
+    today = datetime.date.today().isoformat()
+
+    plan_quantity = get_plan_quantity()
+
+    table5_queryset = Table5.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
+    speed5_queryset = Speed5.objects.filter(data=today, time__range=(start_time, stop_time))
+    production_output5_queryset = ProductionOutput5.objects.filter(data=today, time__range=(start_time, stop_time))
+    boom = bottleExplosion5.objects.filter(data=datetime.date.today(),time__range=(start_time, stop_time))
+
+    all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output5_queryset), start_time, stop_time)
+    sum_prostoy = get_total_prostoy(table5_queryset)
+    avg_speed = get_average_speed(speed5_queryset)
+    sum_product = get_total_product(production_output5_queryset)
+
+    lable_chart = [str(sp.time) for sp in speed5_queryset]
+    data_chart = [sp.triblok for sp in speed5_queryset]
+    boomOut = get_boom_out(boom)
+
+
+    return JsonResponse({
+        "allProc": all_proc,
+        'sumProstoy': sum_prostoy,
+        'avgSpeed': avg_speed,
+        'sumProduct': sum_product,
+        'lableChart': lable_chart,
+        'dataChart_triblok': data_chart,
+        "boomOut":boomOut,
+
+    })
+
+def getBtn5(request):
+    buttons_reg = modbus_client.read_input_registers(1)
+
     result = {
-        'buttons_reg':buttons_reg
-              }
+        'buttons_reg': buttons_reg
+    }
+
     return JsonResponse(result)

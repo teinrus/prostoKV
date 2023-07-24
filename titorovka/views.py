@@ -1057,18 +1057,24 @@ def TO24(request):
 
 def start_perenaladka26(request):
 
-    mod_bus_igristoe(1,1)
+    mod_bus_igristoe(2,1)
     return HttpResponse('yes')
 def start_donaladka26(request):
-    mod_bus_igristoe(1,2)
+    mod_bus_igristoe(2,2)
     return HttpResponse('yes')
 
 def rabota26(request):
-    mod_bus_igristoe(1,4)
+    mod_bus_igristoe(2,4)
     return HttpResponse('yes')
 def TO26(request):
-    mod_bus_igristoe(1,8)
+    mod_bus_igristoe(2,8)
     return HttpResponse('yes')
+def vid26(request):
+    mod_bus_igristoe(2,16)
+    return HttpResponse('yes')
+
+
+
 def start_perenaladka25(request):
 
     mod_bus_igristoe(1,1)

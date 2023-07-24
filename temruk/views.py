@@ -77,14 +77,15 @@ def index(request):
 
 
 def temruk(request):
-    acr = NapAcratofori.objects.filter(data=datetime.datetime(year=2023,month=7,day=14))
-
-    with open('acr.csv', 'w', newline='') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=' ',
-                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        spamwriter.writerow([14.07, 69])
-        for el in acr:
-            spamwriter.writerow([el.time,el.acr69_temp,])
+    # acr = NapAcratofori.objects.filter(data=datetime.datetime(year=2023,month=7,day=19))
+    #
+    # with open('acr.csv', 'w', newline='') as csvfile:
+    #     spamwriter = csv.writer(csvfile, delimiter=' ',
+    #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    #     for el in acr:
+    #         # temp=str(el.acr63_temp).replace("." , ",")
+    #         temp2 = str(el.acr83_temp).replace(".", ",")
+    #         spamwriter.writerow([el.time,temp2])
     if request.method == 'GET':
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
                                       starttime__gte=startSmena,
@@ -132,51 +133,6 @@ def temruk(request):
 
     })
 
-def start_perenaladka5(request):
-    mod_bus(0,1)
-    return HttpResponse('yes')
-def start_donaladka5(request):
-    mod_bus(0,2)
-    return HttpResponse('yes')
-
-def rabota5(request):
-    mod_bus(0,4)
-    return HttpResponse('yes')
-def TO5(request):
-    mod_bus(0,8)
-    return HttpResponse('yes')
-
-def start_perenaladka4(request):
-    mod_bus(1,1)
-    return HttpResponse('yes')
-def start_donaladka4(request):
-    mod_bus(1,2)
-    return HttpResponse('yes')
-
-def rabota4(request):
-    mod_bus(1,4)
-    return HttpResponse('yes')
-def TO4(request):
-    mod_bus(1,8)
-    return HttpResponse('yes')
-
-def start_perenaladka2(request):
-    mod_bus(2,1)
-    return HttpResponse('yes')
-def start_donaladka2(request):
-    mod_bus(2,2)
-    return HttpResponse('yes')
-
-def rabota2(request):
-    mod_bus(2,4)
-    return HttpResponse('yes')
-def TO2(request):
-    mod_bus(2,8)
-    return HttpResponse('yes')
-
-
-
-# блок формирования отчета
 def otchet(request):
     plan=0
     table=[]
@@ -450,6 +406,8 @@ def otchet(request):
                 except:
                     timeTemp = 0
 
+            # tempik=speed2.filter(triblok__gt=1)
+            # print(tempik.aggregate(Avg("triblok")))
             table=table2
             speed=speed2
             prod=productionOutput2
@@ -702,6 +660,53 @@ def otchet(request):
 
     })
 
+def start_perenaladka5(request):
+    mod_bus(0,1)
+    return HttpResponse('yes')
+def start_donaladka5(request):
+    mod_bus(0,2)
+    return HttpResponse('yes')
+
+def rabota5(request):
+    mod_bus(0,4)
+    return HttpResponse('yes')
+def TO5(request):
+    mod_bus(0,8)
+    return HttpResponse('yes')
+
+def start_perenaladka4(request):
+    mod_bus(1,1)
+    return HttpResponse('yes')
+def start_donaladka4(request):
+    mod_bus(1,2)
+    return HttpResponse('yes')
+
+def rabota4(request):
+    mod_bus(1,4)
+    return HttpResponse('yes')
+def TO4(request):
+    mod_bus(1,8)
+    return HttpResponse('yes')
+
+def start_perenaladka2(request):
+    mod_bus(2,1)
+    return HttpResponse('yes')
+def start_donaladka2(request):
+    mod_bus(2,2)
+    return HttpResponse('yes')
+
+def rabota2(request):
+    mod_bus(2,4)
+    return HttpResponse('yes')
+def TO2(request):
+    mod_bus(2,8)
+    return HttpResponse('yes')
+
+
+
+# блок формирования отчета
+
+
 def otchetSmena(request):
     nomenklatura=[]
     nomenklatura1 = []
@@ -788,6 +793,9 @@ def otchetSmena(request):
                                   data__lte=finish_data,
                                   time__gte=start_time,
                                   time__lte=finish_time)
+    speed_triblok5=round(speed.filter(triblok__gt=0).aggregate(Avg('triblok'))['triblok__avg'],2)
+    speed_triblok4 = round(speed4.filter(triblok__gt=0).aggregate(Avg('triblok'))['triblok__avg'],2)
+    speed_triblok2 = round(speed2.filter(triblok__gt=0).aggregate(Avg('triblok'))['triblok__avg'],2)
     try:
         plan1 = bottling_plan.objects.filter(Data__gte=start_data,
                                             Data__lte=finish_data,
@@ -1049,6 +1057,9 @@ def otchetSmena(request):
     #     for i in speedTest:
     #         writer.writerow(["Дата ", i.data, i.time,"Кол ", int(i.triblok)/20])
     return render(request, "otchetSmena.html", {
+        "speed_triblok5": speed_triblok5,
+        "speed_triblok4": speed_triblok4,
+        "speed_triblok2":speed_triblok2,
 
         "itog_plan": itog_plan,
         "itog_fact": itog_fact,

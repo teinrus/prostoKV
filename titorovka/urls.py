@@ -2,7 +2,7 @@ from django.urls import path
 from titorovka import views, views31, views33, views24, views26, views25
 from titorovka.views import start_perenaladka31, start_donaladka31, rabota31, TO31, start_perenaladka33, rabota33, TO33, \
     start_donaladka33, start_perenaladka24, start_donaladka24, rabota24, TO24, start_perenaladka26, start_donaladka26, \
-    rabota26, TO26, start_perenaladka25, start_donaladka25, rabota25, TO25, vid25
+    rabota26, TO26, start_perenaladka25, start_donaladka25, rabota25, TO25, vid25, vid26
 
 urlpatterns = [
     path('', views.index, name='titorovka'),
@@ -44,6 +44,7 @@ urlpatterns = [
     path('start_donaladka26/', start_donaladka26, name='start_donaladka26'),
     path('rabota26/', rabota26, name='rabota26'),
     path('TO26/', TO26, name='TO26'),
+    path('vid26/', vid26, name='vid26'),
 
     path('update_items25/', views25.update_items25, name='update_items25'),
     path('getData25', views25.getData25, name='getData25'),
