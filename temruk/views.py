@@ -793,9 +793,9 @@ def otchetSmena(request):
                                   data__lte=finish_data,
                                   time__gte=start_time,
                                   time__lte=finish_time)
-    speed_triblok5=round(speed.filter(triblok__gt=0).aggregate(Avg('triblok'))['triblok__avg'],2)
-    speed_triblok4 = round(speed4.filter(triblok__gt=0).aggregate(Avg('triblok'))['triblok__avg'],2)
-    speed_triblok2 = round(speed2.filter(triblok__gt=0).aggregate(Avg('triblok'))['triblok__avg'],2)
+    speed_triblok5=round(speed.filter(triblok__gt=100).aggregate(Avg('triblok'))['triblok__avg'],2)
+    speed_triblok4 = round(speed4.filter(triblok__gt=100).aggregate(Avg('triblok'))['triblok__avg'],2)
+    speed_triblok2 = round(speed2.filter(triblok__gt=100).aggregate(Avg('triblok'))['triblok__avg'],2)
     try:
         plan1 = bottling_plan.objects.filter(Data__gte=start_data,
                                             Data__lte=finish_data,
