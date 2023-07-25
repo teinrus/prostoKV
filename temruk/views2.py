@@ -23,7 +23,7 @@ def get_shift_times():
     elif 8 * 3600 <= now_time < 16 * 3600 + 30 * 60:
         return datetime.time(8, 0),datetime.time(16, 30)
     else:
-        return datetime.time(16, 0),datetime.time(23, 59, 59)
+        return datetime.time(16, 30),datetime.time(23, 59, 59)
 
 
 
