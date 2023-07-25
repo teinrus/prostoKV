@@ -134,7 +134,7 @@ def getData4(request):
     })
 
 def getBtn4(request):
-    buttons_reg = modbus_client.read_input_registers(0)
+    buttons_reg = modbus_client.read_input_registers(1)
 
     result = {
         'buttons_reg': buttons_reg
