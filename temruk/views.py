@@ -113,8 +113,8 @@ def temruk(request):
     otv_p=set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
-    uch = uchastok.objects.all()
-    uch_vino=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
+    uch = uchastok.objects.all().exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(uchastok="Розлив")
+    uch_vino=uch.exclude(uchastok="Мюзлёвочный аппарат")
     return render(request, "temruk.html", {
 
         'otv_p':otv_p ,
@@ -134,6 +134,20 @@ def temruk(request):
     })
 
 def otchet(request):
+    # acr = Speed5.objects.filter(data__gte=datetime.datetime(year=2023,month=7,day=1),data__lte=datetime.datetime(year=2023,month=8,day=1))
+    #
+    # with open('speed.csv', 'w', newline='') as csvfile:
+    #     spamwriter = csv.writer(csvfile, delimiter=' ',
+    #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    #     for el in acr:
+    #         spamwriter.writerow([str(el.data)+";",str(el.time)+";",str(el.triblok/20)+";"])
+    # # acr = Table5.objects.filter(startdata__gte=datetime.datetime(year=2023,month=7,day=1),startdata__lte=datetime.datetime(year=2023,month=8,day=1))
+    # # with open('prostoy.csv', 'w', newline='') as csvfile:
+    # #     spamwriter = csv.writer(csvfile, delimiter=' ',
+    # #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    # #     for el in acr:
+    # #         spamwriter.writerow([str(el.startdata)+";",str(el.starttime)+";",str(el.prostoy)+";",str(el.uchastok)+";",str(el.prichina)+";"])
+
     plan=0
     table=[]
     timeTemp = 0
@@ -597,8 +611,8 @@ def otchet(request):
 
 
 
-    uch = uchastok.objects.all()
-    uch_vino=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
+    uch = uchastok.objects.all().exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(uchastok="Розлив")
+    uch_vino=uch.exclude(uchastok="Мюзлёвочный аппарат")
 
     prichAll = prichina.objects.all()
     podrazdeleniaEl = []

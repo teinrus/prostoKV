@@ -109,14 +109,17 @@ def index(request):
     otv_p=set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
-    uch = uchastok.objects.all()
-    uch_vino=uchastok.objects.exclude(uchastok="Мюзле")
+    uch = uchastok.objects.all().exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(uchastok="Розлив")
+    uch_vino=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат").exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(uchastok="Розлив")
+    uch_vino33 = uchastok.objects.all().exclude(uchastok="Триблок розлива").exclude(uchastok="Мюзлёвочный аппарат")
+
     return render(request, "titorovka.html", {
 
         'otv_p':otv_p ,
         'prich': prich,
         'uch': uch,
         'uch_vino': uch_vino,
+        'uch_vino33': uch_vino33,
 
         'table31': table31,
         'speed31': speed31,

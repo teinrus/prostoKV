@@ -117,7 +117,7 @@ def getData2(request):
     production_output2_queryset = ProductionOutput2.objects.filter(data=today, time__range=(start_time, stop_time))
 
     all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output2_queryset), start_time, stop_time)
-    sum_prostoy = get_total_prostoy(table2_queryset)
+    sum_prostoy = get_total_prostoy(table2_queryset.filter())
     avg_speed = get_average_speed(speed2_queryset)
     sum_product = get_total_product(production_output2_queryset)
 
