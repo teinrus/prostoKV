@@ -198,99 +198,7 @@
     {% endif %}
 
     {% if user.username == 'masterI' or user.username == 'admin' %}
-        <script>
 
-            $(document).ready(function () {
-                var item_num24 = $(this).attr('id');
-                update_item(item_num24)
-                setInterval(function () {
-                    if (!$(".popover-title").is(':visible')) {
-                        item_num24 = $(this).attr('id');
-                        update_item(item_num24);
-
-                    }
-
-                }, 30000);
-
-                function update_item(item_num24) {
-                    $('#sample_data33 tbody').load(
-                        "{% url 'update_items24' %}?item_num24=" + item_num24
-                    );
-
-
-                }
-
-
-            });
-
-
-        </script>
-        <script>
-            $(document).ready(function () {
-                setInterval(function () {
-                    $.ajax({
-                        url: 'getBtn24',
-                        method: 'post',
-                        success: function (data) {
-                            if (data.buttons_reg[0] == 1) {
-                                $('#start_perenaladka24').attr('style', 'color:red; border: 1px solid blue;')
-                                $('#start_donaladka24').attr('style', 'color:black;')
-                                $('#TO24').attr('style', 'color:black; ')
-                                $('#rabota24').attr('style', 'color:black; ')
-                            }
-                            if (data.buttons_reg[0] == 2) {
-                                $('#start_donaladka24').attr('style', 'color:red; border: 1px solid blue;')
-                                $('#start_perenaladka24').attr('style', 'color:black;')
-                                $('#TO24').attr('style', 'color:black; ')
-                                $('#rabota24').attr('style', 'color:black; ')
-                            }
-                            if (data.buttons_reg[0] == 8) {
-                                $('#TO24').attr('style', 'color:red; border: 1px solid blue;')
-                                $('#start_perenaladka24').attr('style', 'color:black;')
-                                $('#start_donaladka24').attr('style', 'color:black;')
-                                $('#rabota24').attr('style', 'color:black; ')
-                            }
-                            if (data.buttons_reg[0] == 4) {
-                                $('#rabota24').attr('style', 'color:green; border: 1px solid blue;')
-                                $('#start_perenaladka24').attr('style', 'color:black;')
-                                $('#start_donaladka24').attr('style', 'color:black;')
-                                $('#TO24').attr('style', 'color:black; ')
-                            }
-                            if (data.buttons_reg[0] == 0) {
-                                $('#start_perenaladka24').attr('style', 'color:black;')
-                                $('#start_donaladka24').attr('style', 'color:black;')
-                                $('#TO24').attr('style', 'color:black; ')
-                                $('#rabota24').attr('style', 'color:black; ')
-                            }
-
-                        }
-                    });
-                }, 2000);
-
-
-                $.ajax({
-                    url: 'getBtn24',
-                    method: 'post',
-                    success: function (data) {
-                        if (data.buttons_reg[0] == 1) {
-                            $('#start_perenaladka24').attr('style', 'color:red; border: 1px solid blue;')
-                        }
-                        if (data.buttons_reg[0] == 2) {
-                            $('#start_donaladka24').attr('style', 'color:red; border: 1px solid blue;')
-                        }
-                        if (data.buttons_reg[0] == 8) {
-                            $('#TO24').attr('style', 'color:red; border: 1px solid blue;')
-                        }
-                        if (data.buttons_reg[0] == 4) {
-                            $('#rabota24').attr('style', 'color:green; border: 1px solid blue;')
-                        }
-
-                    }
-                });
-
-
-            });
-        </script>
         <script> // зависимости выпадающих списков таблицы
         $(document).ready(function () {
             var sor = [];
@@ -411,7 +319,7 @@
                 value: "Не выбрано",
                 source:
                     [
-                        {% for el in uch %}
+                        {% for el in uch_vino %}
                             {value: "{{ el }}", text: "{{ el }}"},
                         {% endfor %}],
                 validate: function (value) {
@@ -488,6 +396,99 @@
 
         </script>
     {% endif %}
+     <script>
+
+            $(document).ready(function () {
+                var item_num24 = $(this).attr('id');
+                update_item(item_num24)
+                setInterval(function () {
+                    if (!$(".popover-title").is(':visible')) {
+                        item_num24 = $(this).attr('id');
+                        update_item(item_num24);
+
+                    }
+
+                }, 30000);
+
+                function update_item(item_num24) {
+                    $('#sample_data33 tbody').load(
+                        "{% url 'update_items24' %}?item_num24=" + item_num24
+                    );
+
+
+                }
+
+
+            });
+
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                setInterval(function () {
+                    $.ajax({
+                        url: 'getBtn24',
+                        method: 'post',
+                        success: function (data) {
+                            if (data.buttons_reg[0] == 1) {
+                                $('#start_perenaladka24').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_donaladka24').attr('style', 'color:black;')
+                                $('#TO24').attr('style', 'color:black; ')
+                                $('#rabota24').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 2) {
+                                $('#start_donaladka24').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka24').attr('style', 'color:black;')
+                                $('#TO24').attr('style', 'color:black; ')
+                                $('#rabota24').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 8) {
+                                $('#TO24').attr('style', 'color:red; border: 1px solid blue;')
+                                $('#start_perenaladka24').attr('style', 'color:black;')
+                                $('#start_donaladka24').attr('style', 'color:black;')
+                                $('#rabota24').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 4) {
+                                $('#rabota24').attr('style', 'color:green; border: 1px solid blue;')
+                                $('#start_perenaladka24').attr('style', 'color:black;')
+                                $('#start_donaladka24').attr('style', 'color:black;')
+                                $('#TO24').attr('style', 'color:black; ')
+                            }
+                            if (data.buttons_reg[0] == 0) {
+                                $('#start_perenaladka24').attr('style', 'color:black;')
+                                $('#start_donaladka24').attr('style', 'color:black;')
+                                $('#TO24').attr('style', 'color:black; ')
+                                $('#rabota24').attr('style', 'color:black; ')
+                            }
+
+                        }
+                    });
+                }, 2000);
+
+
+                $.ajax({
+                    url: 'getBtn24',
+                    method: 'post',
+                    success: function (data) {
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka24').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 2) {
+                            $('#start_donaladka24').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 8) {
+                            $('#TO24').attr('style', 'color:red; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 4) {
+                            $('#rabota24').attr('style', 'color:green; border: 1px solid blue;')
+                        }
+
+                    }
+                });
+
+
+            });
+        </script>
     <script>
         $(document).ready(function () {
             setInterval(function () {
