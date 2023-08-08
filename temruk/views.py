@@ -150,14 +150,20 @@ def otchet(request):
 
     plan=0
     table=[]
+    temp_chart=[]
     timeTemp = 0
     form = Otchet(request.GET)
     if form.is_valid():
+
         # Сортировка по дате
         if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 5'):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
+                    boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                           data__lte=form.cleaned_data["finish_data"],
+                                                           time__range=(datetime.time(0),datetime.time(23, 59)))
+                    temp_chart = [str(sp.time) for sp in boom]
                     table = Table5.objects.filter(starttime__gte=datetime.time(0),
                                                   starttime__lte=datetime.time(23, 59),
                                                   startdata__gte=form.cleaned_data["start_data"],
@@ -195,6 +201,10 @@ def otchet(request):
                         timeTemp = 0
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
+                    boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                           data__lte=form.cleaned_data["finish_data"],
+                                                           time__range=(datetime.time(8), datetime.time(16, 30)))
+                    temp_chart = [str(sp.time) for sp in boom]
                     table = Table5.objects.filter(starttime__gte=datetime.time(8),
                                                   starttime__lte=datetime.time(16, 30),
                                                   startdata__gte=form.cleaned_data["start_data"],
@@ -228,6 +238,11 @@ def otchet(request):
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
+                    boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                           data__lte=form.cleaned_data["finish_data"],
+                                                           time__range=(datetime.time(16, 30), datetime.time(23, 59)))
+                    temp_chart = [str(sp.time) for sp in boom]
+
                     table = Table5.objects.filter(starttime__gte=datetime.time(16, 30),
                                                   starttime__lte=datetime.time(23, 59),
                                                   startdata__gte=form.cleaned_data["start_data"],
@@ -262,6 +277,10 @@ def otchet(request):
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
+                    boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                           data__lte=form.cleaned_data["finish_data"],
+                                                           time__range=(datetime.time(00, 00), datetime.time(8, 00)))
+                    temp_chart = [str(sp.time) for sp in boom]
                     table = Table5.objects.filter(starttime__gte=datetime.time(00, 00),
                                                   starttime__lte=datetime.time(8, 00),
                                                   startdata__gte=form.cleaned_data["start_data"],
@@ -599,6 +618,7 @@ def otchet(request):
 
 
 
+
     # Данные для графика
     try:
         for sp in speed:
@@ -646,6 +666,7 @@ def otchet(request):
         'table': table,
         'form': form,
 
+        "tempChart":temp_chart,
 
         'line':line,
         'smena':smena,

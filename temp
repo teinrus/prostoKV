@@ -1,0 +1,33 @@
+function getColorByTime(value, tempChartTimes) {
+
+        let timeParts = value.split(":");
+        let hours = parseInt(timeParts[0], 10);
+        let minutes = parseInt(timeParts[1], 10);
+        let seconds = parseInt(timeParts[2], 10);
+
+        let currentDate = new Date();
+        let timeObject = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes, seconds);
+
+
+        for (var j = 0; j < tempChartTimes.length; j++) {
+            let timeParts2 = tempChartTimes[j].split(":");
+            let hours2 = parseInt(timeParts2[0], 10);
+            let minutes2 = parseInt(timeParts2[1], 10);
+            let seconds2 = parseInt(timeParts2[2], 10)
+            let currentDate2 = new Date();
+            let timeObject2 = new Date(currentDate2.getFullYear(), currentDate2.getMonth(), currentDate2.getDate(), hours2, minutes2,seconds2);
+            let newTimeM = new Date(timeObject2 - 3 * 60 * 1000);
+            let newTimeB = new Date(timeObject2 + 4 * 60 * 1000);
+
+            // Проверяем, выполнялось ли уже это условие для данного времени
+            if (newTimeM < timeObject && timeObject < newTimeB) {
+                console.log(newTimeM,timeObject,newTimeB)
+               return '#ff0000';
+            }
+        }
+
+    return 'rgb(76,125,248)'; // Зеленый, если не попадает в условие окрашивания в черный
+}
+
+
+ newData.lableChart.map((value) => getColorByTime(value, newData.temp_chart, newData.lableChart));

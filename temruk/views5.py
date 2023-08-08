@@ -110,6 +110,40 @@ def update_items5(request):
 
 
 
+# def getData(request):
+#     start_time, stop_time = get_shift_times()
+#
+#     today = datetime.date.today().isoformat()
+#
+#     plan_quantity = get_plan_quantity()
+#
+#     table5_queryset = Table5.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
+#     speed5_queryset = Speed5.objects.filter(data=today, time__range=(start_time, stop_time))
+#     production_output5_queryset = ProductionOutput5.objects.filter(data=today, time__range=(start_time, stop_time))
+#     boom = bottleExplosion5.objects.filter(data=datetime.date.today(),time__range=(start_time, stop_time))
+#
+#     all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output5_queryset), start_time, stop_time)
+#     sum_prostoy = get_total_prostoy(table5_queryset)
+#     avg_speed = get_average_speed(speed5_queryset)
+#     sum_product = get_total_product(production_output5_queryset)
+#
+#     lable_chart = [str(sp.time) for sp in speed5_queryset]
+#     data_chart = [sp.triblok for sp in speed5_queryset]
+#     boomOut = get_boom_out(boom)
+#
+#     boomTemp=list(boom)
+#     return JsonResponse({
+#         "allProc": all_proc,
+#         'sumProstoy': sum_prostoy,
+#         'avgSpeed': avg_speed,
+#         'sumProduct': sum_product,
+#         'lableChart': lable_chart,
+#         'dataChart_triblok': data_chart,
+#         "boomOut":boomOut,
+#         "boomTemp":boomTemp,
+#
+#     })
+
 def getData(request):
     start_time, stop_time = get_shift_times()
 
@@ -120,9 +154,10 @@ def getData(request):
     table5_queryset = Table5.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
     speed5_queryset = Speed5.objects.filter(data=today, time__range=(start_time, stop_time))
     production_output5_queryset = ProductionOutput5.objects.filter(data=today, time__range=(start_time, stop_time))
-    boom = bottleExplosion5.objects.filter(data=datetime.date.today(),time__range=(start_time, stop_time))
+    boom = bottleExplosion5.objects.filter(data=datetime.date.today(), time__range=(start_time, stop_time))
 
-    all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output5_queryset), start_time, stop_time)
+    all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output5_queryset),
+                                               start_time, stop_time)
     sum_prostoy = get_total_prostoy(table5_queryset)
     avg_speed = get_average_speed(speed5_queryset)
     sum_product = get_total_product(production_output5_queryset)
@@ -130,6 +165,12 @@ def getData(request):
     lable_chart = [str(sp.time) for sp in speed5_queryset]
     data_chart = [sp.triblok for sp in speed5_queryset]
     boomOut = get_boom_out(boom)
+    temp_chart = [str(sp.time) for sp in boom]
+
+
+
+
+
 
 
     return JsonResponse({
@@ -139,8 +180,8 @@ def getData(request):
         'sumProduct': sum_product,
         'lableChart': lable_chart,
         'dataChart_triblok': data_chart,
-        "boomOut":boomOut,
-
+        "boomOut": boomOut,
+        "temp_chart":temp_chart,
     })
 
 def getBtn5(request):
