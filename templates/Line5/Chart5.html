@@ -3,56 +3,15 @@
 <html>
 <head>
     <title>Простои линии</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
     <h1 style="text-align:center">Простои линии 5</h1>
 
     {% if not user.username == 'admin' and not user.username == 'master' %}
-        <!-- Этот блок будет отображаться только если пользователь НЕ admin и НЕ master -->
-
-        <!-- Здесь идет разметка для графика и другой информации -->
-        <div class="col__wrapper"
-             style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
-            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
-                <canvas id="Chart"></canvas>
-            </div>
-            <ul class="col__list">
-                <!-- Здесь идет блок с различной информацией, который будет обновляться вместе с графиком -->
-                <!-- Данные с id="avgSpeeds", id="sumProduct", id="sumProstoy", и id="allProc" будут обновляться в коде JavaScript -->
-                <li class="col__item">
-                    <ul>
-                        <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
-                        <li id="avgSpeeds"
-                            style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
-                    </ul>
-                </li>
-                <li class="col__item">
-                    <ul>
-                        <li style="list-style-type: none; font-size:23px">Количество продукции:</li>
-                        <li id="sumProduct" style="text-align: center; font-size:70px; list-style-type: none;"></li>
-                    </ul>
-                <li class="col__item">
-                    <ul>
-                        <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
-                        <li id="sumProstoy" style="text-align: center; font-size:70px; list-style-type: none;"></li>
-                    </ul>
-                <li class="col__item">
-                    <ul>
-                        <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
-                        <li id="allProc" style="text-align: center; font-size:70px; list-style-type: none;"></li>
-                    </ul>
-                <li class="col__item" style="margin-top:10px;">
-                    <ul>
-                        <li style=" display: inline;list-style-type: none; font-size:15px">Взрывы бутылки</li>
-                        <li id="boomOut"style=" display: inline;font-size:15px; list-style-type: none;" ></li>
-                    </ul>
-            </ul>
-        </div>
-    {% endif %}
-
-    <script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
         // Функция для окрашивания элементов графика в зависимости от времени
         function getColorByTime(value, tempChartTimes) {
 
@@ -157,6 +116,49 @@
             dataUpdater();
         });
     </script>
+        <!-- Этот блок будет отображаться только если пользователь НЕ admin и НЕ master -->
+
+        <!-- Здесь идет разметка для графика и другой информации -->
+        <div class="col__wrapper"
+             style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
+            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
+                <canvas id="Chart"></canvas>
+            </div>
+            <ul class="col__list">
+                <!-- Здесь идет блок с различной информацией, который будет обновляться вместе с графиком -->
+                <!-- Данные с id="avgSpeeds", id="sumProduct", id="sumProstoy", и id="allProc" будут обновляться в коде JavaScript -->
+                <li class="col__item">
+                    <ul>
+                        <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
+                        <li id="avgSpeeds"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+                    </ul>
+                </li>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Количество продукции:</li>
+                        <li id="sumProduct" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
+                        <li id="sumProstoy" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+                <li class="col__item">
+                    <ul>
+                        <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
+                        <li id="allProc" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+                    </ul>
+                <li class="col__item" style="margin-top:10px;">
+                    <ul>
+                        <li style=" display: inline;list-style-type: none; font-size:15px">Взрывы бутылки</li>
+                        <li id="boomOut"style=" display: inline;font-size:15px; list-style-type: none;" ></li>
+                    </ul>
+            </ul>
+        </div>
+    {% endif %}
+
+
 
     <script>
 
