@@ -106,7 +106,7 @@ def update_items26(request):
     table26 = Table26.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
-
+    print("tut26")
     return render(request, 'Line26/table_body26.html', {'table26': table26})
 
 
@@ -211,7 +211,6 @@ def getData26(requst):
 
 def getBtn26(requst):
     buttons_reg = modbus_client.read_input_registers(2)
-    print(buttons_reg)
     result = {
         'buttons_reg':buttons_reg
               }

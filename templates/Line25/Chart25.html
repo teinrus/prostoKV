@@ -145,32 +145,6 @@
     ;
     </script>
 
-    <script>
 
-        $(document).ready(function () {
-            var item_num25 = $(this).attr('id');
-            update_item(item_num25)
-            setInterval(function () {
-                if (!$(".popover-title").is(':visible')) {
-                    item_num25 = $(this).attr('id');
-                    update_item(item_num25);
-
-                }
-
-            }, 15000);
-
-            function update_item(item_num25) {
-                $('#sample_data25 tbody').load(
-                    "{% url 'update_items25' %}?item_num25=" + item_num25
-                );
-
-
-            }
-
-
-        });
-
-
-    </script>
 
 {% endblock %}

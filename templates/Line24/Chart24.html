@@ -65,28 +65,6 @@
                             borderWidth: 3,
                             borderColor: 'rgb(76,125,248)',
                         }],
-                {#{#}
-                {#            label: '# Производительность капсула',#}
-                {#            data: data.dataChart24_kapsula,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,130,248)',#}
-                {#            },{#}
-                {#            label: '# Производительность этикетировка',#}
-                {#            data: data.dataChart24_eticetka,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,248,216)',#}
-                {#             },{#}
-                {#            label: '# Производительность укладчик',#}
-                {#            data: data.dataChart24_ukladchik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,248,145)',#}
-                {#            },{#}
-                {#            label: '# Производительность заклейщик',#}
-                {#            data: data.dataChart24_zakleichik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(87,248,76)',#}
-                {##}
-                {#        }]#}
                     },
                     options: {
 
@@ -133,10 +111,6 @@
             }).done(function (newData) {
                 chart24.data.labels = newData.lableChart24;
                 chart24.data.datasets[0].data = newData.dataChart24_triblok;
-                {#chart24.data.datasets[1].data = newData.dataChart24_kapsula;#}
-                {#chart24.data.datasets[2].data = newData.dataChart24_eticetka;#}
-                {#chart24.data.datasets[3].data = newData.dataChart24_ukladchik;#}
-                {#chart24.data.datasets[4].data = newData.dataChart24_zakleichik;#}
                 chart24.update();
             });
 
@@ -147,28 +121,7 @@
 
     <script>
 
-        $(document).ready(function () {
-            var item_num24 = $(this).attr('id');
-            update_item(item_num24)
-            setInterval(function () {
-                if (!$(".popover-title").is(':visible')) {
-                    item_num24 = $(this).attr('id');
-                    update_item(item_num24);
 
-                }
-
-            }, 15000);
-
-            function update_item(item_num24) {
-                $('#sample_data24 tbody').load(
-                    "{% url 'update_items24' %}?item_num24=" + item_num24
-                );
-
-
-            }
-
-
-        });
 
 
     </script>

@@ -106,7 +106,7 @@ def update_items24(request):
     table24 = Table24.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
-
+    print("tut24")
     return render(request, 'Line24/table_body24.html', {'table24': table24})
 
 

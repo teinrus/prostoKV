@@ -65,28 +65,7 @@
                             borderWidth: 3,
                             borderColor: 'rgb(76,125,268)',
                         }],
-                {#{#}
-                {#            label: '# Производительность капсула',#}
-                {#            data: data.dataChart26_kapsula,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,130,268)',#}
-                {#            },{#}
-                {#            label: '# Производительность этикетировка',#}
-                {#            data: data.dataChart26_eticetka,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,268,216)',#}
-                {#             },{#}
-                {#            label: '# Производительность укладчик',#}
-                {#            data: data.dataChart26_ukladchik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,268,145)',#}
-                {#            },{#}
-                {#            label: '# Производительность заклейщик',#}
-                {#            data: data.dataChart26_zakleichik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(87,268,76)',#}
-                {##}
-                {#        }]#}
+
                     },
                     options: {
 
@@ -133,10 +112,6 @@
             }).done(function (newData) {
                 chart26.data.labels = newData.lableChart26;
                 chart26.data.datasets[0].data = newData.dataChart26_triblok;
-                {#chart26.data.datasets[1].data = newData.dataChart26_kapsula;#}
-                {#chart26.data.datasets[2].data = newData.dataChart26_eticetka;#}
-                {#chart26.data.datasets[3].data = newData.dataChart26_ukladchik;#}
-                {#chart26.data.datasets[4].data = newData.dataChart26_zakleichik;#}
                 chart26.update();
             });
 
@@ -145,32 +120,6 @@
     ;
     </script>
 
-    <script>
 
-        $(document).ready(function () {
-            var item_num26 = $(this).attr('id');
-            update_item(item_num26)
-            setInterval(function () {
-                if (!$(".popover-title").is(':visible')) {
-                    item_num26 = $(this).attr('id');
-                    update_item(item_num26);
-
-                }
-
-            }, 15000);
-
-            function update_item(item_num26) {
-                $('#sample_data26 tbody').load(
-                    "{% url 'update_items26' %}?item_num26=" + item_num26
-                );
-
-
-            }
-
-
-        });
-
-
-    </script>
 
 {% endblock %}

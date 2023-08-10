@@ -1,7 +1,7 @@
 
 {% block content %}
 
-{% for row in table24|dictsort:"id"  reversed %}
+{% for row in table24|dictsort:"id" reversed %}
 
     <tr>
         <td data-pk="{{ row.id }}">{{ row.id }}</td>
@@ -12,7 +12,7 @@
 
         <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy}}</td>
 
-        <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">
+        <td data-name="uchastok"  class="uchastok" data-type="select" data-pk="{{ row.id }}">
             {{ row.uchastok }}</td>
         <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}
         </td>
