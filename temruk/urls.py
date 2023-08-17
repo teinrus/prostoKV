@@ -7,6 +7,9 @@ from temruk.views import profile_view, profileOut_view, start_perenaladka5, star
     start_perenaladka2, start_donaladka2, rabota2, TO2, start_perenaladka4, start_donaladka4, rabota4, TO4
 
 urlpatterns = [
+
+
+
     path('', views.index, name='home'),
 
     path('temruk', views.temruk, name='temruk'),
