@@ -200,6 +200,7 @@ class ProductionOutput25(models.Model):
 
     class Meta:
         verbose_name_plural = "Выпуск продукции линии 25"
+
 class ProductionOutput26(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')

@@ -277,5 +277,34 @@ class NapAcratofori(models.Model):
     class Meta:
         verbose_name_plural = "Напорные акратофоры"
 
+class Line5Indicators(models.Model):
+
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+
+    napTemp = models.FloatField('Температура напорника',default=0.0, blank=True, null=True)
+    napPress = models.FloatField('Давление напорника',default=0.0, blank=True, null=True)
+
+
+    def __str__(self):
+        return str(self.data)+str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Показатели линии 5"
+
+class Line5Indicators(models.Model):
+
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+
+    napTemp = models.FloatField('Температура напорника',default=0.0, blank=True, null=True)
+    napPress = models.FloatField('Давление напорника',default=0.0, blank=True, null=True)
+
+
+    def __str__(self):
+        return str(self.data)+str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Показатели линии 2"
 
 
