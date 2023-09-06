@@ -345,8 +345,16 @@
             <li>Количество взрывов {{ boomOut }}</li>
         {% endif %}
 
+
     </ul>
     <ul class="col">
+        <ul style="margin-bottom:15px ">
+            {% for item in indicators %}
+                {% if item.numbacr != None %}
+            <li>Акр: {{ item.numbacr }},Температура:{{ item.avg_naptemp_rounded }}°,Давление:{{ item.avg_nappress_rounded }}</li>
+                {% endif %}
+        {% endfor %}
+        </ul>
         <ul style="margin-bottom:15px ">
             <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy }}</b></li>
             <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork }}</b></li>
@@ -395,72 +403,72 @@
 
     {% if line == 'Линиия 5' %}
         <script>
-    function getColorByTime(value, tempChartTimes) {
-        let timeParts = value.split(":");
-        let hours = parseInt(timeParts[0], 10);
-        let minutes = parseInt(timeParts[1], 10);
-        let seconds = parseInt(timeParts[2], 10);
+            function getColorByTime(value, tempChartTimes) {
+                let timeParts = value.split(":");
+                let hours = parseInt(timeParts[0], 10);
+                let minutes = parseInt(timeParts[1], 10);
+                let seconds = parseInt(timeParts[2], 10);
 
-        let currentDate = new Date();
-        let timeObject = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes, seconds);
+                let currentDate = new Date();
+                let timeObject = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes, seconds);
 
-        for (var j = 0; j < tempChartTimes.length; j++) {
-            let timeParts2 = tempChartTimes[j].split(":");
-            let hours2 = parseInt(timeParts2[0], 10);
-            let minutes2 = parseInt(timeParts2[1], 10);
-            let seconds2 = parseInt(timeParts2[2], 10)
-            let currentDate2 = new Date();
-            let timeObject2 = new Date(currentDate2.getFullYear(), currentDate2.getMonth(), currentDate2.getDate(), hours2, minutes2,seconds2);
-            let newTimeM = new Date(timeObject2- 60 * 1000);
-            timeObject2.setMinutes(timeObject2.getMinutes() + 2);
-            let newTimeB = new Date(timeObject2);
-            // Проверяем, выполнялось ли уже это условие для данного времени
-            console.log(newTimeM,newTimeB)
-            if (newTimeM < timeObject && timeObject < newTimeB) {
-               return '#ff0000';
-            }
-        }
-
-        return 'rgb(76,125,248)'; // Зеленый, если не попадает в условие окрашивания в черный
-    }
-
-
-        const ctx = document.getElementById('myChart');
-
-        // Получение данных из Django-шаблона
-        const lableChart = {{ lableChart | safe }};
-        const dataChart = {{ dataChart | safe }};
-        const tempChartTimes = {{ tempChart | safe }};
-
-        // Создание массива для хранения цветов фона для каждого элемента данных
-        const backgroundColorArray = [];
-        for (var i = 0; i < lableChart.length; i++) {
-            const value = lableChart[i];
-            const color = getColorByTime(value, tempChartTimes);
-            backgroundColorArray.push(color);
-        }
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: lableChart,
-                datasets: [{
-                    borderColor: 'rgb(53,123,184)',
-                    label: '# Производительность {{ line }}',
-                    data: dataChart,
-                    borderWidth: 1,
-                    backgroundColor: backgroundColorArray // Массив с цветами фона
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                for (var j = 0; j < tempChartTimes.length; j++) {
+                    let timeParts2 = tempChartTimes[j].split(":");
+                    let hours2 = parseInt(timeParts2[0], 10);
+                    let minutes2 = parseInt(timeParts2[1], 10);
+                    let seconds2 = parseInt(timeParts2[2], 10)
+                    let currentDate2 = new Date();
+                    let timeObject2 = new Date(currentDate2.getFullYear(), currentDate2.getMonth(), currentDate2.getDate(), hours2, minutes2, seconds2);
+                    let newTimeM = new Date(timeObject2 - 60 * 1000);
+                    timeObject2.setMinutes(timeObject2.getMinutes() + 2);
+                    let newTimeB = new Date(timeObject2);
+                    // Проверяем, выполнялось ли уже это условие для данного времени
+                    console.log(newTimeM, newTimeB)
+                    if (newTimeM < timeObject && timeObject < newTimeB) {
+                        return '#ff0000';
                     }
                 }
+
+                return 'rgb(76,125,248)'; // Зеленый, если не попадает в условие окрашивания в черный
             }
-        });
-</script>
+
+
+            const ctx = document.getElementById('myChart');
+
+            // Получение данных из Django-шаблона
+            const lableChart = {{ lableChart | safe }};
+            const dataChart = {{ dataChart | safe }};
+            const tempChartTimes = {{ tempChart | safe }};
+
+            // Создание массива для хранения цветов фона для каждого элемента данных
+            const backgroundColorArray = [];
+            for (var i = 0; i < lableChart.length; i++) {
+                const value = lableChart[i];
+                const color = getColorByTime(value, tempChartTimes);
+                backgroundColorArray.push(color);
+            }
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: lableChart,
+                    datasets: [{
+                        borderColor: 'rgb(53,123,184)',
+                        label: '# Производительность {{ line }}',
+                        data: dataChart,
+                        borderWidth: 1,
+                        backgroundColor: backgroundColorArray // Массив с цветами фона
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
 
 
         <table id="sample_data" class="table table-bordered table-striped">

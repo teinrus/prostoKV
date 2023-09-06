@@ -54,4 +54,6 @@ urlpatterns = [
     path('profile', profile_view, name='profile'),
     path('profileOut', profileOut_view, name='profileOut'),
 
+
+
 ]

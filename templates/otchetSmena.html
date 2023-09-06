@@ -40,9 +40,11 @@
             </th>
             <th></th>
             <th>{% for item in indicators5 %}
+                {% if item.numbacr != None %}
                 Акр: {{ item.numbacr }},
                 {{ item.avg_naptemp_rounded }}°,
                 P:{{ item.avg_nappress_rounded }}
+                {% endif %}
             {% endfor %}</th>
             <th>{% for el in plan %}
                 <li style="font-size:small">{{ el.Quantity }}</li>
@@ -455,6 +457,7 @@
     <h5>Спец.помарочного учета:______________________________</h5>
     <a media="print" onclick="window.print()" style="margin-top: 20px;">Распечатать
     </a>
+
     <h1 media="print"></h1>
     <h4>Линия 5</h4>
     <table media="print" class="table table-bordered table-striped">

@@ -56,6 +56,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ProstoyKV.wsgi.application'
 
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -104,7 +105,8 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
