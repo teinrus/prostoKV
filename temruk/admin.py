@@ -41,6 +41,6 @@ TNR_admin_site.register(Line)
 
 TNR_admin_site.register(NapAcratofori)
 TNR_admin_site.register(Line5Indicators)
-
+TNR_admin_site.register(Line2Indicators)
 
 

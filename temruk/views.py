@@ -5,7 +5,8 @@ import datetime
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
-from django.db.models import Sum, Avg
+from django.db.models import Sum, Avg, F
+from django.db.models.functions import Round
 from django.http import HttpResponse
 
 from django.shortcuts import render, redirect
@@ -747,6 +748,8 @@ def otchetSmena(request):
     nomenklatura1 = []
     nomenklatura4=[]
     nomenklatura2=[]
+    indicators2 = []
+    indicators5 = []
 
     if  datetime.time(hour=8)< datetime.datetime.now().time()<datetime.time(hour=16,minute=30):
 
@@ -795,6 +798,7 @@ def otchetSmena(request):
                                   startdata__gte=start_data,
                                   startdata__lte=finish_data
                                   ).order_by('startdata', 'starttime')
+
 
     boom5 = bottleExplosion5.objects.filter(data__gte=start_data,
                                            data__lte=finish_data,
@@ -1087,7 +1091,28 @@ def otchetSmena(request):
     itog_otcl=otklonenie+otklonenie4+otklonenie2
     itog_proc=int(itog_fact/itog_plan*100)
 
+    try:
+        indicators2 = Line2Indicators.objects.filter(time__gte=start_time,
+                                        time__lte=finish_time,
+                                        data__gte=start_data,
+                                        data__lte=finish_data).values('numbacr')\
+            .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress'))\
+            .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'),2))\
+            .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
 
+    except:
+        print("alarme2")
+    try:
+        indicators5 = Line5Indicators.objects.filter(time__gte=start_time,
+                                        time__lte=finish_time,
+                                        data__gte=start_data,
+                                        data__lte=finish_data).values('numbacr')\
+            .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress'))\
+            .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'),2))\
+            .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+
+    except:
+        print("alarme")
     # tableTest = Table5.objects.all()
     # speedTest=Speed5.objects.all()
 
@@ -1101,6 +1126,8 @@ def otchetSmena(request):
     #     for i in speedTest:
     #         writer.writerow(["Дата ", i.data, i.time,"Кол ", int(i.triblok)/20])
     return render(request, "otchetSmena.html", {
+        "indicators2":indicators2,
+        "indicators5":indicators5,
         "speed_triblok5": speed_triblok5,
         "speed_triblok4": speed_triblok4,
         "speed_triblok2":speed_triblok2,
