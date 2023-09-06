@@ -136,9 +136,11 @@
             </th>
             <th></th>
             <th>{% for item in indicators2 %}
+                {% if item.numbacr != None %}
                 Акр: {{ item.numbacr }},
                 {{ item.avg_naptemp_rounded }}°,
                 P:{{ item.avg_nappress_rounded }}
+                {% endif %}
             {% endfor %}</th>
             <th>{% for el in plan2 %}
                 <li style="font-size:small">{{ el.Quantity }}</li>
