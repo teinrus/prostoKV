@@ -41,9 +41,9 @@
             <th></th>
             <th>{% for item in indicators5 %}
                 {% if item.numbacr != None %}
-                Акр: {{ item.numbacr }},
+                 <li>Акр: {{ item.numbacr }},
                 {{ item.avg_naptemp_rounded }}°,
-                P:{{ item.avg_nappress_rounded }}
+                     P:{{ item.avg_nappress_rounded }}</li>
                 {% endif %}
             {% endfor %}</th>
             <th>{% for el in plan %}
@@ -137,9 +137,9 @@
             <th></th>
             <th>{% for item in indicators2 %}
                 {% if item.numbacr != None %}
-                Акр: {{ item.numbacr }},
+                 <li>Акр: {{ item.numbacr }},
                 {{ item.avg_naptemp_rounded }}°,
-                P:{{ item.avg_nappress_rounded }}
+                     P:{{ item.avg_nappress_rounded }}</li>
                 {% endif %}
             {% endfor %}</th>
             <th>{% for el in plan2 %}
