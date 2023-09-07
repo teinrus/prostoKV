@@ -37,9 +37,9 @@ def get_shift_number():
 
 def get_plan_quantity():
     try:
-        today = time.localtime().tm_yday
+        today = datetime.datetime.today()
         shift_number = get_shift_number()
-        plan = bottling_plan.objects.filter(Data__day=today, GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
+        plan = bottling_plan.objects.filter(Data=today, GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
         plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
         return plan_quantity
     except Exception as e:
@@ -123,7 +123,6 @@ def getData2(request):
 
     lable_chart = [str(sp.time) for sp in speed2_queryset]
     data_chart = [sp.triblok for sp in speed2_queryset]
-
     return JsonResponse({
         "allProc2": all_proc,
         'sumProstoy2': sum_prostoy,

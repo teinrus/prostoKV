@@ -43,12 +43,14 @@ def get_shift_number():
 
 def get_plan_quantity():
     try:
-        today = time.localtime().tm_yday
+        today = datetime.datetime.today()
         shift_number = get_shift_number()
-        plan = bottling_plan.objects.filter(Data__day=today, GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
+        plan = bottling_plan.objects.filter(Data=today, GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
         plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
         return plan_quantity
+
     except Exception as e:
+
         return 31000
 
 def get_average_speed(speed5_queryset):
