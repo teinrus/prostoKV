@@ -68,21 +68,7 @@ class Line(models.Model):
 
 
 #Таблицы по линиям
-class TableTest(models.Model):
-    startdata = models.DateField('Дата начала простоя')
-    starttime = models.TimeField('Время начала простоя')
-    prostoy = models.TimeField('Время простоя', blank=True, null=True)
 
-    uchastok = models.CharField('Где произошол простой', max_length=50, default='', blank=True, null=True)
-    prichina = models.CharField('Причина', max_length=50, default='', blank=True, null=True)
-    otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
-                               null=True)
-    comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
-
-    def __str__(self):
-        return str(self.startdata)+'_' + str(self.starttime) + '_' +str(self.id)
-    class Meta:
-        verbose_name_plural = "Простои Test"
 class Table5(models.Model):
     startdata = models.DateField('Дата начала простоя')
     starttime = models.TimeField('Время начала простоя')
@@ -146,6 +132,29 @@ class Speed5(models.Model):
 
     class Meta:
         verbose_name_plural = "Производительность линии 5"
+
+class CO2_Rozliv(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    volume = models.FloatField('Обьем', default=0.0, blank=True, null=True)
+
+
+    def __str__(self):
+        return str(self.time)+" "+str(self.id)
+
+    class Meta:
+        verbose_name_plural = "CO2 Розлив"
+class CO2_Kupaj(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    volume = models.FloatField('Обьем', default=0.0, blank=True, null=True)
+
+
+    def __str__(self):
+        return str(self.time)+" "+str(self.id)
+
+    class Meta:
+        verbose_name_plural = "CO2 Купахный"
 class Speed2(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
@@ -212,6 +221,17 @@ class ProductionOutput4(models.Model):
 
     class Meta:
         verbose_name_plural = "Выпуск продукции линии 4"
+
+class ProductionOutput1(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    production = models.IntegerField('Продукция линии')
+
+    def __str__(self):
+        return str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Выпуск продукции линии 1"
 class ProductionOutput5(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')

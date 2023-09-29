@@ -15,7 +15,7 @@ TNR_admin_site = CustomAdminSite(name="customadmin")
 
 
 
-TNR_admin_site.register(TableTest)
+
 TNR_admin_site.register(Table2)
 TNR_admin_site.register(Speed2)
 
@@ -24,7 +24,9 @@ TNR_admin_site.register(Speed4)
 
 TNR_admin_site.register(Table5)
 TNR_admin_site.register(Speed5)
+TNR_admin_site.register(CO2_Rozliv)
 
+TNR_admin_site.register(ProductionOutput1)
 TNR_admin_site.register(ProductionOutput2)
 TNR_admin_site.register(ProductionOutput4)
 TNR_admin_site.register(ProductionOutput5)

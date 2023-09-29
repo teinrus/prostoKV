@@ -825,6 +825,8 @@ def otchetSmena(request):
     nomenklatura2 = []
     indicators2 = []
     indicators5 = []
+    co2_rozliv=[]
+    co2_kupaj = []
 
     if datetime.time(hour=8) < datetime.datetime.now().time() < datetime.time(hour=16, minute=30):
 
@@ -856,11 +858,32 @@ def otchetSmena(request):
         timeTemp = datetime.timedelta(hours=7, minutes=30)
         dataTemp = datetime.datetime.today() - datetime.timedelta(days=1)
 
+    try:
+        co2_rozliv = CO2_Rozliv.objects.filter(time__gte=start_time,
+                                       time__lte=finish_time,
+                                       data__gte=start_data,
+                                       data__lte=finish_data
+                                       ).order_by('data', 'time').aggregate(sum_volume=Sum('volume'))['sum_volume']
+        co2_rozliv*=1.96
+    except:
+        co2_rozliv=0
+    try:
+        co2_kupaj = CO2_Kupaj.objects.filter(time__gte=start_time,
+                                       time__lte=finish_time,
+                                       data__gte=start_data,
+                                       data__lte=finish_data
+                                       ).order_by('data', 'time').aggregate(sum_volume=Sum('volume'))['sum_volume']
+        co2_kupaj*=1.96
+    except:
+        co2_kupaj = 0
+
+
     table5 = Table5.objects.filter(starttime__gte=start_time,
                                    starttime__lte=finish_time,
                                    startdata__gte=start_data,
                                    startdata__lte=finish_data
                                    ).order_by('startdata', 'starttime')
+
     table4 = Table4.objects.filter(starttime__gte=start_time,
                                    starttime__lte=finish_time,
                                    startdata__gte=start_data,
@@ -888,6 +911,10 @@ def otchetSmena(request):
                                              time__gte=start_time,
                                              time__lte=finish_time)
     prod2 = ProductionOutput2.objects.filter(data__gte=start_data,
+                                             data__lte=finish_data,
+                                             time__gte=start_time,
+                                             time__lte=finish_time)
+    prod1 = ProductionOutput1.objects.filter(data__gte=start_data,
                                              data__lte=finish_data,
                                              time__gte=start_time,
                                              time__lte=finish_time)
@@ -943,6 +970,7 @@ def otchetSmena(request):
 
     except:
         plan = 0
+
 
     try:
         for el in plan:
@@ -1023,9 +1051,22 @@ def otchetSmena(request):
         allProd2 = 0
         procent2 = 0
     try:
+        allProd1 = prod1.aggregate(Sum('production')).get('production__sum')
+        if (allProd1 == None):
+            allProd1 = 0
+        procent2 = int(allProd1 / plan1.aggregate(Sum('Quantity')).get('Quantity__sum') * 100)
+
+    except:
+        allProd1 = 0
+        procent1 = 0
+    try:
         otklonenie2 = int(allProd2) - int(plan2.aggregate(Sum('Quantity')).get('Quantity__sum'))
     except:
         otklonenie2 = 0
+    try:
+        otklonenie1 = int(allProd1) - int(plan1.aggregate(Sum('Quantity')).get('Quantity__sum'))
+    except:
+        otklonenie1 = 0
     # Общее количество  врывов бутылок
     try:
         boomOut = boom5.aggregate(Sum('bottle')).get('bottle__sum')
@@ -1145,13 +1186,20 @@ def otchetSmena(request):
             itog_fact2 = 0
     except:
         itog_fact2 = 0
+
     try:
-        itog_fact = itog_fact2 + itog_fact4 + itog_fact5
+        itog_fact1 = prod1.aggregate(Sum('production')).get('production__sum')
+        if itog_fact1 == None:
+            itog_fact1 = 0
+    except:
+        itog_fact1 = 0
+    try:
+        itog_fact =itog_fact1 + itog_fact2 + itog_fact4 + itog_fact5
 
     except:
         itog_fact = 0
 
-    itog_otcl = otklonenie + otklonenie4 + otklonenie2
+    itog_otcl = otklonenie + otklonenie4 + otklonenie2+otklonenie1
     itog_proc = int(itog_fact / itog_plan * 100)
 
     try:
@@ -1189,6 +1237,11 @@ def otchetSmena(request):
     #     for i in speedTest:
     #         writer.writerow(["Дата ", i.data, i.time,"Кол ", int(i.triblok)/20])
     return render(request, "otchetSmena.html", {
+
+        "co2_rozliv":co2_rozliv,
+        "co2_kupaj": co2_kupaj,
+
+
         "indicators2": indicators2,
         "indicators5": indicators5,
         "speed_triblok5": speed_triblok5,
