@@ -24,7 +24,7 @@ TNR_admin_site.register(Speed4)
 
 TNR_admin_site.register(Table5)
 TNR_admin_site.register(Speed5)
-TNR_admin_site.register(CO2_Rozliv)
+
 
 TNR_admin_site.register(ProductionOutput1)
 TNR_admin_site.register(ProductionOutput2)
@@ -45,4 +45,5 @@ TNR_admin_site.register(NapAcratofori)
 TNR_admin_site.register(Line5Indicators)
 TNR_admin_site.register(Line2Indicators)
 
-
+TNR_admin_site.register(CO2_Rozliv)
+TNR_admin_site.register(CO2_Kupaj)

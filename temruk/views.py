@@ -864,7 +864,7 @@ def otchetSmena(request):
                                        data__gte=start_data,
                                        data__lte=finish_data
                                        ).order_by('data', 'time').aggregate(sum_volume=Sum('volume'))['sum_volume']
-        co2_rozliv*=1.96
+        co2_rozliv=round(co2_rozliv*1.96,2)
     except:
         co2_rozliv=0
     try:
@@ -873,7 +873,7 @@ def otchetSmena(request):
                                        data__gte=start_data,
                                        data__lte=finish_data
                                        ).order_by('data', 'time').aggregate(sum_volume=Sum('volume'))['sum_volume']
-        co2_kupaj*=1.96
+        co2_kupaj=round(co2_kupaj*1.96,2)
     except:
         co2_kupaj = 0
 
