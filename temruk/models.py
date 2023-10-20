@@ -155,6 +155,43 @@ class CO2_Kupaj(models.Model):
 
     class Meta:
         verbose_name_plural = "CO2 Купахный"
+class Filter2(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    press1 = models.FloatField('Давление 1 ступени', default=0.0, blank=True, null=True)
+    press2 = models.FloatField('Давление 2 ступени', default=0.0, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.time)+" "+str(self.id)
+
+    class Meta:
+        verbose_name_plural = "Давление микрофилтрации линия 2"
+
+
+class Filter4(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    press1 = models.FloatField('Давление 1 ступени', default=0.0, blank=True, null=True)
+    press2 = models.FloatField('Давление 2 ступени', default=0.0, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.time) + " " + str(self.id)
+
+    class Meta:
+        verbose_name_plural = "Давление микрофилтрации линия 4"
+
+
+class Filter5(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    press1 = models.FloatField('Давление 1 ступени', default=0.0, blank=True, null=True)
+    press2 = models.FloatField('Давление 2 ступени', default=0.0, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.time) + " " + str(self.id)
+
+    class Meta:
+        verbose_name_plural = "Давление микрофилтрации линия 5"
 class Speed2(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')

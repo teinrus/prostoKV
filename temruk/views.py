@@ -3,7 +3,7 @@ import datetime
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, Min, Max
 
 from django.shortcuts import redirect
 
@@ -206,11 +206,7 @@ def otchet(request):
                         indicators = Line5Indicators.objects.filter(time__gte=datetime.time(0),
                                                                     time__lte=datetime.time(23, 59),
                                                                     data__gte=form.cleaned_data["start_data"],
-                                                                    data__lte=form.cleaned_data["finish_data"]).values(
-                            'numbacr') \
-                            .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
-                            .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
-                            .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+                                                                    data__lte=form.cleaned_data["finish_data"])
 
                     except:
                         print("alarme")
@@ -256,11 +252,7 @@ def otchet(request):
                     indicators = Line5Indicators.objects.filter(time__gte=datetime.time(8),
                                                                 time__lte=datetime.time(16, 30),
                                                                 data__gte=form.cleaned_data["start_data"],
-                                                                data__lte=form.cleaned_data["finish_data"]).values(
-                        'numbacr') \
-                        .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
-                        .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
-                        .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+                                                                data__lte=form.cleaned_data["finish_data"])
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
                     boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                            data__lte=form.cleaned_data["finish_data"],
@@ -303,11 +295,7 @@ def otchet(request):
                     indicators = Line5Indicators.objects.filter(time__gte=datetime.time(16, 30),
                                                                 time__lte=datetime.time(23, 59),
                                                                 data__gte=form.cleaned_data["start_data"],
-                                                                data__lte=form.cleaned_data["finish_data"]).values(
-                        'numbacr') \
-                        .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
-                        .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
-                        .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+                                                                data__lte=form.cleaned_data["finish_data"])
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
                     boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                            data__lte=form.cleaned_data["finish_data"],
@@ -349,11 +337,7 @@ def otchet(request):
                     indicators = Line5Indicators.objects.filter(time__gte=datetime.time(00, 00),
                                                                 time__lte=datetime.time(8, 00),
                                                                 data__gte=form.cleaned_data["start_data"],
-                                                                data__lte=form.cleaned_data["finish_data"]).values(
-                        'numbacr') \
-                        .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
-                        .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
-                        .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+                                                                data__lte=form.cleaned_data["finish_data"])
         # Сортировка по сменам линии 2:
         if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 2'):
@@ -389,11 +373,7 @@ def otchet(request):
                     indicators = Line2Indicators.objects.filter(time__gte=datetime.time(0),
                                                                 time__lte=datetime.time(23, 59),
                                                                 data__gte=form.cleaned_data["start_data"],
-                                                                data__lte=form.cleaned_data["finish_data"]).values(
-                        'numbacr') \
-                        .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
-                        .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
-                        .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+                                                                data__lte=form.cleaned_data["finish_data"])
             if form.cleaned_data["SmenaF"] == 'Смена 1':
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(8),
                                                starttime__lte=datetime.time(16, 30),
@@ -427,21 +407,13 @@ def otchet(request):
                 indicators = Line2Indicators.objects.filter(time__gte=datetime.time(8, 30),
                                                             time__lte=datetime.time(16, 30),
                                                             data__gte=form.cleaned_data["start_data"],
-                                                            data__lte=form.cleaned_data["finish_data"]).values(
-                    'numbacr') \
-                    .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
-                    .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
-                    .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+                                                            data__lte=form.cleaned_data["finish_data"])
             if form.cleaned_data["SmenaF"] == 'Смена 2':
 
                 indicators = Line2Indicators.objects.filter(time__gte=datetime.time(16, 30),
                                                             time__lte=datetime.time(23, 59),
                                                             data__gte=form.cleaned_data["start_data"],
-                                                            data__lte=form.cleaned_data["finish_data"]).values(
-                    'numbacr') \
-                    .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
-                    .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
-                    .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+                                                            data__lte=form.cleaned_data["finish_data"])
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(16, 30),
                                                starttime__lte=datetime.time(23, 59),
                                                startdata__gte=form.cleaned_data["start_data"],
@@ -477,11 +449,7 @@ def otchet(request):
                 indicators = Line2Indicators.objects.filter(time__gte=datetime.time(00, 00),
                                                             time__lte=datetime.time(8, 00),
                                                             data__gte=form.cleaned_data["start_data"],
-                                                            data__lte=form.cleaned_data["finish_data"]).values(
-                    'numbacr') \
-                    .annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
-                    .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
-                    .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+                                                            data__lte=form.cleaned_data["finish_data"])
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(00, 00),
                                                starttime__lte=datetime.time(8, 00),
                                                startdata__gte=form.cleaned_data["start_data"],
@@ -707,20 +675,49 @@ def otchet(request):
     smena = form.cleaned_data["SmenaF"]
     nachaloOt = form.cleaned_data["start_data"]
     okonchanieOt = form.cleaned_data["finish_data"]
-    # temp=Table5.objects.all()
-    # tempS=Speed5.objects.all()
 
-    #
-    # with open('prostoy.csv', 'w', newline='') as csvfile:
-    #     spamwriter = csv.writer(csvfile, delimiter=' ',
-    #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    #     for el in temp:
-    #         spamwriter.writerow([el.startdata,el.starttime,el.prostoy,el.uchastok  ])
-    # with open('proizvod.csv', 'w', newline='') as csvfile2:
-    #     spamwriter = csv.writer(csvfile2, delimiter=' ',
-    #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    #     for el in tempS:
-    #         spamwriter.writerow([el.data,el.time,'|',int(int(el.triblok)/20)])
+    try:
+        indicators_with_times = indicators.values('numbacr').annotate(
+            first_time=Min('time'),
+            last_time=Max('time')
+        )
+
+        # Create a list with the query results
+        indicators_list = []
+        for indicator in indicators_with_times:
+            numbacr = indicator['numbacr']
+            first_time = indicator['first_time']
+            last_time = indicator['last_time']
+
+
+            average_triblok_speed =speed.filter(
+                time__range=(first_time, last_time),
+                triblok__gt=100
+            ).aggregate(average_triblok_speed=Avg('triblok'))['average_triblok_speed']
+
+            indicators_list.append({
+                'numbacr': numbacr,
+                'first_time': first_time,
+                'last_time': last_time,
+                'average_triblok_speed': round(average_triblok_speed),
+
+            })
+
+
+    except:
+        print("не получилось")
+
+    try:
+        indicators = indicators.values('numbacr').annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
+                        .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
+                        .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
+
+    except:
+        print("alarme")
+    try:
+        indicators=[dict1 | dict2 for dict1 in indicators_list for dict2 in indicators if dict1['numbacr'] == dict2['numbacr']]
+    except:
+        indicators=[]
 
     return render(request, "otchet.html", {
         'table': table,

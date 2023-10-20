@@ -47,3 +47,7 @@ TNR_admin_site.register(Line2Indicators)
 
 TNR_admin_site.register(CO2_Rozliv)
 TNR_admin_site.register(CO2_Kupaj)
+
+TNR_admin_site.register(Filter2)
+TNR_admin_site.register(Filter4)
+TNR_admin_site.register(Filter5)

@@ -349,9 +349,10 @@
     </ul>
     <ul class="col">
         <ul style="margin-bottom:15px ">
+
             {% for item in indicators %}
                 {% if item.numbacr != None %}
-            <li>Акр: {{ item.numbacr }},Температура:{{ item.avg_naptemp_rounded }}°,Давление:{{ item.avg_nappress_rounded }}</li>
+            <li>Акр: {{ item.numbacr }},Температура: {{ item.avg_naptemp_rounded }}°,Давление: {{ item.avg_nappress_rounded }},Скорость: {{ item.average_triblok_speed }}</li>
                 {% endif %}
         {% endfor %}
         </ul>

@@ -11,7 +11,7 @@
 
             var dataTable31 = $('#sample_data31').DataTable();
 
-
+{% if not user.username == 'masterS'  %}
             $('#sample_data31').editable({
                 container: 'body',
                 selector: 'td.uchastok',
@@ -30,7 +30,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data31').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -109,7 +109,7 @@
 
             var dataTable33 = $('#sample_data33').DataTable();
 
-
+{% if not user.username == 'masterS'  %}
             $('#sample_data33').editable({
                 container: 'body',
                 selector: 'td.uchastok',
@@ -128,7 +128,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data33').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -209,7 +209,7 @@
 
             var dataTable24 = $('#sample_data24').DataTable();
 
-
+{% if not user.username == 'masterI'  %}
             $('#sample_data24').editable({
                 container: 'body',
                 selector: 'td.uchastok',
@@ -228,7 +228,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data24').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -309,7 +309,7 @@
 
             var dataTable25 = $('#sample_data25').DataTable();
 
-
+{% if not user.username == 'masterI'  %}
             $('#sample_data25').editable({
                 container: 'body',
                 selector: 'td.uchastok',
@@ -328,7 +328,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data25').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -725,7 +725,7 @@
 
             var dataTable26 = $('#sample_data26').DataTable();
 
-
+{% if not user.username == 'masterI'  %}
             $('#sample_data26').editable({
                 container: 'body',
                 selector: 'td.uchastok',
@@ -744,7 +744,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data26').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
