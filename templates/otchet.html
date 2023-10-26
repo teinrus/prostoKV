@@ -393,7 +393,7 @@
         </div>
     </div>
 
-
+    {% if not line == 'Линиия 4' %}
         <ul style="margin-bottom:15px ">
 
             <table class="table table-bordered table-striped">
@@ -423,6 +423,7 @@
                 </tbody>
             </table>
         </ul>
+    {%  endif %}
     {% if line == 'Линиия 5' %}
         <script>
             function getColorByTime(value, tempChartTimes) {
