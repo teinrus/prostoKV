@@ -356,7 +356,7 @@
         <ul>
             <li>Средняя производительность:<b style="font-size: 120%;"> {{ avgSpeed }}</b></li>
             <li>Количество продукции:<b style="font-size: 120%;"> {{ allProd }}</b></li>
-            <li>План продукции:<b style="font-size: 120%" ;> {{ plan }}</b></li>
+            <li>План продукции:<b style="font-size: 120%;"> {{ plan }}</b></li>
         </ul>
     </ul>
     <div class="not-print" media="print">
@@ -371,6 +371,7 @@
                         <form action="" method="get" style='display:table-caption;'>
                             {{ form.as_ul }}
                             <input class="not-print" type="submit" value="Сформировать" style="margin-top: 20px;">
+
                         </form>
 
                     </ul>
@@ -393,11 +394,27 @@
         </div>
     </div>
 
-    {% if not line == 'Линиия 4' %}
-        <ul style="margin-bottom:15px ">
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var sampleData = document.getElementById("sample_data");
+    var sampleData2 = document.getElementById("sample_data2");
+    var dataTable = document.getElementById("data-table");
 
-            <table class="table table-bordered table-striped">
-                <thead class="thead-dark">
+    if (sampleData) {
+        // Если таблица "sample_data" существует, отобразить таблицу "data-table"
+        dataTable.style.display = "table";
+    }
+        if (sampleData2) {
+        dataTable.style.display = "table";
+    }
+});
+</script>
+
+
+            <table id="data-table" class="table table-bordered table-striped" style="display: none;">
+
+
+                <thead>
                 <tr>
                     <th>Акр</th>
                     <th>Температура (°)</th>
@@ -422,8 +439,8 @@
                 {% endfor %}
                 </tbody>
             </table>
-        </ul>
-    {%  endif %}
+
+
     {% if line == 'Линиия 5' %}
         <script>
             function getColorByTime(value, tempChartTimes) {
