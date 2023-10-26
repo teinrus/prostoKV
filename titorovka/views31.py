@@ -42,6 +42,10 @@ def proc(startSmena, spotSmena, plan, colProduct):
     diff2 = d_end2 - d_start2
 
     # проц вып продукции
+    print(colProduct)
+    print(diff2.total_seconds())
+    print(planProdSec)
+    print( int(colProduct / ((int(diff2.total_seconds()) * planProdSec) / 100)))
     return int(colProduct / ((int(diff2.total_seconds()) * planProdSec) / 100))
 
 

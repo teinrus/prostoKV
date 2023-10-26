@@ -4,6 +4,7 @@ import datetime
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
+from django.forms import DecimalField, FloatField
 
 from django.shortcuts import redirect
 
@@ -861,9 +862,43 @@ def otchetSmena(request):
                                        data__gte=start_data,
                                        data__lte=finish_data
                                        ).order_by('data', 'time').aggregate(sum_volume=Sum('volume'))['sum_volume']
+
         co2_rozliv=round(co2_rozliv*1.96,2)
     except:
         co2_rozliv=0
+    try:
+        filter5= Filter5.objects.filter(time__gte=start_time,
+                                       time__lte=finish_time,
+                                       data__gte=start_data,
+                                       data__lte=finish_data
+                                       ).order_by('data', 'time').aggregate(
+                                                                    press1_avg=Avg('press1'),
+                                                                    press2_avg=Avg('press2')
+                                                                    )
+    except:
+        filter5=0
+    try:
+        filter4= Filter4.objects.filter(time__gte=start_time,
+                                       time__lte=finish_time,
+                                       data__gte=start_data,
+                                       data__lte=finish_data
+                                       ).order_by('data', 'time').aggregate(
+                                                                    press1_avg=Avg('press1'),
+                                                                    press2_avg=Avg('press2')
+                                                                    )
+    except:
+        filter4=0
+    try:
+        filter2= Filter5.objects.filter(time__gte=start_time,
+                                       time__lte=finish_time,
+                                       data__gte=start_data,
+                                       data__lte=finish_data
+                                       ).order_by('data', 'time').aggregate(
+                                                                    press1_avg=Avg('press1'),
+                                                                    press2_avg=Avg('press2')
+                                                                    )
+    except:
+        filter2=0
     try:
         co2_kupaj = CO2_Kupaj.objects.filter(time__gte=start_time,
                                        time__lte=finish_time,
@@ -1233,10 +1268,15 @@ def otchetSmena(request):
     #     writer = csv.writer(file, delimiter=',')  # lineterminator='\n',
     #     for i in speedTest:
     #         writer.writerow(["Дата ", i.data, i.time,"Кол ", int(i.triblok)/20])
+
     return render(request, "otchetSmena.html", {
 
         "co2_rozliv":co2_rozliv,
         "co2_kupaj": co2_kupaj,
+
+        "filter5":filter5,
+        "filter4": filter4,
+        "filter2": filter2,
 
 
         "indicators2": indicators2,

@@ -19,6 +19,7 @@
         <th>Номенклатура:</th>
 
         <th style="width: 50px">Партия</th>
+        <th style="width: 50px">М/Ф</th>
         <th>Акратофор</th>
 
         <th class="plan-prod">План продукции:</th>
@@ -39,6 +40,7 @@
             {% endfor %}
             </th>
             <th></th>
+            <th><li>1: {{ filter5.press1_avg|floatformat:2  }}</li><li>2: {{ filter5.press2_avg |floatformat:2  }}</li></th>
             <th>{% for item in indicators5 %}
                 {% if item.numbacr != None %}
                  <li>Акр: {{ item.numbacr }},
@@ -91,6 +93,7 @@
             {% endfor %}
             </th>
             <th></th>
+            <th><li>1: {{ filter4.press1_avg|floatformat:2  }}</li><li>2: {{ filter4.press2_avg |floatformat:2  }}</li></th>
             <th></th>
             <th>{% for el in plan4 %}
                 <li style="font-size:small">{{ el.Quantity }}</li>
@@ -135,6 +138,7 @@
             {% endfor %}
             </th>
             <th></th>
+            <th><li>1: {{ filter2.press1_avg|floatformat:2  }}</li><li>2: {{ filter2.press2_avg |floatformat:2  }}</li></th>
             <th>{% for item in indicators2 %}
                 {% if item.numbacr != None %}
                  <li>Акр: {{ item.numbacr }},
@@ -187,6 +191,7 @@
             </th>
             <th></th>
             <th></th>
+            <th></th>
             <th>{% for el in plan1 %}
                 <li style="font-size:small">{{ el.Quantity }}</li>
             {% endfor %} </th>
@@ -233,6 +238,7 @@
                 </th>
                 <th></th>
                 <th></th>
+                <th></th>
                 <th class="col-xs-1">
                     <div style="font-size:small"></div>
                 </th>
@@ -268,6 +274,7 @@
                 <th class="col-xs-1">
                     <div style="font-size:small"></div>
                 </th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th class="col-xs-1">
@@ -344,6 +351,7 @@
                 </th>
                 <th></th>
                 <th></th>
+                <th></th>
                 <th class="col-xs-1">
                     <div style="font-size:small"></div>
                 </th>
@@ -387,6 +395,7 @@
             </th>
             <th></th>
             <th></th>
+            <th></th>
             <th class="col-xs-1">
                 <div style="font-size:small"></div>
             </th>
@@ -415,6 +424,7 @@
 
             <th></th>
             <th class="col-xs-1"></th>
+            <th></th>
             <th></th>
             <th class="col-xs-1">
                 <li style="font-size:small">{{ itog_plan }}</li>
@@ -472,11 +482,11 @@
 
             </th>
             <th>
-                Факт:
+
 
             </th>
             <th>
-                План:
+
 
             </th>
             <th class="col-xs-2">
