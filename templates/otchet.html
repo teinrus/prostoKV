@@ -348,14 +348,7 @@
 
     </ul>
     <ul class="col">
-        <ul style="margin-bottom:15px ">
 
-            {% for item in indicators %}
-                {% if item.numbacr != None %}
-            <li>Акр: {{ item.numbacr }},Температура: {{ item.avg_naptemp_rounded }}°,Давление: {{ item.avg_nappress_rounded }},Скорость: {{ item.average_triblok_speed }}</li>
-                {% endif %}
-        {% endfor %}
-        </ul>
         <ul style="margin-bottom:15px ">
             <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy }}</b></li>
             <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork }}</b></li>
@@ -401,7 +394,35 @@
     </div>
 
 
+        <ul style="margin-bottom:15px ">
 
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Акр</th>
+                    <th>Температура (°)</th>
+                    <th>Давление</th>
+                    <th>Скорость</th>
+                    <th>М/Ф 1</th>
+                    <th>М/Ф 2</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in indicators %}
+                    {% if item.numbacr != None %}
+                        <tr>
+                            <td>{{ item.numbacr }}</td>
+                            <td>{{ item.avg_naptemp_rounded }}</td>
+                            <td>{{ item.avg_nappress_rounded }}</td>
+                            <td>{{ item.average_triblok_speed }}</td>
+                            <td>{{ item.filter_data.press1_avg|floatformat:2 }}</td>
+                            <td>{{ item.filter_data.press2_avg|floatformat:2 }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </ul>
     {% if line == 'Линиия 5' %}
         <script>
             function getColorByTime(value, tempChartTimes) {
@@ -594,6 +615,7 @@
                 }
             });
         </script>
+
         <table id="sample_data4" class="table table-bordered table-striped">
             <thead>
             <tr>
