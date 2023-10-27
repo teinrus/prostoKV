@@ -99,7 +99,7 @@
         </script>
     {% endif %}
 
-   <script>
+    <script>
 
         $(document).ready(function () {
             var item_num31 = $(this).attr('id');
@@ -149,12 +149,14 @@
         </tbody>
     </table>
     </body>
-{% if not user.username == 'naladchikS'%}
-  <input type="button" id="start_perenaladka31" value="Старт переналадка"/>
-    <input type="button" id="start_donaladka31" value="Cтарт доналадка"/>
-    <input type="button" id="TO31" value="ТО"/>
-    <input type="button" id="rabota31" value="Работа"/>
-{% endif %}
+    {% if not user.username == 'naladchikS' %}
+        <input type="button" id="start_perenaladka31" value="Старт переналадка"/>
+        <input type="button" id="start_donaladka31" value="Cтарт доналадка"/>
+        <input type="button" id="TO31" value="ТО"/>
+        <input type="button" id="rabota31" value="Работа"/>
+        <input type="button" id="Oformlenie31" value="Оформление"/>
+
+    {% endif %}
     <script>
         $('#start_perenaladka31').click(function () {
 
@@ -180,6 +182,12 @@
             $.ajax({
                 type: "POST",
                 url: "{% url 'TO31' %}",
+            });
+        })
+        $('#Oformlenie31').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'Oformlenie31' %}",
             });
         })
 

@@ -1028,6 +1028,10 @@ def TO31(request):
     mod_bus(0,8)
     return HttpResponse('yes')
 
+def Oformlenie31(request):
+    mod_bus(0,16)
+    return HttpResponse('yes')
+
 def start_perenaladka33(request):
     mod_bus(1,1)
     return HttpResponse('yes')
