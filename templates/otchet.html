@@ -47,7 +47,7 @@
                     }
                 });
             });
-
+{% if not user.username == 'master' %}
             var dataTable = $('#sample_data').DataTable();
 
             $('#sample_data').editable({
@@ -68,7 +68,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -145,7 +145,7 @@
                 });
 
             });
-
+{% if not user.username == 'master' %}
             var dataTable2 = $('#sample_data4').DataTable();
 
             $('#sample_data4').editable({
@@ -166,7 +166,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data4').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -240,7 +240,7 @@
             var test =
             {{ prich|safe }}
             var temp = '%'
-
+{% if not user.username == 'master' %}
             var dataTable2 = $('#sample_data2').DataTable();
 
 
@@ -262,7 +262,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data2').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
