@@ -12,7 +12,7 @@
 
 
             });
-
+{% if not user.username == 'master' %}
             var dataTable = $('#sample_data').DataTable();
 
             $('#sample_data').editable({
@@ -33,7 +33,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data').editable({
                 container: 'body',
                 selector: 'td.otv_pod',

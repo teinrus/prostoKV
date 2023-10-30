@@ -8,7 +8,7 @@
             var test =
             {{ prich|safe }}
             var temp = '%'
-
+{% if not user.username == 'master' %}
             var dataTable4 = $('#sample_data4').DataTable();
 
 
@@ -30,7 +30,7 @@
                     }
                 }
             });
-
+    {% endif %}
             $('#sample_data4').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
