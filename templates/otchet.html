@@ -47,28 +47,28 @@
                     }
                 });
             });
-{% if not user.username == 'master' %}
-            var dataTable = $('#sample_data').DataTable();
+            {% if not user.username == 'master' %}
+                var dataTable = $('#sample_data').DataTable();
 
-            $('#sample_data').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: '/update',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+                $('#sample_data').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: '/update',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-    {% endif %}
+                });
+            {% endif %}
             $('#sample_data').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -145,28 +145,28 @@
                 });
 
             });
-{% if not user.username == 'master' %}
-            var dataTable2 = $('#sample_data4').DataTable();
+            {% if not user.username == 'master' %}
+                var dataTable2 = $('#sample_data4').DataTable();
 
-            $('#sample_data4').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: '/update4',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch_vino %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+                $('#sample_data4').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: '/update4',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch_vino %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-    {% endif %}
+                });
+            {% endif %}
             $('#sample_data4').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -240,29 +240,29 @@
             var test =
             {{ prich|safe }}
             var temp = '%'
-{% if not user.username == 'master' %}
-            var dataTable2 = $('#sample_data2').DataTable();
+            {% if not user.username == 'master' %}
+                var dataTable2 = $('#sample_data2').DataTable();
 
 
-            $('#sample_data2').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: '/update2',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+                $('#sample_data2').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: '/update2',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-    {% endif %}
+                });
+            {% endif %}
             $('#sample_data2').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -337,108 +337,112 @@
 
     <body>
 
-
-    <ul class="up-1" style="margin-bottom:15px; font-size: 120%;">
-        <li>{{ line }}</li>
-        <li>{{ smena }}</li>
-        {% if line == 'Линиия 5' %}
-            <li>Количество взрывов {{ boomOut }}</li>
-        {% endif %}
-
-
-    </ul>
-    <ul class="col">
-
-        <ul style="margin-bottom:15px ">
-            <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy }}</b></li>
-            <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork }}</b></li>
-        </ul>
-        <ul>
-            <li>Средняя производительность:<b style="font-size: 120%;"> {{ avgSpeed }}</b></li>
-            <li>Количество продукции:<b style="font-size: 120%;"> {{ allProd }}</b></li>
-            <li>План продукции:<b style="font-size: 120%;"> {{ plan }}</b></li>
-        </ul>
-    </ul>
-    <div class="not-print" media="print">
-        <div class="col__wrapper"
-             style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
-            <div class="col" style="width: calc((100% - 30px) / 2);">
-                <canvas id="myChart"></canvas>
-            </div>
-            <ul class="col__list">
-                <li class="col__item__ot">
-                    <ul class="not-print">
-                        <form action="" method="get" style='display:table-caption;'>
-                            {{ form.as_ul }}
-                            <input class="not-print" type="submit" value="Сформировать" style="margin-top: 20px;">
-
-                        </form>
-
-                    </ul>
-                </li>
-
-                <li class="col__item__ot">
-                    <ul class="not-print" media="print">
-                        <li class="not-print">
-                            <a onclick="window.print()" style="margin-top: 20px;">Распечатать
-                            </a>
-                        </li>
-                        <li class="not-print">
-
-                        </li>
-                    </ul>
-                </li>
+    <div class="not-print" style="display: flex; justify-content: space-between;">
+        <!-- Столбец с дополнительной информацией (слева) -->
+        <div class="col" style="width: 48%; margin-right: 2%;">
+            <ul style="margin-bottom: 15px">
+                <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy }}</b></li>
+                <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork }}</b></li>
             </ul>
 
+            <ul>
+                <li>Средняя производительность:<b style="font-size: 120%;"> {{ avgSpeed }}</b></li>
+                <li>Количество продукции:<b style="font-size: 120%;"> {{ allProd }}</b></li>
+                <li>План продукции:<b style="font-size: 120%;"> {{ plan }}</b></li>
+            </ul>
+        </div>
 
+        <!-- Столбец с формой и кнопками (справа) -->
+        <div class="col" style="width: 48%;">
+            <ul class="col__list">
+                <li class="col__item__ot">
+                    <form action="" method="get">
+                        {{ form.as_ul }}
+                        <input class="not-print" type="submit" value="Сформировать">
+                        <a onclick="window.print()">Распечатать</a>
+                    </form>
+                </li>
+            </ul>
         </div>
     </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    var sampleData = document.getElementById("sample_data");
-    var sampleData2 = document.getElementById("sample_data2");
-    var dataTable = document.getElementById("data-table");
 
-    if (sampleData) {
-        // Если таблица "sample_data" существует, отобразить таблицу "data-table"
-        dataTable.style.display = "table";
-    }
-        if (sampleData2) {
-        dataTable.style.display = "table";
-    }
-});
-</script>
+<div class="not-print">
+    <div class="col__wrapper" style="display: flex; flex-direction: column; justify-content: space-between;
+    margin-bottom: 20px;margin-left: 30px;">
+        <div class="col" style="width: calc((100% - 30px) / 1.85);">
+            <canvas id="myChart"></canvas>
+        </div>
 
-
-            <table id="data-table" class="table table-bordered table-striped" style="display: none;">
+    </div>
+    <div class="col__wrapper" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 20px;">
+            <div class="col" style="width: calc((100% - 30px) /1.85);">
+            <canvas id="myChart2"></canvas>
+        </div>
+        </div>
+</div>
 
 
-                <thead>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var sampleData = document.getElementById("sample_data");
+            var sampleData2 = document.getElementById("sample_data2");
+            var dataTable = document.getElementById("data-table");
+
+            if (sampleData) {
+                // Если таблица "sample_data" существует, отобразить таблицу "data-table"
+                dataTable.style.display = "table";
+            }
+            if (sampleData2) {
+                dataTable.style.display = "table";
+            }
+        });
+    </script>
+
+
+    <table id="data-table" class="table table-bordered table-striped" style="display: none;">
+
+
+        <thead>
+        <tr>
+            <th>Дата старт</th>
+
+            <th>Время старт</th>
+            <th>Время стоп</th>
+
+            <th>Акр</th>
+            <th>Давление</th>
+            <th>Температура</th>
+
+            <th>Скорость</th>
+            <th>1</th>
+            <th>2</th>
+
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in indicators %}
+            {% if item.numbacr != None %}
                 <tr>
-                    <th>Акр</th>
-                    <th>Температура (°)</th>
-                    <th>Давление</th>
-                    <th>Скорость</th>
-                    <th>М/Ф 1</th>
-                    <th>М/Ф 2</th>
+                    <td>{{ item.first_data }}</td>
+                    <td>{{ item.first_time }}</td>
+                    <td>{{ item.last_time }}</td>
+                    <td>{{ item.numbacr }}</td>
+                    <td>{{ item.average_press.average_press|floatformat:1 }}</td>
+                    <td>{{ item.average_temp.average_temp|floatformat:1 }}</td>
+
+                    <td>{{ item.average_triblok_speed|floatformat:0 }}</td>
+                    <td>{{ item.filter_data.press1_avg|floatformat:2 }}</td>
+                    <td>{{ item.filter_data.press2_avg|floatformat:2 }}</td>
+
+
                 </tr>
-                </thead>
-                <tbody>
-                {% for item in indicators %}
-                    {% if item.numbacr != None %}
-                        <tr>
-                            <td>{{ item.numbacr }}</td>
-                            <td>{{ item.avg_naptemp_rounded }}</td>
-                            <td>{{ item.avg_nappress_rounded }}</td>
-                            <td>{{ item.average_triblok_speed }}</td>
-                            <td>{{ item.filter_data.press1_avg|floatformat:2 }}</td>
-                            <td>{{ item.filter_data.press2_avg|floatformat:2 }}</td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
 
 
     {% if line == 'Линиия 5' %}
@@ -463,7 +467,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     timeObject2.setMinutes(timeObject2.getMinutes() + 2);
                     let newTimeB = new Date(timeObject2);
                     // Проверяем, выполнялось ли уже это условие для данного времени
-                    console.log(newTimeM, newTimeB)
                     if (newTimeM < timeObject && timeObject < newTimeB) {
                         return '#ff0000';
                     }
@@ -508,6 +511,57 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 }
             });
+var ctx2 = document.getElementById('myChart2').getContext('2d');
+var myChart2 = new Chart(ctx2, {
+    type: 'line',
+    data: {
+        labels: {{ data.labels|safe }},
+        datasets: [
+            {
+                label: 'Давление',
+                borderColor: 'rgba(255, 205, 86, 1)',
+                data: {{ data.nappress|safe }},
+                fill: false,
+                yAxisID: 'y-axis-0'
+            },
+            {
+                label: 'Температура',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                data: {{ data.naptemp|safe }},
+                fill: false,
+                yAxisID: 'y-axis-1',
+
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'График данных'
+        },
+        scales: {
+            xAxes: [{
+                type: 'time',
+                time: {
+                    displayFormats: {
+                        day: 'YYYY-MM-DD'
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Дата'
+                }
+            }],
+
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false
+        }
+    }
+});
+
         </script>
 
 
@@ -547,6 +601,7 @@ document.addEventListener("DOMContentLoaded", function() {
             </tbody>
         </table>
     {% elif line == 'Линиия 2' %}
+
         <script>
             const ctx = document.getElementById('myChart');
 
@@ -571,7 +626,57 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 }
             });
+             var ctx2 = document.getElementById('myChart2').getContext('2d');
+        var myChart2 = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: {{ data.labels|safe }},
+                datasets: [
+                    {
+                        label: 'Давление',
+                        borderColor: 'rgba(255, 205, 86, 1)',
+                        data: {{ data.nappress|safe }},
+                        fill: false,
+                        yAxisID: 'y-axis-0'
+                    },
+                    {
+                        label: 'Температура',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        data: {{ data.naptemp|safe }},
+                        fill: false,
+                        yAxisID: 'y-axis-1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'График данных'
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {
+                            displayFormats: {
+                                day: 'YYYY-MM-DD'
+                            }
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Дата'
+                        }
+                    }],
+
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                }
+            }
+        });
         </script>
+
         <table id="sample_data2" class="table table-bordered table-striped">
             <thead>
             <tr>
@@ -671,6 +776,9 @@ document.addEventListener("DOMContentLoaded", function() {
         </table>
     {% endif %}
 
+    <script>
+
+    </script>
 
     </body>
 {% endblock %}

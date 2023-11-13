@@ -1,6 +1,5 @@
 import csv
 import datetime
-
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
@@ -134,19 +133,6 @@ def temruk(request):
 
 
 def otchet(request):
-    # acr = Speed5.objects.filter(data__gte=datetime.datetime(year=2023,month=7,day=1),data__lte=datetime.datetime(year=2023,month=8,day=1))
-    #
-    # with open('speed.csv', 'w', newline='') as csvfile:
-    #     spamwriter = csv.writer(csvfile, delimiter=' ',
-    #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    #     for el in acr:
-    #         spamwriter.writerow([str(el.data)+";",str(el.time)+";",str(el.triblok/20)+";"])
-    # # acr = Table5.objects.filter(startdata__gte=datetime.datetime(year=2023,month=7,day=1),startdata__lte=datetime.datetime(year=2023,month=8,day=1))
-    # # with open('prostoy.csv', 'w', newline='') as csvfile:
-    # #     spamwriter = csv.writer(csvfile, delimiter=' ',
-    # #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    # #     for el in acr:
-    # #         spamwriter.writerow([str(el.startdata)+";",str(el.starttime)+";",str(el.prostoy)+";",str(el.uchastok)+";",str(el.prichina)+";"])
 
     plan = 0
     table = []
@@ -735,58 +721,79 @@ def otchet(request):
     smena = form.cleaned_data["SmenaF"]
     nachaloOt = form.cleaned_data["start_data"]
     okonchanieOt = form.cleaned_data["finish_data"]
+    sorted_date_time_numbacr_list=[]
+
+    indicators_chart = indicators
+
+    data = {
+        'labels': [obj.time.strftime('%H:%M:%S') for obj in indicators_chart if obj.time is not None],
+        'naptemp': [round(obj.naptemp,1) for obj in indicators_chart if obj.naptemp is not None],
+        'nappress': [round(obj.nappress,1) for obj in indicators_chart if obj.nappress is not None],
+    }
 
     try:
-        indicators_with_times = indicators.values('numbacr').annotate(
-            first_time=Min('time'),
-            last_time=Max('time')
-        )
+        indicators_with_times = indicators.values(
+            'numbacr',
+            'data',
+        ).annotate(
+            start_time=Min('time'),
+            end_time=Max('time')
+        ).order_by('data', 'start_time')
 
-        # Create a list with the query results
-        indicators_list = []
+
+
+        # Создаем список для сгруппированных записей
+        date_time_numbacr_list = []
+
         for indicator in indicators_with_times:
             numbacr = indicator['numbacr']
-            first_time = indicator['first_time']
-            last_time = indicator['last_time']
+            first_time = indicator['start_time']
+            last_time = indicator['end_time']
+            first_data = indicator['data']
 
-
-            average_triblok_speed =speed.filter(
+            average_triblok_speed = speed.filter(
                 time__range=(first_time, last_time),
-                triblok__gt=100
+                triblok__gt=1000
             ).aggregate(average_triblok_speed=Avg('triblok'))['average_triblok_speed']
+            average_press = indicators.filter(
+                time__range=(first_time, last_time),
+            ).aggregate(average_press=Avg('nappress'))
+            average_temp = indicators.filter(
+                time__range=(first_time, last_time),
+            ).aggregate(average_temp=Avg('naptemp'))
 
-            filter_data = filter.filter(time__range=(first_time, last_time)).aggregate(
-            press1_avg=Avg('press1'),
-            press2_avg=Avg('press2')
+            filter_data = filter.filter(
+                time__range=(first_time, last_time)
+            ).aggregate(
+                press1_avg=Avg('press1'),
+                press2_avg=Avg('press2')
             )
-            indicators_list.append({
+
+            record = {
                 'numbacr': numbacr,
+                'first_data': first_data,
                 'first_time': first_time,
                 'last_time': last_time,
-                'average_triblok_speed': round(average_triblok_speed),
-                "filter_data":filter_data
+                'average_press':average_press,
+                'average_temp': average_temp,
+                'average_triblok_speed':average_triblok_speed,
+                'filter_data':filter_data,
 
-            })
+            }
+            date_time_numbacr_list.append(record)
 
 
+        sorted_date_time_numbacr_list = sorted(date_time_numbacr_list, key=lambda x: (x['first_data'], x['first_time']))
     except:
-        print("не получилось")
+            pass
 
-    try:
-        indicators = indicators.values('numbacr').annotate(avg_naptemp=Avg('naptemp'), avg_nappress=Avg('nappress')) \
-                        .annotate(avg_naptemp_rounded=Round(F('avg_naptemp'), 2)) \
-                        .annotate(avg_nappress_rounded=Round(F('avg_nappress'), 2))
 
-    except:
-        print("alarme")
-    try:
-        indicators=[dict1 | dict2 for dict1 in indicators_list for dict2 in indicators if dict1['numbacr'] == dict2['numbacr']]
-    except:
-        indicators=[]
 
     return render(request, "otchet.html", {
         'table': table,
         'form': form,
+
+        "data":data,
 
         "tempChart": temp_chart,
 
@@ -812,7 +819,7 @@ def otchet(request):
         'uch': uch,
         'uch_vino': uch_vino,
 
-        "indicators": indicators,
+        "indicators": sorted_date_time_numbacr_list,
 
     })
 
@@ -953,7 +960,7 @@ def otchetSmena(request):
     except:
         filter4=0
     try:
-        filter2= Filter5.objects.filter(time__gte=start_time,
+        filter2= Filter2.objects.filter(time__gte=start_time,
                                        time__lte=finish_time,
                                        data__gte=start_data,
                                        data__lte=finish_data
