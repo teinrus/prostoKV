@@ -15,8 +15,11 @@ urlpatterns = [
     path('temruk', views.temruk, name='temruk'),
 
     path(r'update', views5.update, name='update'),
+    path(r'update5_2', views5.update5_2, name='update5_2'),
     path(r'update4', views4.update4, name='update4'),
+    path(r'update4_2', views4.update4_2, name='update4_2'),
     path(r'update2', views2.update2, name='update2'),
+    path(r'update2_2', views2.update2_2, name='update2_2'),
 
 
     path('getData', views5.getData, name='getData'),

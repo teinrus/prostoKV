@@ -94,6 +94,20 @@ def update4(request):
 
         a.save()
         return HttpResponse('yes')
+def update4_2(request):
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+        name = request.POST.get('name')
+        value = request.POST.get('value')
+
+        try:
+            a = Table4.objects.get(id=pk)
+            setattr(a, name, value)
+        except Table4.DoesNotExist:
+            a = Table4(id=pk, **{name: value})
+
+        a.save()
+        return HttpResponse('yes')
 
 
 def update_items4(request):

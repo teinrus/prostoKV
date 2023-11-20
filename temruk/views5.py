@@ -101,6 +101,20 @@ def update(request):
 
         a.save()
         return HttpResponse('yes')
+def update5_2(request):
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+        name = request.POST.get('name')
+        value = request.POST.get('value')
+
+        try:
+            a = Table5.objects.get(id=pk)
+            setattr(a, name, value)
+        except Table5.DoesNotExist:
+            a = Table5(id=pk, **{name: value})
+
+        a.save()
+        return HttpResponse('yes')
 
 
 def update_items5(request):

@@ -93,6 +93,20 @@ def update2(request):
 
         a.save()
         return HttpResponse('yes')
+def update2_2(request):
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+        name = request.POST.get('name')
+        value = request.POST.get('value')
+
+        try:
+            a = Table2.objects.get(id=pk)
+            setattr(a, name, value)
+        except Table2.DoesNotExist:
+            a = Table2(id=pk, **{name: value})
+
+        a.save()
+        return HttpResponse('yes')
 
 
 def update_items2(request):

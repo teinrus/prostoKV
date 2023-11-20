@@ -83,6 +83,7 @@ def temruk(request):
     #         # temp=str(el.acr63_temp).replace("." , ",")
     #         temp2 = str(el.acr83_temp).replace(".", ",")
     #         spamwriter.writerow([el.time,temp2])
+    table_triblok=[]
     if request.method == 'GET':
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
                                        starttime__gte=startSmena,
@@ -136,6 +137,7 @@ def otchet(request):
 
     plan = 0
     table = []
+    table_triblok=[]
     temp_chart = []
     timeTemp = 0
 
@@ -787,10 +789,17 @@ def otchet(request):
     except:
             pass
 
+    try:
 
+        table_triblok=table.filter(uchastok="Триблок")
+        table = table.exclude(uchastok="Триблок")
+
+    except:
+        pass
 
     return render(request, "otchet.html", {
         'table': table,
+        "table_triblok":table_triblok,
         'form': form,
 
         "data":data,

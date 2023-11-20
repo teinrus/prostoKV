@@ -115,6 +115,119 @@
             });
         });
         </script>
+         <script> // зависимости выпадающих списков таблици
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+            $(function () {
+
+
+                $('#sample_data5_2').mousemove(function () {
+                    $('td.otv_pod', this).mousedown(function () {
+
+                        temp = '';
+                        for (let i = 0; i < test.length; i++) {
+                            if ($(this).text() === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    })
+                });
+                $('#sample_data5_2').editable({
+                    container: 'body',
+                    selector: 'td.prichina',
+                    url: '/update5_2',
+                    title: 'prichina',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        function () {
+                            return sor
+                        },
+                    validate: function (value) {
+                        if ($.trim(value)) {
+                        }
+                    }
+                });
+            });
+            {% if not user.username == 'master' %}
+                var dataTable = $('#sample_data5_2').DataTable();
+
+                $('#sample_data5_2').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: '/update5_2',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
+                    }
+                });
+            {% endif %}
+            $('#sample_data5_2').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: '/update5_2',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+
+            $('#sample_data5_2').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: '/update5_2',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+        </script>
     {% endif %}
     {% if user.username == 'master' or user.username == 'admin' %}
         <script> // зависимости выпадающих списков таблицы
@@ -231,6 +344,120 @@
 
 
         </script>
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+            $(function () {
+                $('#sample_data4_2').mousemove(function () {
+                    $('td.otv_pod', this).mousedown(function () {
+
+                        temp = '';
+                        for (let i = 0; i < test.length; i++) {
+                            if ($(this).text() === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    })
+                });
+
+            });
+            {% if not user.username == 'master' %}
+                var dataTable2 = $('#sample_data4_2').DataTable();
+
+                $('#sample_data4_2').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: '/update4_2',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch_vino %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
+                    }
+                });
+            {% endif %}
+            $('#sample_data4_2').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: '/update4_2',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data4_2').editable({
+                container: 'body',
+                selector: 'td.prichina',
+                url: '/update4_2',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+                    }
+                }
+            });
+
+            $('#sample_data4_2').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: '/update4_2',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+
+
+        </script>
     {% endif %}
     {% if user.username == 'master' or user.username == 'admin' %}
         <script> // зависимости выпадающих списков таблицы
@@ -315,6 +542,102 @@
                 container: 'body',
                 selector: 'td.comment',
                 url: '/update2',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
+
+
+        </script>
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+            {% if not user.username == 'master' %}
+                var dataTable2 = $('#sample_data2_2').DataTable();
+
+
+                $('#sample_data2_2').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: '/update2_2',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
+                    }
+                });
+            {% endif %}
+            $('#sample_data2_2').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: '/update2_2',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data2_2').editable({
+
+                container: 'body',
+                selector: 'td.prichina',
+                url: '/update2_2',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+                }
+            });
+
+            $('#sample_data2_2').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: '/update2_2',
                 title: 'comment',
                 type: 'POST',
                 value: "",
@@ -564,8 +887,45 @@ var myChart2 = new Chart(ctx2, {
 
         </script>
 
-
+{% if table_triblok %}
         <table id="sample_data" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время начала простоя</th>
+                <th>Время простоя</th>
+                <th>Участок</th>
+
+                <th>Ответст. подразделение</th>
+                <th>Причина</th>
+                <th>Комментарий</th>
+            </thead>
+            <tbody>
+
+            {% for row in table_triblok %}
+                <tr>
+                    <td>{{ row.startdata|date:"d.m.Y" }}</td>
+                    <td>{{ row.starttime }}</td>
+                    <td>{{ row.prostoy }}
+                    </td>
+
+                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                    <td data-name="otv_pod" class="otv_pod" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+                    <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                    <td data-name="comment" class="comment" data-type="textarea"
+                        data-pk="{{ row.id }}">{{ row.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+        <table id="sample_data5_2" class="table table-bordered table-striped">
             <thead>
             <tr>
                 <th>Дата</th>
@@ -676,7 +1036,43 @@ var myChart2 = new Chart(ctx2, {
             }
         });
         </script>
+{% if table_triblok %}
+    <table id="sample_data2_2" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время начала простоя</th>
+                <th>Время простоя</th>
+                <th>Участок</th>
 
+                <th>Ответст. подразделение</th>
+                <th>Причина</th>
+                <th>Комментарий</th>
+            </thead>
+            <tbody>
+            {% for row in table_triblok %}
+                <tr>
+                    <td>{{ row.startdata|date:"d.m.Y" }}</td>
+                    <td>{{ row.starttime }}</td>
+                    <td>{{ row.prostoy }}
+                    </td>
+
+                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                    <td data-name="otv_pod" class="otv_pod" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+                    <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                    <td data-name="comment" class="comment" data-type="textarea"
+                        data-pk="{{ row.id }}">{{ row.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
         <table id="sample_data2" class="table table-bordered table-striped">
             <thead>
             <tr>
@@ -738,8 +1134,44 @@ var myChart2 = new Chart(ctx2, {
                 }
             });
         </script>
+{% if table_triblok %}
+    <table id="sample_data4" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Время начала простоя</th>
+                <th>Время простоя</th>
+                <th>Участок</th>
 
-        <table id="sample_data4" class="table table-bordered table-striped">
+                <th>Ответст. подразделение</th>
+                <th>Причина</th>
+                <th>Комментарий</th>
+            </thead>
+            <tbody>
+            {% for row in table_triblok %}
+                <tr>
+                    <td>{{ row.startdata|date:"d.m.Y" }}</td>
+                    <td>{{ row.starttime }}</td>
+                    <td>{{ row.prostoy }}
+                    </td>
+
+                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                    <td data-name="otv_pod" class="otv_pod" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+                    <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                    <td data-name="comment" class="comment" data-type="textarea"
+                        data-pk="{{ row.id }}">{{ row.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+        <table id="sample_data4_2" class="table table-bordered table-striped">
             <thead>
             <tr>
                 <th>Дата</th>
