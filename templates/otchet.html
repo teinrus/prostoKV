@@ -666,6 +666,9 @@
             <ul style="margin-bottom: 15px">
                 <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy }}</b></li>
                 <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork }}</b></li>
+                {% if line == 'Линиия 5' %}
+            <li>Количество взрывов {{ boomOut }}</li>
+        {% endif %}
             </ul>
 
             <ul>
