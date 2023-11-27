@@ -26,27 +26,21 @@ else:
     startSmena = datetime.time(00, 00, 00)
     spotSmena = datetime.time(8, 00, 00)
 
-def mod_bus(reg,bit_temp):
 
+def mod_bus(reg, bit_temp):
     slave_address = '10.36.20.2'
 
     unit_id = 1
     modbus_client = ModbusClient(host=slave_address, unit_id=unit_id, auto_open=True)
     test = modbus_client.write_single_register(reg, bit_temp)
 
-def mod_bus_igristoe(reg,bit_temp):
 
+def mod_bus_igristoe(reg, bit_temp):
     slave_address = '10.36.20.4'
 
     unit_id = 1
     modbus_client = ModbusClient(host=slave_address, unit_id=unit_id, auto_open=True)
     test = modbus_client.write_single_register(reg, bit_temp)
-
-
-
-
-
-
 
 
 # функция формирования процентов за текущию смену
@@ -70,52 +64,52 @@ def proc(startSmena, spotSmena, plan, colProduct):
 def index(request):
     if request.method == 'GET':
         table31 = Table31.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=startSmena,
-                                      starttime__lte=spotSmena)
+                                         starttime__gte=startSmena,
+                                         starttime__lte=spotSmena)
         speed31 = Speed31.objects.filter(data=datetime.date.today(),
-                                      time__gte=startSmena,
-                                      time__lte=spotSmena)
+                                         time__gte=startSmena,
+                                         time__lte=spotSmena)
         table33 = Table33.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=startSmena,
-                                      starttime__lte=spotSmena)
+                                         starttime__gte=startSmena,
+                                         starttime__lte=spotSmena)
         speed33 = Speed33.objects.filter(data=datetime.date.today(),
-                                      time__gte=startSmena,
-                                      time__lte=spotSmena)
+                                         time__gte=startSmena,
+                                         time__lte=spotSmena)
         table24 = Table24.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=startSmena,
-                                      starttime__lte=spotSmena)
+                                         starttime__gte=startSmena,
+                                         starttime__lte=spotSmena)
         speed24 = Speed24.objects.filter(data=datetime.date.today(),
-                                      time__gte=startSmena,
-                                      time__lte=spotSmena)
+                                         time__gte=startSmena,
+                                         time__lte=spotSmena)
         table26 = Table26.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=startSmena,
-                                      starttime__lte=spotSmena)
+                                         starttime__gte=startSmena,
+                                         starttime__lte=spotSmena)
         speed26 = Speed26.objects.filter(data=datetime.date.today(),
-                                      time__gte=startSmena,
-                                      time__lte=spotSmena)
+                                         time__gte=startSmena,
+                                         time__lte=spotSmena)
         table25 = Table25.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=startSmena,
-                                      starttime__lte=spotSmena)
+                                         starttime__gte=startSmena,
+                                         starttime__lte=spotSmena)
         speed25 = Speed25.objects.filter(data=datetime.date.today(),
-                                      time__gte=startSmena,
-                                      time__lte=spotSmena)
+                                         time__gte=startSmena,
+                                         time__lte=spotSmena)
 
-
-
-    prichAll=prichina.objects.all()
-    podrazdeleniaEl=[]
+    prichAll = prichina.objects.all()
+    podrazdeleniaEl = []
     for el in prichAll:
         podrazdeleniaEl.append(el.key)
-    otv_p=set(podrazdeleniaEl)
+    otv_p = set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
-    uch = uchastok.objects.all().exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(uchastok="Розлив")
-    uch_vino=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат").exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(uchastok="Розлив")
+    uch = uchastok.objects.all().exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(
+        uchastok="Розлив")
+    uch_vino = uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат").exclude(uchastok="Укупор").exclude(
+        uchastok="Ополаскиватель").exclude(uchastok="Розлив")
     uch_vino33 = uchastok.objects.all().exclude(uchastok="Триблок розлива").exclude(uchastok="Мюзлёвочный аппарат")
 
     return render(request, "titorovka.html", {
 
-        'otv_p':otv_p ,
+        'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
         'uch_vino': uch_vino,
@@ -136,14 +130,14 @@ def index(request):
         'table26': table26,
         'speed26': speed26,
 
-
-
     })
 
-def Sotchet(request):
 
+def Sotchet(request):
     plan = 0
     table = []
+    table_other = []
+
     timeTemp = 0
     form = Otchet(request.GET)
     if form.is_valid():
@@ -152,21 +146,29 @@ def Sotchet(request):
                 form.cleaned_data["LineF"] == 'Линиия 31'):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
-                    table = Table31.objects.filter(starttime__gte=datetime.time(0),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                    table = (Table31.objects.filter(starttime__gte=datetime.time(0),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(uchastok="Триблок") | Table31.objects.filter(
+                        startdata=datetime.date.today(),
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировка")).order_by('startdata', 'starttime')
+                    table_other =Table31.objects.filter(starttime__gte=datetime.time(0),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ) .exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")
 
                     speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(0),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(0),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -186,20 +188,29 @@ def Sotchet(request):
                         timeTemp = 0
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
-                    table = Table31.objects.filter(starttime__gte=datetime.time(8),
-                                                  starttime__lte=datetime.time(16, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                    table = (Table31.objects.filter(starttime__gte=datetime.time(8),
+                                                    starttime__lte=datetime.time(16, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(uchastok="Триблок") | Table31.objects.filter(
+                        startdata=datetime.date.today(),
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировка")).order_by('startdata', 'starttime')
+                    table_other = Table31.objects.filter(starttime__gte=datetime.time(8),
+                                                    starttime__lte=datetime.time(16, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")
+
                     speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(8),
+                                                   time__lte=datetime.time(16, 00))
 
                     prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(8),
+                                                             time__lte=datetime.time(16, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -211,25 +222,35 @@ def Sotchet(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=1+timeTemp.total_seconds()/3600/24
-                        timeTemp=datetime.timedelta(hours=(8*count),minutes=00*count)
+                        count = 1 + timeTemp.total_seconds() / 3600 / 24
+                        timeTemp = datetime.timedelta(hours=(8 * count), minutes=00 * count)
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
-                    table = Table31.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                    table = (Table31.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(uchastok="Триблок") | Table31.objects.filter(
+                        startdata=datetime.date.today(),
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировка")).order_by('startdata', 'starttime')
+                    table_other = Table31.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")
+
+
                     speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(16, 00),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(16, 00),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -241,26 +262,35 @@ def Sotchet(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(7*count),minutes=00*count)
+                        timeTemp = datetime.timedelta(hours=(7 * count), minutes=00 * count)
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
-                    table = Table31.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                  starttime__lte=datetime.time(8, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                    table = (Table31.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                    starttime__lte=datetime.time(8, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(uchastok="Триблок") | Table31.objects.filter(
+                        startdata=datetime.date.today(),
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировка")).order_by('startdata', 'starttime')
+                    table_other = Table31.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                    starttime__lte=datetime.time(8, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")
+
                     speed = Speed31.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                                         data__lte=form.cleaned_data["finish_data"],
+                                                                         time__gte=datetime.time(00, 00),
+                                                                         time__lte=datetime.time(8, 00))
 
                     prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(00, 00),
+                                                             time__lte=datetime.time(8, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -272,9 +302,9 @@ def Sotchet(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
         elif form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
@@ -282,20 +312,20 @@ def Sotchet(request):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
                     table = Table33.objects.filter(starttime__gte=datetime.time(0),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(23, 59),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
 
                     speed = Speed33.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(0),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput33.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(0),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -316,19 +346,19 @@ def Sotchet(request):
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
                     table = Table33.objects.filter(starttime__gte=datetime.time(8),
-                                                  starttime__lte=datetime.time(16, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(16, 00),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed33.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(8),
+                                                   time__lte=datetime.time(16, 00))
 
                     prod = ProductionOutput33.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(8),
+                                                             time__lte=datetime.time(16, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -340,25 +370,25 @@ def Sotchet(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=1+timeTemp.total_seconds()/3600/24
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        count = 1 + timeTemp.total_seconds() / 3600 / 24
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
                     table = Table33.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(23, 59),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed33.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(16, 00),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput33.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(16, 00),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -370,26 +400,26 @@ def Sotchet(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
                     table = Table33.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                  starttime__lte=datetime.time(8, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(8, 00),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed33.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                                         data__lte=form.cleaned_data["finish_data"],
+                                                                         time__gte=datetime.time(00, 00),
+                                                                         time__lte=datetime.time(8, 00))
 
                     prod = ProductionOutput33.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(00, 00),
+                                                             time__lte=datetime.time(8, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -401,19 +431,16 @@ def Sotchet(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
-
-
-
 
     lableChart = []
     dataChart = []
 
-    #Общее количество  продукции
+    # Общее количество  продукции
     try:
         allProd = prod.aggregate(Sum('production')).get('production__sum')
         if (allProd == None):
@@ -421,32 +448,27 @@ def Sotchet(request):
     except:
         allProd = 0
 
-
-
-    #Общее время простоя
+    # Общее время простоя
     try:
         sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
-        if sumProstoy== None:
-            sumProstoy=datetime.timedelta(0)
+        if sumProstoy == None:
+            sumProstoy = datetime.timedelta(0)
     except:
         sumProstoy = 0
     # Средняя скорость
     try:
-        if sumProstoy>timeTemp:
-            sumProstoy=timeTemp
-        timeWork=(timeTemp -sumProstoy)
+        if sumProstoy > timeTemp:
+            sumProstoy = timeTemp
+        timeWork = (timeTemp - sumProstoy)
 
 
     except:
-        timeWork=0
+        timeWork = 0
     try:
-        avgSpeed =round((allProd / timeWork.total_seconds() * 3600),2)
+        avgSpeed = round((allProd / timeWork.total_seconds() * 3600), 2)
 
     except:
-        avgSpeed=0
-
-
-
+        avgSpeed = 0
 
     # Данные для графика
 
@@ -458,11 +480,8 @@ def Sotchet(request):
         lableChart = []
         dataChart = []
 
-
-
-
     uch = uchastok.objects.all()
-    uch_v=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
+    uch_v = uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
 
     prichAll = prichina.objects.all()
     podrazdeleniaEl = []
@@ -473,31 +492,25 @@ def Sotchet(request):
     prich = list(prichAll.values())
 
     line = form.cleaned_data["LineF"]
-    smena=form.cleaned_data["SmenaF"]
+    smena = form.cleaned_data["SmenaF"]
     nachaloOt = form.cleaned_data["start_data"]
     okonchanieOt = form.cleaned_data["finish_data"]
 
-
-
     return render(request, "Sotchet.html", {
         'table': table,
+        'table_other': table_other,
         'form': form,
 
+        'line': line,
+        'smena': smena,
+        'nachaloOt': nachaloOt,
+        'okonchanieOt': okonchanieOt,
 
-
-
-        'line':line,
-        'smena':smena,
-        'nachaloOt':nachaloOt,
-        'okonchanieOt':okonchanieOt,
-
-        'timeWork':timeWork,
-        'plan':plan,
+        'timeWork': timeWork,
+        'plan': plan,
         'sumProstoy': sumProstoy,
 
         'avgSpeed': avgSpeed,
-
-
 
         'allProd': allProd,
 
@@ -507,13 +520,12 @@ def Sotchet(request):
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
-        'uch_v':uch_v,
-
-
+        'uch_v': uch_v,
 
     })
-def SotchetIgr(request):
 
+
+def SotchetIgr(request):
     plan = 0
     table = []
     timeTemp = 0
@@ -525,20 +537,20 @@ def SotchetIgr(request):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
                     table = Table24.objects.filter(starttime__gte=datetime.time(0),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(23, 59),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
 
                     speed = Speed24.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(0),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput24.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(0),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -559,19 +571,19 @@ def SotchetIgr(request):
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
                     table = Table24.objects.filter(starttime__gte=datetime.time(8),
-                                                  starttime__lte=datetime.time(16, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(16, 00),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed24.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(8),
+                                                   time__lte=datetime.time(16, 00))
 
                     prod = ProductionOutput24.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(8),
+                                                             time__lte=datetime.time(16, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -583,25 +595,25 @@ def SotchetIgr(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=1+timeTemp.total_seconds()/3600/24
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        count = 1 + timeTemp.total_seconds() / 3600 / 24
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
                     table = Table24.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(23, 59),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed24.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(16, 00),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput24.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(16, 00),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -613,26 +625,26 @@ def SotchetIgr(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
                     table = Table24.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                  starttime__lte=datetime.time(8, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(8, 00),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed24.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                                         data__lte=form.cleaned_data["finish_data"],
+                                                                         time__gte=datetime.time(00, 00),
+                                                                         time__lte=datetime.time(8, 00))
 
                     prod = ProductionOutput24.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(00, 00),
+                                                             time__lte=datetime.time(8, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -644,9 +656,9 @@ def SotchetIgr(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
         elif form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
@@ -654,20 +666,20 @@ def SotchetIgr(request):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
                     table = Table26.objects.filter(starttime__gte=datetime.time(0),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(23, 59),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
 
                     speed = Speed26.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(0),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput26.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(0),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -688,19 +700,19 @@ def SotchetIgr(request):
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
                     table = Table26.objects.filter(starttime__gte=datetime.time(8),
-                                                  starttime__lte=datetime.time(16, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(16, 00),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed26.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(8),
+                                                   time__lte=datetime.time(16, 00))
 
                     prod = ProductionOutput26.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(8),
+                                                             time__lte=datetime.time(16, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -712,25 +724,25 @@ def SotchetIgr(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=1+timeTemp.total_seconds()/3600/24
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        count = 1 + timeTemp.total_seconds() / 3600 / 24
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
                     table = Table26.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(23, 59),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed26.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(16, 00),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput26.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(16, 00),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -742,26 +754,26 @@ def SotchetIgr(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
                     table = Table26.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                  starttime__lte=datetime.time(8, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(8, 00),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed26.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                                         data__lte=form.cleaned_data["finish_data"],
+                                                                         time__gte=datetime.time(00, 00),
+                                                                         time__lte=datetime.time(8, 00))
 
                     prod = ProductionOutput26.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(00, 00),
+                                                             time__lte=datetime.time(8, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -773,9 +785,9 @@ def SotchetIgr(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
         elif form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
@@ -783,20 +795,20 @@ def SotchetIgr(request):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
                     table = Table25.objects.filter(starttime__gte=datetime.time(0),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(23, 59),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
 
                     speed = Speed25.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(0),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput25.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(0),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(0),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -817,19 +829,19 @@ def SotchetIgr(request):
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
                     table = Table25.objects.filter(starttime__gte=datetime.time(8),
-                                                  starttime__lte=datetime.time(16, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(16, 00),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed25.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(8),
+                                                   time__lte=datetime.time(16, 00))
 
                     prod = ProductionOutput25.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(8),
+                                                             time__lte=datetime.time(16, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -841,25 +853,25 @@ def SotchetIgr(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=1+timeTemp.total_seconds()/3600/24
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        count = 1 + timeTemp.total_seconds() / 3600 / 24
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
                     table = Table25.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(23, 59),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed25.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(16, 00),
+                                                   time__lte=datetime.time(23, 59))
 
                     prod = ProductionOutput25.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(16, 00),
-                                                  time__lte=datetime.time(23, 59))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(16, 00),
+                                                             time__lte=datetime.time(23, 59))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -871,26 +883,26 @@ def SotchetIgr(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
                     table = Table25.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                  starttime__lte=datetime.time(8, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                   starttime__lte=datetime.time(8, 00),
+                                                   startdata__gte=form.cleaned_data["start_data"],
+                                                   startdata__lte=form.cleaned_data["finish_data"]
+                                                   ).order_by('startdata', 'starttime')
                     speed = Speed25.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                                         data__lte=form.cleaned_data["finish_data"],
+                                                                         time__gte=datetime.time(00, 00),
+                                                                         time__lte=datetime.time(8, 00))
 
                     prod = ProductionOutput25.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                  data__lte=form.cleaned_data["finish_data"],
-                                                  time__gte=datetime.time(00, 00),
-                                                  time__lte=datetime.time(8, 00))
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(00, 00),
+                                                             time__lte=datetime.time(8, 00))
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -902,17 +914,16 @@ def SotchetIgr(request):
 
                     try:
                         timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count=timeTemp.total_seconds()/3600/24+1
+                        count = timeTemp.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp=datetime.timedelta(hours=(8*count))
+                        timeTemp = datetime.timedelta(hours=(8 * count))
                     except:
                         timeTemp = 0
-
 
     lableChart = []
     dataChart = []
 
-    #Общее количество  продукции
+    # Общее количество  продукции
     try:
         allProd = prod.aggregate(Sum('production')).get('production__sum')
         if (allProd == None):
@@ -920,32 +931,27 @@ def SotchetIgr(request):
     except:
         allProd = 0
 
-
-
-    #Общее время простоя
+    # Общее время простоя
     try:
         sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
-        if sumProstoy== None:
-            sumProstoy=datetime.timedelta(0)
+        if sumProstoy == None:
+            sumProstoy = datetime.timedelta(0)
     except:
         sumProstoy = 0
     # Средняя скорость
     try:
-        if sumProstoy>timeTemp:
-            sumProstoy=timeTemp
-        timeWork=(timeTemp -sumProstoy)
+        if sumProstoy > timeTemp:
+            sumProstoy = timeTemp
+        timeWork = (timeTemp - sumProstoy)
 
 
     except:
-        timeWork=0
+        timeWork = 0
     try:
-        avgSpeed =round((allProd / timeWork.total_seconds() * 3600),2)
+        avgSpeed = round((allProd / timeWork.total_seconds() * 3600), 2)
 
     except:
-        avgSpeed=0
-
-
-
+        avgSpeed = 0
 
     # Данные для графика
 
@@ -957,11 +963,8 @@ def SotchetIgr(request):
         lableChart = []
         dataChart = []
 
-
-
-
     uch = uchastok.objects.all()
-    uch_v=uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
+    uch_v = uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
 
     prichAll = prichina.objects.all()
     podrazdeleniaEl = []
@@ -972,31 +975,24 @@ def SotchetIgr(request):
     prich = list(prichAll.values())
 
     line = form.cleaned_data["LineF"]
-    smena=form.cleaned_data["SmenaF"]
+    smena = form.cleaned_data["SmenaF"]
     nachaloOt = form.cleaned_data["start_data"]
     okonchanieOt = form.cleaned_data["finish_data"]
-
-
 
     return render(request, "SotchetIgr.html", {
         'table': table,
         'form': form,
 
+        'line': line,
+        'smena': smena,
+        'nachaloOt': nachaloOt,
+        'okonchanieOt': okonchanieOt,
 
-
-
-        'line':line,
-        'smena':smena,
-        'nachaloOt':nachaloOt,
-        'okonchanieOt':okonchanieOt,
-
-        'timeWork':timeWork,
-        'plan':plan,
+        'timeWork': timeWork,
+        'plan': plan,
         'sumProstoy': sumProstoy,
 
         'avgSpeed': avgSpeed,
-
-
 
         'allProd': allProd,
 
@@ -1006,100 +1002,121 @@ def SotchetIgr(request):
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
-        'uch_v':uch_v,
-
-
+        'uch_v': uch_v,
 
     })
 
 
 def start_perenaladka31(request):
-    print("tut")
-    mod_bus(0,1)
+    mod_bus(0, 1)
     return HttpResponse('yes')
+
+
 def start_donaladka31(request):
-    mod_bus(0,2)
+    mod_bus(0, 2)
     return HttpResponse('yes')
+
 
 def rabota31(request):
-    mod_bus(0,4)
+    mod_bus(0, 4)
     return HttpResponse('yes')
+
+
 def TO31(request):
-    mod_bus(0,8)
+    mod_bus(0, 8)
     return HttpResponse('yes')
+
 
 def Oformlenie31(request):
-    mod_bus(0,16)
+    mod_bus(0, 16)
     return HttpResponse('yes')
+
 
 def start_perenaladka33(request):
-    mod_bus(1,1)
-    return HttpResponse('yes')
-def start_donaladka33(request):
-    mod_bus(1,2)
+    mod_bus(1, 1)
     return HttpResponse('yes')
 
-def rabota33(request):
-    mod_bus(1,4)
+
+def start_donaladka33(request):
+    mod_bus(1, 2)
     return HttpResponse('yes')
+
+
+def rabota33(request):
+    mod_bus(1, 4)
+    return HttpResponse('yes')
+
+
 def TO33(request):
-    mod_bus(1,8)
+    mod_bus(1, 8)
     return HttpResponse('yes')
 
 
 def start_perenaladka24(request):
+    mod_bus_igristoe(0, 1)
+    return HttpResponse('yes')
 
-    mod_bus_igristoe(0,1)
-    return HttpResponse('yes')
+
 def start_donaladka24(request):
-    mod_bus_igristoe(0,2)
+    mod_bus_igristoe(0, 2)
     return HttpResponse('yes')
+
 
 def rabota24(request):
-    mod_bus_igristoe(0,4)
+    mod_bus_igristoe(0, 4)
     return HttpResponse('yes')
+
+
 def TO24(request):
-    mod_bus_igristoe(0,8)
+    mod_bus_igristoe(0, 8)
     return HttpResponse('yes')
+
 
 def start_perenaladka26(request):
+    mod_bus_igristoe(2, 1)
+    return HttpResponse('yes')
 
-    mod_bus_igristoe(2,1)
-    return HttpResponse('yes')
+
 def start_donaladka26(request):
-    mod_bus_igristoe(2,2)
+    mod_bus_igristoe(2, 2)
     return HttpResponse('yes')
+
 
 def rabota26(request):
-    mod_bus_igristoe(2,4)
-    return HttpResponse('yes')
-def TO26(request):
-    mod_bus_igristoe(2,8)
-    return HttpResponse('yes')
-def vid26(request):
-    mod_bus_igristoe(2,16)
+    mod_bus_igristoe(2, 4)
     return HttpResponse('yes')
 
+
+def TO26(request):
+    mod_bus_igristoe(2, 8)
+    return HttpResponse('yes')
+
+
+def vid26(request):
+    mod_bus_igristoe(2, 16)
+    return HttpResponse('yes')
 
 
 def start_perenaladka25(request):
+    mod_bus_igristoe(1, 1)
+    return HttpResponse('yes')
 
-    mod_bus_igristoe(1,1)
-    return HttpResponse('yes')
+
 def start_donaladka25(request):
-    mod_bus_igristoe(1,2)
+    mod_bus_igristoe(1, 2)
     return HttpResponse('yes')
+
 
 def rabota25(request):
-    mod_bus_igristoe(1,4)
+    mod_bus_igristoe(1, 4)
     return HttpResponse('yes')
+
+
 def TO25(request):
-    mod_bus_igristoe(1,8)
+    mod_bus_igristoe(1, 8)
     return HttpResponse('yes')
+
+
 def vid25(request):
-    mod_bus_igristoe(1,16)
+    mod_bus_igristoe(1, 16)
     return HttpResponse('yes')
-
-
-
-

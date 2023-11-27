@@ -106,7 +106,6 @@ def update_items26(request):
     table26 = Table26.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
-    print("tut26")
     return render(request, 'Line26/table_body26.html', {'table26': table26})
 
 

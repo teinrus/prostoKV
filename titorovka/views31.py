@@ -1,16 +1,16 @@
 import datetime
 
-
 from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
 from temruk.models import bottling_plan
 from titorovka.models import *
-from  pyModbusTCP.client import ModbusClient
-slave_address='10.36.20.2'
+from pyModbusTCP.client import ModbusClient
+
+slave_address = '10.36.20.2'
 unit_id = 1
-modbus_client = ModbusClient(host=slave_address,unit_id=unit_id,auto_open=True)
+modbus_client = ModbusClient(host=slave_address, unit_id=unit_id, auto_open=True)
 
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 00, 0)
@@ -42,10 +42,6 @@ def proc(startSmena, spotSmena, plan, colProduct):
     diff2 = d_end2 - d_start2
 
     # проц вып продукции
-    print(colProduct)
-    print(diff2.total_seconds())
-    print(planProdSec)
-    print( int(colProduct / ((int(diff2.total_seconds()) * planProdSec) / 100)))
     return int(colProduct / ((int(diff2.total_seconds()) * planProdSec) / 100))
 
 
@@ -94,6 +90,7 @@ def update31(request):
     return HttpResponse('yes')
 
 
+
 # получение данных в таблицу
 def update_items31(request):
     if start1 <= datetime.datetime.now().time() <= start2:
@@ -107,9 +104,10 @@ def update_items31(request):
         spotSmena = datetime.time(8, 00, 00)
 
     table31 = Table31.objects.filter(startdata=datetime.date.today(),
-                                   starttime__gte=startSmena,
-                                   starttime__lte=spotSmena)
-
+                                     starttime__gte=startSmena,
+                                     starttime__lte=spotSmena).filter(uchastok="Триблок") | Table31.objects.filter(startdata=datetime.date.today(),
+                                     starttime__gte=startSmena,
+                                     starttime__lte=spotSmena).filter(uchastok="Этикетировка")
     return render(request, 'Line31/table_body31.html', {'table31': table31})
 
 
@@ -130,27 +128,26 @@ def getData31(requst):
 
     try:
         plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-                                         GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
-                                         ShiftNumber=Smena)
-        plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-        if plan== None:
-            plan=31000
+                                            GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
+                                            ShiftNumber=Smena)
+        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+        if plan == None:
+            plan = 31000
     except:
-        plan=31000
-
+        plan = 31000
 
     table31 = Table31.objects.filter(startdata=datetime.date.today(),
-                                   starttime__gte=startSmena,
-                                   starttime__lte=spotSmena)
+                                     starttime__gte=startSmena,
+                                     starttime__lte=spotSmena).filter(uchastok="Триблок") | Table31.objects.filter(startdata=datetime.date.today(),
+                                     starttime__gte=startSmena,
+                                     starttime__lte=spotSmena).filter(uchastok="Этикетировка")
 
     speed31 = Speed31.objects.filter(data=datetime.date.today(),
-                                   time__gte=startSmena,
-                                   time__lte=spotSmena)
+                                     time__gte=startSmena,
+                                     time__lte=spotSmena)
     productionOutput31 = ProductionOutput31.objects.filter(data=datetime.date.today(),
-                                                         time__gte=startSmena,
-                                                         time__lte=spotSmena)
-
-
+                                                           time__gte=startSmena,
+                                                           time__lte=spotSmena)
 
     try:
         count31 = 0
@@ -212,10 +209,11 @@ def getData31(requst):
     }
     return JsonResponse(result)
 
+
 def getBtn31(requst):
     buttons_reg = modbus_client.read_input_registers(0)
 
     result = {
-        'buttons_reg':buttons_reg
-              }
+        'buttons_reg': buttons_reg
+    }
     return JsonResponse(result)

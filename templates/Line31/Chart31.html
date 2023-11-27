@@ -65,28 +65,6 @@
                             borderWidth: 3,
                             borderColor: 'rgb(76,125,248)',
                         }],
-                {#{#}
-                {#            label: '# Производительность капсула',#}
-                {#            data: data.dataChart31_kapsula,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,130,248)',#}
-                {#            },{#}
-                {#            label: '# Производительность этикетировка',#}
-                {#            data: data.dataChart31_eticetka,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,248,216)',#}
-                {#             },{#}
-                {#            label: '# Производительность укладчик',#}
-                {#            data: data.dataChart31_ukladchik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,248,145)',#}
-                {#            },{#}
-                {#            label: '# Производительность заклейщик',#}
-                {#            data: data.dataChart31_zakleichik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(87,248,76)',#}
-                {##}
-                {#        }]#}
                     },
                     options: {
 
@@ -133,10 +111,6 @@
             }).done(function (newData) {
                 chart31.data.labels = newData.lableChart31;
                 chart31.data.datasets[0].data = newData.dataChart31_triblok;
-                {#chart31.data.datasets[1].data = newData.dataChart31_kapsula;#}
-                {#chart31.data.datasets[2].data = newData.dataChart31_eticetka;#}
-                {#chart31.data.datasets[3].data = newData.dataChart31_ukladchik;#}
-                {#chart31.data.datasets[4].data = newData.dataChart31_zakleichik;#}
                 chart31.update();
             });
 
