@@ -11,26 +11,26 @@
 
             var dataTable31 = $('#sample_data31').DataTable();
 
-{% if not user.username == 'masterS'  %}
-            $('#sample_data31').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: 'update31',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch_vino %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+            {% if not user.username == 'masterS'  %}
+                $('#sample_data31').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: 'update31',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch_vino %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-    {% endif %}
+                });
+            {% endif %}
             $('#sample_data31').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -109,26 +109,26 @@
 
             var dataTable33 = $('#sample_data33').DataTable();
 
-{% if not user.username == 'masterS'  %}
-            $('#sample_data33').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: 'update33',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch_vino33 %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+            {% if not user.username == 'masterS'  %}
+                $('#sample_data33').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: 'update33',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch_vino33 %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-    {% endif %}
+                });
+            {% endif %}
             $('#sample_data33').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -209,26 +209,26 @@
 
             var dataTable24 = $('#sample_data24').DataTable();
 
-{% if not user.username == 'masterI'  %}
-            $('#sample_data24').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: 'update24',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+            {% if not user.username == 'masterI'  %}
+                $('#sample_data24').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: 'update24',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-    {% endif %}
+                });
+            {% endif %}
             $('#sample_data24').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -309,26 +309,26 @@
 
             var dataTable25 = $('#sample_data25').DataTable();
 
-{% if not user.username == 'masterI'  %}
-            $('#sample_data25').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: 'update25',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch_vino %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+            {% if not user.username == 'masterI'  %}
+                $('#sample_data25').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: 'update25',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch_vino %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-    {% endif %}
+                });
+            {% endif %}
             $('#sample_data25').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -606,7 +606,7 @@
     </script>
 
     {#    линия 26#}
-        {#кнопки 25#}
+    {#кнопки 25#}
     <script>
 
         $(document).ready(function () {
@@ -634,7 +634,7 @@
 
 
     </script>
-        {#таблица 26#}
+    {#таблица 26#}
     <script>
         $(document).ready(function () {
             setInterval(function () {
@@ -726,26 +726,26 @@
 
             var dataTable26 = $('#sample_data26').DataTable();
 
-{% if not user.username == 'masterI'  %}
-            $('#sample_data26').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: 'update26',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+            {% if not user.username == 'masterI'  %}
+                $('#sample_data26').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: 'update26',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-    {% endif %}
+                });
+            {% endif %}
             $('#sample_data26').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -816,7 +816,51 @@
 
     {#кнопки 31#}
     <script>
+
+
         $(document).ready(function () {
+            // Функция для обновления селекта
+            function updateSelect(options) {
+                var select = document.getElementById("select31");
+
+                // Очистка существующих опций в селекте
+                select.innerHTML = "";
+
+                // Добавление новых опций в селект
+                for (var i = 0; i < options.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = options[i];
+                    option.text = options[i];
+                    select.appendChild(option);
+                }
+            }
+
+            $.ajax({
+                url: 'getBtn31',
+                method: 'post',
+                success: function (data) {
+                    updateSelect(data.list_nomenklature);
+                }
+            });
+            // Обработчик события изменения <select>
+            $('#select31').change(function () {
+                var selectedOption = $(this).val();
+                console.log('Selected Option:', selectedOption); // Проверка значения selectedOption
+
+                // Сохранение выбранной позиции в локальном хранилище
+                localStorage.setItem('selectedOption31', selectedOption);
+
+                // Отправка выбранной позиции на сервер Django
+                $.ajax({
+                    url: 'handle_select_position31',
+                    method: 'POST',
+                    data: {
+                        selected_option: selectedOption
+                    },
+                });
+            });
+
+
             setInterval(function () {
                 $.ajax({
                     url: 'getBtn31',
@@ -868,27 +912,6 @@
                     }
                 });
             }, 2000);
-
-
-            $.ajax({
-                url: 'getBtn31',
-                method: 'post',
-                success: function (data) {
-                    if (data.buttons_reg[0] == 1) {
-                        $('#start_perenaladka31').attr('style', 'color:red; border: 1px solid blue;')
-                    }
-                    if (data.buttons_reg[0] == 2) {
-                        $('#start_donaladka31').attr('style', 'color:red; border: 1px solid blue;')
-                    }
-                    if (data.buttons_reg[0] == 8) {
-                        $('#TO31').attr('style', 'color:red; border: 1px solid blue;')
-                    }
-                    if (data.buttons_reg[0] == 4) {
-                        $('#rabota31').attr('style', 'color:green; border: 1px solid blue;')
-                    }
-
-                }
-            });
 
 
         });

@@ -35,7 +35,7 @@
             timeObject2.setMinutes(timeObject2.getMinutes() + 2);
             let newTimeB = new Date(timeObject2);
             // Проверяем, выполнялось ли уже это условие для данного времени
-            console.log(newTimeM,newTimeB)
+
             if (newTimeM < timeObject && timeObject < newTimeB) {
                return '#ff0000';
             }

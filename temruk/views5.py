@@ -36,7 +36,7 @@ def get_shift_times():
 def get_shift_number():
     if 0 <= time.localtime().tm_hour < 8:
         return 3
-    elif 8 <= time.localtime().tm_hour < 16:
+    elif 8 <= time.localtime().tm_hour < 16.5:
         return 1
     else:
         return 2
@@ -46,7 +46,8 @@ def get_plan_quantity():
         today = datetime.datetime.today()
         shift_number = get_shift_number()
         plan = bottling_plan.objects.filter(Data=today, GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
-        plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
+        plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum']
+
         return plan_quantity
 
     except Exception as e:
@@ -78,14 +79,18 @@ def calculate_production_percentage(plan, total_product, startSmena, spotSmena):
     d_end1 = datetime.datetime.combine(today, spotSmena)
     diff1 = d_end1 - d_start1
 
-    planProdSec = (plan / diff1.total_seconds())
+
+    planProdSec = plan / diff1.total_seconds()
+
     # количество времени которое прошло
     d_start5 = datetime.datetime.combine(today, startSmena)
+
     d_end5 = datetime.datetime.combine(today, datetime.datetime.now().time())
     diff5 = d_end5 - d_start5
+    planNow=planProdSec*diff5.total_seconds()
 
-    # проц вып продукции
-    return int(total_product / ((int(diff5.total_seconds()) * planProdSec) / 100))
+
+    return int(total_product/planNow*100)
 
 def update(request):
     if request.method == 'POST':

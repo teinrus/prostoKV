@@ -158,7 +158,8 @@ def Sotchet(request):
                                                     starttime__lte=datetime.time(23, 59),
                                                     startdata__gte=form.cleaned_data["start_data"],
                                                     startdata__lte=form.cleaned_data["finish_data"]
-                                                    ) .exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")
+                                                    ) .exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")\
+                        .order_by('startdata', 'starttime')
 
                     speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
@@ -200,7 +201,8 @@ def Sotchet(request):
                                                     starttime__lte=datetime.time(16, 00),
                                                     startdata__gte=form.cleaned_data["start_data"],
                                                     startdata__lte=form.cleaned_data["finish_data"]
-                                                    ).exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")
+                                                    ).exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")\
+                        .order_by('startdata', 'starttime')
 
                     speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
@@ -234,7 +236,8 @@ def Sotchet(request):
                                                     ).filter(uchastok="Триблок") | Table31.objects.filter(
                         startdata=datetime.date.today(),
                         starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировка")).order_by('startdata', 'starttime')
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировка")).order_by('startdata', 'starttime')\
+                        .order_by('startdata', 'starttime')
                     table_other = Table31.objects.filter(starttime__gte=datetime.time(16, 00),
                                                     starttime__lte=datetime.time(23, 59),
                                                     startdata__gte=form.cleaned_data["start_data"],
@@ -280,7 +283,8 @@ def Sotchet(request):
                                                     starttime__lte=datetime.time(8, 00),
                                                     startdata__gte=form.cleaned_data["start_data"],
                                                     startdata__lte=form.cleaned_data["finish_data"]
-                                                    ).exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")
+                                                    ).exclude(uchastok="Триблок").exclude(uchastok="Этикетировка")\
+                        .order_by('startdata', 'starttime')
 
                     speed = Speed31.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
                                                                          data__lte=form.cleaned_data["finish_data"],

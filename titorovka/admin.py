@@ -23,3 +23,6 @@ TNR_admin_site.register(Table26)
 TNR_admin_site.register(Speed26)
 TNR_admin_site.register(ProductionOutput26)
 
+TNR_admin_site.register(SetProductionSpeed31)
+TNR_admin_site.register(ProductionTime31)
+

@@ -76,9 +76,13 @@ def calculate_production_percentage(plan, total_product, startSmena, spotSmena):
     d_start4 = datetime.datetime.combine(today, startSmena)
     d_end4 = datetime.datetime.combine(today, datetime.datetime.now().time())
     diff4 = d_end4 - d_start4
+    planNow=planProdSec*diff4.total_seconds()
 
-    # проц вып продукции
-    return int(total_product / ((int(diff4.total_seconds()) * planProdSec) / 100))
+
+
+
+
+    return int(total_product/planNow*100)
 
 def update4(request):
     if request.method == 'POST':
