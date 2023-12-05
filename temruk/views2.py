@@ -77,12 +77,12 @@ def calculate_production_percentage(plan, total_product, startSmena, spotSmena):
     diff2 = d_end2 - d_start2
 
     planNow=planProdSec*diff2.total_seconds()
+    try:
+        result=int(total_product/planNow*100)
+    except:
+        result=0
 
-
-
-
-
-    return int(total_product/planNow*100)
+    return result
 
 def update2(request):
     if request.method == 'POST':

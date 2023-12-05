@@ -73,24 +73,28 @@ def get_total_product(production_output5_queryset):
     return sum_product if sum_product else 0
 
 def calculate_production_percentage(plan, total_product, startSmena, spotSmena):
-    today = datetime.date.today()
-    # количество продукции вып в сек
-    d_start1 = datetime.datetime.combine(today, startSmena)
-    d_end1 = datetime.datetime.combine(today, spotSmena)
-    diff1 = d_end1 - d_start1
+    try:
+        today = datetime.date.today()
+        # количество продукции вып в сек
+        d_start1 = datetime.datetime.combine(today, startSmena)
+        d_end1 = datetime.datetime.combine(today, spotSmena)
+        diff1 = d_end1 - d_start1
 
 
-    planProdSec = plan / diff1.total_seconds()
+        planProdSec = plan / diff1.total_seconds()
 
-    # количество времени которое прошло
-    d_start5 = datetime.datetime.combine(today, startSmena)
+        # количество времени которое прошло
+        d_start5 = datetime.datetime.combine(today, startSmena)
 
-    d_end5 = datetime.datetime.combine(today, datetime.datetime.now().time())
-    diff5 = d_end5 - d_start5
-    planNow=planProdSec*diff5.total_seconds()
+        d_end5 = datetime.datetime.combine(today, datetime.datetime.now().time())
+        diff5 = d_end5 - d_start5
+        planNow=planProdSec*diff5.total_seconds()
 
+        result=int(total_product/planNow*100)
+    except:
+        result=0
 
-    return int(total_product/planNow*100)
+    return result
 
 def update(request):
     if request.method == 'POST':

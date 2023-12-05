@@ -275,7 +275,7 @@ class ProductionOutput4(models.Model):
     production = models.IntegerField('Продукция линии')
 
     def __str__(self):
-        return str(self.time)
+        return str(self.time) + " "+str(self.production)
 
     class Meta:
         verbose_name_plural = "Выпуск продукции линии 4"
