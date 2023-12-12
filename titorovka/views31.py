@@ -183,11 +183,7 @@ def getData31(requst):
 
     lableChart31 = []
     dataChart31_triblok = []
-
-    for sp in speed31:
-        lableChart31.append(str(sp.time))
-        dataChart31_triblok.append(sp.triblok)
-
+    dataChart31_test = []
 
     # Получение времени начала и окончания из ProductionTime31
     start_times = list(ProductionTime31.objects.filter(data=datetime.date.today(),
@@ -212,17 +208,26 @@ def getData31(requst):
         else:
             speeds.append(None)
 
-    end_times = start_times[1:] + [lableChart31[-1]]  # Последнее время в день
-
+    end_times = start_times[1:] + [speed31.last().time]
     start_times = [str(time) for time in start_times]
     end_times = [str(time) for time in end_times]
 
     # Парное объединение элементов двух списков
-    merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4  in
+    merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
                    zip(start_times, end_times, speeds, prod_name)]
 
-    for el in merged_list:
-        print(el)
+    for sp in speed31:
+        trig = False
+        lableChart31.append(str(sp.time))
+        dataChart31_triblok.append(sp.triblok)
+        for el in range(0, len(merged_list)):
+            if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
+                    <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
+                dataChart31_test.append(merged_list[el][2])
+                trig = True
+
+        if not trig:
+            dataChart31_test.append(0)
 
     result = {
         "allProc31": allProc31,
@@ -232,13 +237,21 @@ def getData31(requst):
 
         'lableChart31': lableChart31,
         'dataChart31_triblok': dataChart31_triblok,
-
+        'dataChart31_test': dataChart31_test,
 
     }
     return JsonResponse(result)
 
 
 def getBtn31(requst):
+    buttons_reg = modbus_client.read_input_registers(0)
+    result = {
+        'buttons_reg': buttons_reg,
+    }
+
+    return JsonResponse(result)
+
+def list_nomenklature31 (requst):
     buttons_reg = modbus_client.read_input_registers(0)
 
     if start1 <= datetime.datetime.now().time() <= start2:
@@ -256,7 +269,7 @@ def getBtn31(requst):
 
     list_nomenklature = []
     list_guid_nomenklature = bottling_plan.objects.filter(
-        Data__range=[datetime.date.today() - datetime.timedelta(days=5), datetime.date.today()],
+        Data=datetime.date.today(),
         GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
         ShiftNumber=Smena).values_list('GUIDNomenсlature', flat=True)
 
@@ -264,17 +277,14 @@ def getBtn31(requst):
         list_nomenklature.append(Nomenclature.objects.filter(GUID=e).values('Nomenclature')[0]['Nomenclature'])
     list_nomenklature = list(set(list_nomenklature))
     list_nomenklature.insert(0, "Выберите продукт")
+
     result = {
-        'buttons_reg': buttons_reg,
         'list_nomenklature': list_nomenklature,
 
     }
 
     return JsonResponse(result)
-
-
 def handle_select_position31(request):
-
     if request.method == 'POST':
         selected_option = request.POST.get('selected_option')
         print(f'Выбранная позиция: {selected_option}')  # Вывод позиции в консоль
@@ -297,7 +307,6 @@ def handle_select_position31(request):
             time=datetime.datetime.now().strftime("%H:%M:%S"),
             nameProduct=selected_option
         )
-
 
         return JsonResponse({'message': 'Успешно обработано'})  # Ответ на AJAX-запрос
     else:

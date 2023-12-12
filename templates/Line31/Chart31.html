@@ -42,81 +42,71 @@
 
 <script>
   $(document).ready(function () {
-        var ctx31 = document.getElementById("Chart31").getContext("2d");
-        var config31;
-        var chart31 = [];
-        $.ajax({
-            url: 'getData31',
-            method: 'post',
-            success: function (data) {
+    var ctx31 = document.getElementById("Chart31").getContext("2d");
+    var chart31;
+    var config31;
 
-                $('#avgSpeeds31').html(data.avgSpeed31);
-                $('#allProc31').html(data.allProc31);
-                $('#sumProduct31').html(data.sumProduct31);
-                $('#sumProstoy31').html(data.sumProstoy31);
-                config31 = {
+    // Функция создания графика
+    function createChart(data) {
+        config31 = {
+            data: {
+                labels: data.lableChart31,
+                datasets: [{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: data.dataChart31_test,
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    pointRadius: 0,
+                }, {
                     type: 'bar',
-                    data: {
+                    label: '# Производительность триблок',
+                    data: data.dataChart31_triblok,
+                    borderWidth: 3,
+                    borderColor: 'rgb(76,125,248)',
+                    backgroundColor: 'rgba(76,125,248,0.2)',
+                }]
+            },
+            // Другие настройки вашего графика
+        };
 
-                        labels: data.lableChart31,
-                        datasets: [{
-                            label: '# Производительность триблок',
-                            data: data.dataChart31_triblok,
-                            borderWidth: 3,
-                            borderColor: 'rgb(76,125,248)',
-                        }],
-                    },
-                    options: {
+        return new Chart(ctx31, config31);
+    }
 
-                        elements: {
-                    point:{
-                        radius: 0
-                    }
-                },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                };
-                chart31 = new Chart(ctx31, config31);
-                dataUpdater();
-
-
+    // Функция обновления данных графика
+    function updateChart() {
+        $.ajax({
+            type: "post",
+            url: 'getData31',
+            success: function (newData) {
+                // Обновление данных графика и вызов метода update()
+                config31.data.labels = newData.lableChart31;
+                config31.data.datasets[1].data = newData.dataChart31_triblok;
+                config31.data.datasets[0].data = newData.dataChart31_test;
+                chart31.update();
             }
         });
-        setInterval(function () {
+    }
 
-            $.ajax({
-                url: 'getData31',
-                method: 'post',
-                success: function (data) {
+    // AJAX запрос для создания графика и его обновления
+    $.ajax({
+        url: 'getData31',
+        method: 'post',
+        success: function (data) {
+            $('#avgSpeeds31').html(data.avgSpeed31);
+            $('#allProc31').html(data.allProc31);
+            $('#sumProduct31').html(data.sumProduct31);
+            $('#sumProstoy31').html(data.sumProstoy31);
 
-                    $('#avgSpeeds31').html(data.avgSpeed31);
-                    $('#allProc31').html(data.allProc31);
-                    $('#sumProstoy31').html(data.sumProstoy31);
-                    $('#sumProduct31').html(data.sumProduct31);
-                    dataUpdater();
-                }
-            });
+            // Создание графика при успешном получении данных
+            chart31 = createChart(data);
 
-        }, 15000);
-
-
-        function dataUpdater() {
-            $.ajax({
-                type: "post",
-                url: 'getData31',
-            }).done(function (newData) {
-                chart31.data.labels = newData.lableChart31;
-                chart31.data.datasets[0].data = newData.dataChart31_triblok;
-                chart31.update();
-            });
-
+            // Вызов функции обновления данных графика каждые 15 секунд
+            setInterval(updateChart, 15000);
         }
     });
-
+});
 
 
 </script>
