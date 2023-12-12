@@ -816,23 +816,27 @@
 
     {#кнопки 31#}
     <script>
-
-
         $(document).ready(function () {
+            var select = document.getElementById("select31");
+
             // Функция для обновления селекта
             function updateSelect(options) {
-                var select = document.getElementById("select31");
-
-                // Очистка существующих опций в селекте
                 select.innerHTML = "";
 
-                // Добавление новых опций в селект
                 for (var i = 0; i < options.length; i++) {
                     var option = document.createElement("option");
                     option.value = options[i];
                     option.text = options[i];
                     select.appendChild(option);
                 }
+
+                var savedOption = localStorage.getItem('selectedOption31');
+                if (savedOption === null) {
+                    savedOption = "default_value"; // Устанавливаем нулевое значение по умолчанию
+                    localStorage.setItem('selectedOption31', savedOption);
+                }
+
+                select.value = savedOption; // Устанавливаем сохраненное или нулевое значение
             }
 
             $.ajax({
@@ -842,7 +846,8 @@
                     updateSelect(data.list_nomenklature);
                 }
             });
-            // Обработчик события изменения <select>
+
+// Обработчик события изменения <select>
             $('#select31').change(function () {
                 var selectedOption = $(this).val();
                 console.log('Selected Option:', selectedOption); // Проверка значения selectedOption
@@ -859,6 +864,24 @@
                     },
                 });
             });
+
+// Функция для вызова события изменения select
+            function triggerSelectChange() {
+                var selectedOption = $('#select31').val();
+                $('#select31').trigger('change');
+            }
+
+// Устанавливаем интервал для вызова события изменения select в нужные моменты времени
+            setInterval(function () {
+                var now = new Date();
+                var hours = now.getHours();
+                var minutes = now.getMinutes();
+
+                // Проверяем, если время соответствует 00:01, 08:01, 16:01, тогда вызываем обработчик
+                if ((hours === 16 && minutes === 1) || (hours === 8 && minutes === 1) || (hours === 16 && minutes === 1)) {
+                    triggerSelectChange();
+                }
+            }, 60000); // Проверяем каждую минуту
 
 
             setInterval(function () {
@@ -913,8 +936,8 @@
                 });
             }, 2000);
 
-
         });
+
     </script>
     {#    таблица 31#}
     <script>

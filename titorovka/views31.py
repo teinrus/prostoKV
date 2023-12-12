@@ -280,7 +280,6 @@ def list_nomenklature31 (requst):
 
     result = {
         'list_nomenklature': list_nomenklature,
-
     }
 
     return JsonResponse(result)
