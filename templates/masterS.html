@@ -832,7 +832,7 @@
 
                 var savedOption = localStorage.getItem('selectedOption31');
                 if (savedOption === null) {
-                    savedOption = "default_value"; // Устанавливаем нулевое значение по умолчанию
+                    savedOption =select.options[0].value;  // Устанавливаем нулевое значение по умолчанию
                     localStorage.setItem('selectedOption31', savedOption);
                 }
 
