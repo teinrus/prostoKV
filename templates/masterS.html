@@ -878,7 +878,7 @@
                 var minutes = now.getMinutes();
 
                 // Проверяем, если время соответствует 00:01, 08:01, 16:01, тогда вызываем обработчик
-                if ((hours === 16 && minutes === 1) || (hours === 8 && minutes === 1) || (hours === 16 && minutes === 1)) {
+                if ((hours === 16 && minutes === 3) || (hours === 8 && minutes === 3) || (hours === 16 && minutes === 3)) {
                     triggerSelectChange();
                 }
             }, 60000); // Проверяем каждую минуту
