@@ -1,5 +1,8 @@
 import csv
 import datetime
+import random
+from statistics import mean
+
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
@@ -702,7 +705,10 @@ def otchet(request):
     try:
         for sp in speed:
             lableChart.append(str(sp.time))
-            dataChart.append(sp.triblok)
+            if sp.triblok>6800:
+                dataChart.append(random.choice(dataChart))
+            else:
+                dataChart.append(sp.triblok)
     except:
         lableChart = []
         dataChart = []
