@@ -1,12 +1,13 @@
-import csv
+
 import datetime
+
 import random
-from statistics import mean
+
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
-from django.forms import DecimalField, FloatField
+
 
 from django.shortcuts import redirect
 
@@ -77,15 +78,6 @@ def index(request):
 
 
 def temruk(request):
-    # acr = NapAcratofori.objects.filter(data=datetime.datetime(year=2023,month=7,day=19))
-    #
-    # with open('acr.csv', 'w', newline='') as csvfile:
-    #     spamwriter = csv.writer(csvfile, delimiter=' ',
-    #                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    #     for el in acr:
-    #         # temp=str(el.acr63_temp).replace("." , ",")
-    #         temp2 = str(el.acr83_temp).replace(".", ",")
-    #         spamwriter.writerow([el.time,temp2])
     table_triblok=[]
     if request.method == 'GET':
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
@@ -739,6 +731,8 @@ def otchet(request):
         'nappress': [round(obj.nappress,1) for obj in indicators_chart if obj.nappress is not None],
     }
 
+    intervals_by_numbacr = []
+
     try:
         indicators_with_times = indicators.values(
             'numbacr',
@@ -748,12 +742,12 @@ def otchet(request):
             end_time=Max('time')
         ).order_by('data', 'start_time')
 
-
-
         # Создаем список для сгруппированных записей
         date_time_numbacr_list = []
 
         for indicator in indicators_with_times:
+
+
             numbacr = indicator['numbacr']
             first_time = indicator['start_time']
             last_time = indicator['end_time']
@@ -792,6 +786,22 @@ def otchet(request):
 
 
         sorted_date_time_numbacr_list = sorted(date_time_numbacr_list, key=lambda x: (x['first_data'], x['first_time']))
+
+        # Преобразование времени в объекты datetime для более удобной работы
+
+
+
+
+        for record in sorted_date_time_numbacr_list:
+
+            start_time = datetime.time.strftime(record['first_time'], '%H:%M:%S')
+
+            end_time = datetime.time.strftime(record['last_time'], '%H:%M:%S')
+
+            # Добавление интервала для данного акратофора в словарь с найденными ближайшими значениями времени
+            interval = {'start_time': start_time, 'end_time': end_time}
+            intervals_by_numbacr.append(interval)
+
     except:
             pass
 
@@ -835,6 +845,7 @@ def otchet(request):
         'uch_vino': uch_vino,
 
         "indicators": sorted_date_time_numbacr_list,
+        "intervals_by_numbacr":intervals_by_numbacr
 
     })
 

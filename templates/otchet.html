@@ -115,7 +115,7 @@
             });
         });
         </script>
-         <script> // зависимости выпадающих списков таблици
+        <script> // зависимости выпадающих списков таблици
         $(document).ready(function () {
             var sor = [];
             let allProstoy
@@ -667,8 +667,8 @@
                 <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy }}</b></li>
                 <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork }}</b></li>
                 {% if line == 'Линиия 5' %}
-            <li>Количество взрывов {{ boomOut }}</li>
-        {% endif %}
+                    <li>Количество взрывов {{ boomOut }}</li>
+                {% endif %}
             </ul>
 
             <ul>
@@ -693,21 +693,21 @@
     </div>
 
 
-<div class="not-print">
-    <div class="col__wrapper" style="display: flex; flex-direction: column; justify-content: space-between;
+    <div class="not-print">
+        <div class="col__wrapper" style="display: flex; flex-direction: column; justify-content: space-between;
     margin-bottom: 20px;margin-left: 30px;">
-        <div class="col" style="width: calc((100% - 30px) / 1.85);">
-            <canvas id="myChart"></canvas>
-        </div>
+            <div class="col" style="width: calc((100% - 30px) / 1.85);">
+                <canvas id="myChart"></canvas>
+            </div>
 
-    </div>
-    <div class="col__wrapper" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 20px;">
+        </div>
+        <div class="col__wrapper"
+             style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 20px;">
             <div class="col" style="width: calc((100% - 30px) /1.85);">
-            <canvas id="myChart2"></canvas>
+                <canvas id="myChart2"></canvas>
+            </div>
         </div>
-        </div>
-</div>
-
+    </div>
 
 
     <script>
@@ -717,9 +717,9 @@
             var dataTable = document.getElementById("data-table");
 
             if (sampleData) {
-                // Если таблица "sample_data" существует, отобразить таблицу "data-table"
                 dataTable.style.display = "table";
             }
+
             if (sampleData2) {
                 dataTable.style.display = "table";
             }
@@ -798,7 +798,7 @@
                     }
                 }
 
-                return 'rgb(76,125,248)'; // Зеленый, если не попадает в условие окрашивания в черный
+                return 'rgb(76,125,248)'; // Цвет, если не попадает в условие окрашивания в черный
             }
 
 
@@ -837,61 +837,75 @@
                     }
                 }
             });
-var ctx2 = document.getElementById('myChart2').getContext('2d');
-var myChart2 = new Chart(ctx2, {
-    type: 'line',
-    data: {
-        labels: {{ data.labels|safe }},
-        datasets: [
-            {
-                label: 'Давление',
-                borderColor: 'rgba(255, 205, 86, 1)',
-                data: {{ data.nappress|safe }},
-                fill: false,
-                yAxisID: 'y-axis-0'
-            },
-            {
-                label: 'Температура',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                data: {{ data.naptemp|safe }},
-                fill: false,
-                yAxisID: 'y-axis-1',
+            document.addEventListener('DOMContentLoaded', function () {
+                var ctx2 = document.getElementById('myChart2').getContext('2d');
+// Найти индекс соответствующий времени 16:30 и 18:00
 
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        title: {
-            display: true,
-            text: 'График данных'
-        },
-        scales: {
-            xAxes: [{
-                type: 'time',
-                time: {
-                    displayFormats: {
-                        day: 'YYYY-MM-DD'
-                    }
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Дата'
-                }
-            }],
+                var myChart2 = new Chart(ctx2, {
 
-        },
-        tooltips: {
-            mode: 'index',
-            intersect: false
-        }
-    }
-});
+                    type: 'line',
+                    data: {
+                        labels: {{ data.labels|safe }},
+                        datasets: [
+                            {
+                                label: 'Давление',
+                                borderColor: 'rgba(255, 205, 86, 1)',
+                                data: {{ data.nappress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0'
+                            },
+                            {
+                                label: 'Температура',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                data: {{ data.naptemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-1',
+
+                            }
+                        ]
+                    },
+
+
+                    plugins: [{
+                        beforeDraw: function (chart) {
+                            var ctx = chart.ctx;
+                            var chartArea = chart.chartArea;
+                            var labels = chart.data.labels;
+
+                            var timeRanges = [
+                                {% for interval in intervals_by_numbacr %}
+                                    {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
+                                {% endfor %}
+                            ];
+
+                            for (var i = 0; i < timeRanges.length; i++) {
+                                var startTime = timeRanges[i].start_time;
+                                var endTime = timeRanges[i].end_time;
+
+                                var startIndex = labels.indexOf(startTime);
+                                var endIndex = labels.indexOf(endTime);
+
+                                if (startIndex !== -1 && endIndex !== -1) {
+                                    var startX = chart.scales['x'].getPixelForValue(startTime);
+                                    var endX = chart.scales['x'].getPixelForValue(endTime);
+
+                                    var backgroundColor = i % 2 === 0 ? 'rgba(250,62,62,0.5)' : 'rgba(145,248,97,0.5)';
+                                    ctx.fillStyle = backgroundColor;
+
+                                    ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+                                }
+                            }
+                        }
+                    }]
+
+
+                });
+            });
 
         </script>
 
-{% if table_triblok %}
-        <table id="sample_data" class="table table-bordered table-striped">
+        {% if table_triblok %}
+            <table id="sample_data" class="table table-bordered table-striped">
             <thead>
             <tr>
                 <th>Дата</th>
@@ -925,9 +939,9 @@ var myChart2 = new Chart(ctx2, {
                     </td>
                 </tr>
             {% endfor %}
-                {% endif %}
-            </tbody>
-        </table>
+        {% endif %}
+    </tbody>
+    </table>
         <table id="sample_data5_2" class="table table-bordered table-striped">
             <thead>
             <tr>
@@ -989,93 +1003,108 @@ var myChart2 = new Chart(ctx2, {
                     }
                 }
             });
-             var ctx2 = document.getElementById('myChart2').getContext('2d');
-        var myChart2 = new Chart(ctx2, {
-            type: 'line',
-            data: {
-                labels: {{ data.labels|safe }},
-                datasets: [
-                    {
-                        label: 'Давление',
-                        borderColor: 'rgba(255, 205, 86, 1)',
-                        data: {{ data.nappress|safe }},
-                        fill: false,
-                        yAxisID: 'y-axis-0'
-                    },
-                    {
-                        label: 'Температура',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        data: {{ data.naptemp|safe }},
-                        fill: false,
-                        yAxisID: 'y-axis-1'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: 'График данных'
-                },
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-                        time: {
-                            displayFormats: {
-                                day: 'YYYY-MM-DD'
+   document.addEventListener('DOMContentLoaded', function () {
+                var ctx2 = document.getElementById('myChart2').getContext('2d');
+// Найти индекс соответствующий времени 16:30 и 18:00
+
+                var myChart2 = new Chart(ctx2, {
+
+                    type: 'line',
+                    data: {
+                        labels: {{ data.labels|safe }},
+                        datasets: [
+                            {
+                                label: 'Давление',
+                                borderColor: 'rgba(255, 205, 86, 1)',
+                                data: {{ data.nappress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0'
+                            },
+                            {
+                                label: 'Температура',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                data: {{ data.naptemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-1',
+
                             }
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Дата'
+                        ]
+                    },
+
+
+                    plugins: [{
+                        beforeDraw: function (chart) {
+                            var ctx = chart.ctx;
+                            var chartArea = chart.chartArea;
+                            var labels = chart.data.labels;
+
+                            var timeRanges = [
+                                {% for interval in intervals_by_numbacr %}
+                                    {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
+                                {% endfor %}
+                            ];
+
+                            for (var i = 0; i < timeRanges.length; i++) {
+                                var startTime = timeRanges[i].start_time;
+                                var endTime = timeRanges[i].end_time;
+
+                                var startIndex = labels.indexOf(startTime);
+                                var endIndex = labels.indexOf(endTime);
+
+                                if (startIndex !== -1 && endIndex !== -1) {
+                                    var startX = chart.scales['x'].getPixelForValue(startTime);
+                                    var endX = chart.scales['x'].getPixelForValue(endTime);
+
+                                    var backgroundColor = i % 2 === 0 ? 'rgba(250,62,62,0.5)' : 'rgba(145,248,97,0.5)';
+                                    ctx.fillStyle = backgroundColor;
+
+                                    ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+                                }
+                            }
                         }
-                    }],
+                    }]
 
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false
-                }
-            }
-        });
+
+                });
+            });
         </script>
-{% if table_triblok %}
-    <table id="sample_data2_2" class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Время начала простоя</th>
-                <th>Время простоя</th>
-                <th>Участок</th>
-
-                <th>Ответст. подразделение</th>
-                <th>Причина</th>
-                <th>Комментарий</th>
-            </thead>
-            <tbody>
-            {% for row in table_triblok %}
+        {% if table_triblok %}
+            <table id="sample_data2_2" class="table table-bordered table-striped">
+                <thead>
                 <tr>
-                    <td>{{ row.startdata|date:"d.m.Y" }}</td>
-                    <td>{{ row.starttime }}</td>
-                    <td>{{ row.prostoy }}
-                    </td>
+                    <th>Дата</th>
+                    <th>Время начала простоя</th>
+                    <th>Время простоя</th>
+                    <th>Участок</th>
 
-                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
-                    <td data-name="otv_pod" class="otv_pod" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.otv_pod }}
-                    </td>
-                    <td data-name="prichina" class="prichina" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+                    <th>Ответст. подразделение</th>
+                    <th>Причина</th>
+                    <th>Комментарий</th>
+                </thead>
+                <tbody>
+                {% for row in table_triblok %}
+                    <tr>
+                        <td>{{ row.startdata|date:"d.m.Y" }}</td>
+                        <td>{{ row.starttime }}</td>
+                        <td>{{ row.prostoy }}
+                        </td>
 
-                    <td data-name="comment" class="comment" data-type="textarea"
-                        data-pk="{{ row.id }}">{{ row.comment }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
+                        <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                            data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                        <td data-name="otv_pod" class="otv_pod" data-type="select"
+                            data-pk="{{ row.id }}">{{ row.otv_pod }}
+                        </td>
+                        <td data-name="prichina" class="prichina" data-type="select"
+                            data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                        <td data-name="comment" class="comment" data-type="textarea"
+                            data-pk="{{ row.id }}">{{ row.comment }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
         <table id="sample_data2" class="table table-bordered table-striped">
             <thead>
             <tr>
@@ -1137,43 +1166,43 @@ var myChart2 = new Chart(ctx2, {
                 }
             });
         </script>
-{% if table_triblok %}
-    <table id="sample_data4" class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Время начала простоя</th>
-                <th>Время простоя</th>
-                <th>Участок</th>
-
-                <th>Ответст. подразделение</th>
-                <th>Причина</th>
-                <th>Комментарий</th>
-            </thead>
-            <tbody>
-            {% for row in table_triblok %}
+        {% if table_triblok %}
+            <table id="sample_data4" class="table table-bordered table-striped">
+                <thead>
                 <tr>
-                    <td>{{ row.startdata|date:"d.m.Y" }}</td>
-                    <td>{{ row.starttime }}</td>
-                    <td>{{ row.prostoy }}
-                    </td>
+                    <th>Дата</th>
+                    <th>Время начала простоя</th>
+                    <th>Время простоя</th>
+                    <th>Участок</th>
 
-                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.uchastok }}</td>
-                    <td data-name="otv_pod" class="otv_pod" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.otv_pod }}
-                    </td>
-                    <td data-name="prichina" class="prichina" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+                    <th>Ответст. подразделение</th>
+                    <th>Причина</th>
+                    <th>Комментарий</th>
+                </thead>
+                <tbody>
+                {% for row in table_triblok %}
+                    <tr>
+                        <td>{{ row.startdata|date:"d.m.Y" }}</td>
+                        <td>{{ row.starttime }}</td>
+                        <td>{{ row.prostoy }}
+                        </td>
 
-                    <td data-name="comment" class="comment" data-type="textarea"
-                        data-pk="{{ row.id }}">{{ row.comment }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
+                        <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                            data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+                        <td data-name="otv_pod" class="otv_pod" data-type="select"
+                            data-pk="{{ row.id }}">{{ row.otv_pod }}
+                        </td>
+                        <td data-name="prichina" class="prichina" data-type="select"
+                            data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
+                        <td data-name="comment" class="comment" data-type="textarea"
+                            data-pk="{{ row.id }}">{{ row.comment }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
         <table id="sample_data4_2" class="table table-bordered table-striped">
             <thead>
             <tr>
