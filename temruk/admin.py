@@ -51,3 +51,6 @@ TNR_admin_site.register(CO2_Kupaj)
 TNR_admin_site.register(Filter2)
 TNR_admin_site.register(Filter4)
 TNR_admin_site.register(Filter5)
+
+TNR_admin_site.register(prichina_test)
+TNR_admin_site.register(uchastok_test)

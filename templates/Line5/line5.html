@@ -7,6 +7,8 @@
             let allProstoy
             var test =
             {{ prich|safe }}
+
+
             var temp = '%'
             $(function () {
 
@@ -46,11 +48,14 @@
                     {% endfor %}
                 ],
                 validate: function (value) {
+
                     if ($.trim(value)) {
                         temp = '%'
                         for (let i = 0; i < test.length; i++) {
-                            if (value === test[i].key) {
-                                temp += test[i].prichina + '%'
+                            if (value === test[i].Key) {
+                                temp += test[i].Prichina + '%'
+                            {#if (value === test[i].key) {#}
+                            {#    temp += test[i].prichina + '%'#}
                             }
                         }
                         allProstoy = temp.split('%')

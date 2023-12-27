@@ -1,16 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    {% if user.username == 'operator5' %}
-        {% include 'Line5/line5.html' %}
-    {% endif %}
 
-    {% if user.username == 'operator2' %}
-        {% include 'Line2/line2.html' %}
-    {% endif %}
-    {% if user.username == 'operator4' %}
-        {% include 'Line4/line4.html' %}
-    {% endif %}
 
     {% if user.username == 'master' or user.username == 'admin' %}
         {% include 'master.html' %}

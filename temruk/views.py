@@ -76,9 +76,13 @@ def index(request):
     else:
         return redirect('titorovka')
 
+def TV5(request):
+    print("tut")
+    return render(request, "tv/tv5.html", {
+
+    })
 
 def temruk(request):
-    table_triblok=[]
     if request.method == 'GET':
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
                                        starttime__gte=startSmena,
@@ -99,21 +103,29 @@ def temruk(request):
                                        time__gte=startSmena,
                                        time__lte=spotSmena)
 
-    prichAll = prichina.objects.all()
+    # prichAll = prichina.objects.all()
+    prichAll = prichina_test.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
-        podrazdeleniaEl.append(el.key)
+        # podrazdeleniaEl.append(el.key)
+        podrazdeleniaEl.append(el.Key)
     otv_p = set(podrazdeleniaEl)
 
+
     prich = list(prichAll.values())
+
+
     uch = uchastok.objects.all().exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(
         uchastok="Розлив")
+    uch5=uchastok_test.objects.all().filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
+    print(uch5)
     uch_vino = uch.exclude(uchastok="Мюзлёвочный аппарат")
     return render(request, "temruk.html", {
 
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
+        "uch5":uch5,
         'uch_vino': uch_vino,
 
         'table5': table5,
@@ -343,6 +355,13 @@ def otchet(request):
                                                                     data__lte=form.cleaned_data["finish_data"])
                     except:
                         print("alarme")
+            try:
+
+                table_triblok = table.filter(uchastok="Триблок розлива")
+                table = table.exclude(uchastok="Триблок розлива")
+
+            except:
+                pass
         # Сортировка по сменам линии 2:
         if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 2'):
@@ -506,9 +525,15 @@ def otchet(request):
                 except:
                     timeTemp = 0
 
-            # tempik=speed2.filter(triblok__gt=1)
-            # print(tempik.aggregate(Avg("triblok")))
+
             table = table2
+            try:
+
+                table_triblok = table.filter(uchastok="Триблок")
+                table = table.exclude(uchastok="Триблок")
+
+            except:
+                pass
             speed = speed2
             prod = productionOutput2
             boom = 0
@@ -649,6 +674,13 @@ def otchet(request):
                     timeTemp = 0
 
             table = table4
+            try:
+
+                table_triblok = table.filter(uchastok="Триблок")
+                table = table.exclude(uchastok="Триблок")
+
+            except:
+                pass
             speed = speed4
             prod = productionOutput4
             boom = 0
@@ -708,11 +740,13 @@ def otchet(request):
     uch = uchastok.objects.all().exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(
         uchastok="Розлив")
     uch_vino = uch.exclude(uchastok="Мюзлёвочный аппарат")
+    uch5 = uchastok_test.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
 
-    prichAll = prichina.objects.all()
+
+    prichAll = prichina_test.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
-        podrazdeleniaEl.append(el.key)
+        podrazdeleniaEl.append(el.Key)
     otv_p = set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
@@ -805,13 +839,7 @@ def otchet(request):
     except:
             pass
 
-    try:
 
-        table_triblok=table.filter(uchastok="Триблок")
-        table = table.exclude(uchastok="Триблок")
-
-    except:
-        pass
 
     return render(request, "otchet.html", {
         'table': table,
@@ -842,6 +870,7 @@ def otchet(request):
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
+        'uch5': uch5,
         'uch_vino': uch_vino,
 
         "indicators": sorted_date_time_numbacr_list,

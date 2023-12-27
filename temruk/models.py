@@ -21,6 +21,29 @@ class uchastok(models.Model):
 
     class Meta:
         verbose_name_plural = "Участок линии"
+class prichina_test(models.Model):
+    Guid_Prichina = models.CharField('Guid', max_length=36, default='Не определено', blank=True, null=True)
+    Key = models.CharField('Подразделение', max_length=50, default='Не определено', blank=True, null=True)
+    Prichina = models.CharField('Причина', max_length=50, default='Не определена', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.Prichina)
+
+    class Meta:
+        verbose_name_plural = "Причина простоя тест"
+
+
+class uchastok_test(models.Model):
+    Guid_Line = models.CharField('Guid', max_length=36, default='Не определено', blank=True, null=True)
+    Line = models.CharField('Линия', max_length=50, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
+    Uchastok = models.CharField('Где произошол простой', max_length=50, default='Не определено', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.Uchastok)
+
+    class Meta:
+        verbose_name_plural = "Участок линии тест"
 
 
 # 1С
@@ -83,7 +106,8 @@ class Table5(models.Model):
     otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
-
+    Guid_Prichina = models.CharField('Guid причины', max_length=36, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
     def __str__(self):
         return str(self.startdata) + '_' + str(self.starttime) + '_' + str(self.id)
 

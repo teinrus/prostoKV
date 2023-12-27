@@ -8,29 +8,29 @@
             var test =
             {{ prich|safe }}
             var temp = '%'
+            {% if not user.username == 'master' %}
+                var dataTable2 = $('#sample_data2').DataTable();
 
-            var dataTable2 = $('#sample_data2').DataTable();
 
-
-            $('#sample_data2').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: '/update2',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+                $('#sample_data2').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: '/update2',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-
+                });
+            {% endif %}
             $('#sample_data2').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -46,8 +46,8 @@
                     if ($.trim(value)) {
                         temp = '%'
                         for (let i = 0; i < test.length; i++) {
-                            if (value === test[i].key) {
-                                temp += test[i].prichina + '%'
+                            if (value === test[i].Key) {
+                                temp += test[i].Prichina + '%'
                             }
                         }
                         allProstoy = temp.split('%')
@@ -130,27 +130,27 @@
     <input type="button" id="TO2" value="ТО"/>
     <input type="button" id="rabota2" value="Работа"/>
     <script>
-    $('#start_perenaladka2').click(function () {
-        $.ajax({
-            type: "POST",
-            url: "{% url 'start_perenaladka2' %}",
-        });
-    })
-    $('#start_donaladka2').click(function () {
+        $('#start_perenaladka2').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_perenaladka2' %}",
+            });
+        })
+        $('#start_donaladka2').click(function () {
 
-        $.ajax({
-            type: "POST",
-            url: "{% url 'start_donaladka2' %}",
-        });
-    })
-    $('#rabota2').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'start_donaladka2' %}",
+            });
+        })
+        $('#rabota2').click(function () {
 
-        $.ajax({
-            type: "POST",
-            url: "{% url 'rabota2' %}",
-        });
-    })
-    $('#TO2').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'rabota2' %}",
+            });
+        })
+        $('#TO2').click(function () {
             $.ajax({
                 type: "POST",
                 url: "{% url 'TO2' %}",
