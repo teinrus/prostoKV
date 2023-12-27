@@ -118,7 +118,7 @@ def temruk(request):
     uch = uchastok.objects.all().exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(
         uchastok="Розлив")
     uch5=uchastok_test.objects.all().filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
-    print(uch5)
+
     uch_vino = uch.exclude(uchastok="Мюзлёвочный аппарат")
     return render(request, "temruk.html", {
 

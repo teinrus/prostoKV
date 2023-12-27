@@ -711,15 +711,14 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var sampleData = document.getElementById("sample_data");
-            var sampleData2 = document.getElementById("sample_data2");
             var dataTable = document.getElementById("data-table");
-
-            if (sampleData) {
+            var a = "{{line}}"
+            console.log(a);
+            if (a==="Линиия 5") {
                 dataTable.style.display = "table";
             }
 
-            if (sampleData2) {
+            if (a==="Линиия 2") {
                 dataTable.style.display = "table";
             }
         });

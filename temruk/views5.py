@@ -113,13 +113,11 @@ def update(request):
             try:
                 n = "Guid_Uchastok"
                 b = Table5.objects.get(id=pk).uchastok
-                print(b)
-                # v = uchastok_test.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
-                #                               Uchastok=b).Guid_Uchastok
-                print(uchastok_test.objects.values_list())
+
+
                 v = uchastok_test.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
                                               Uchastok=b).Guid_Uchastok
-                print(v)
+
                 a = Table5.objects.get(id=pk)
                 setattr(a, n, v)
 
