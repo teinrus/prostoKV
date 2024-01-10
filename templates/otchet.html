@@ -234,7 +234,8 @@
         $(document).ready(function () {
             var sor = [];
             let allProstoy
-            var test = {{ prich|safe }}
+            var test =
+            {{ prich|safe }}
             var temp = '%'
             $(function () {
                 $('#sample_data4').mousemove(function () {
@@ -714,11 +715,11 @@
             var dataTable = document.getElementById("data-table");
             var a = "{{line}}"
             console.log(a);
-            if (a==="Линиия 5") {
+            if (a === "Линиия 5") {
                 dataTable.style.display = "table";
             }
 
-            if (a==="Линиия 2") {
+            if (a === "Линиия 2") {
                 dataTable.style.display = "table";
             }
         });
@@ -837,66 +838,105 @@
             });
             document.addEventListener('DOMContentLoaded', function () {
                 var ctx2 = document.getElementById('myChart2').getContext('2d');
-// Найти индекс соответствующий времени 16:30 и 18:00
 
                 var myChart2 = new Chart(ctx2, {
-
                     type: 'line',
                     data: {
                         labels: {{ data.labels|safe }},
                         datasets: [
                             {
                                 label: 'Давление',
-                                borderColor: 'rgba(255, 205, 86, 1)',
+                                borderColor: 'rgb(0,59,255)',
                                 data: {{ data.nappress|safe }},
                                 fill: false,
-                                yAxisID: 'y-axis-0'
+                                yAxisID: 'y-axis-0',
                             },
                             {
                                 label: 'Температура',
                                 borderColor: 'rgba(255, 99, 132, 1)',
                                 data: {{ data.naptemp|safe }},
                                 fill: false,
-                                yAxisID: 'y-axis-1',
-
+                                yAxisID: 'y-axis-0',
+                            },
+                            {
+                                label: 'МинТемп',
+                                borderColor: 'rgb(253,204,2)',
+                                data: {{ data.mintemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                                                        {
+                                label: 'MaксТемп',
+                                borderColor: 'rgb(253,204,2)',
+                                data: {{ data.maxtemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },                            {
+                                label: 'МаксДавл',
+                                borderColor: 'rgb(253,204,2)',
+                                data: {{ data.maxpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                                                        {
+                                label: 'МинДавление',
+                                borderColor: 'rgb(253,204,2)',
+                                data: {{ data.minpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
                             }
                         ]
                     },
+                    options: {
+                elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
+        scales: {
+            yAxes: [{
+                id: 'y-axis-0',
+                ticks: {
+                    min: -2,
+                    max: 6,
+                    stepSize: 1,
+                },
+            }]
+        }
+    },
+                    plugins: [
+                        {
+                            beforeDraw: function (chart) {
+                                var ctx = chart.ctx;
+                                var chartArea = chart.chartArea;
+                                var labels = chart.data.labels;
 
+                                var timeRanges = [
+                                    {% for interval in intervals_by_numbacr %}
+                                        {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
+                                    {% endfor %}
+                                ];
 
-                    plugins: [{
-                        beforeDraw: function (chart) {
-                            var ctx = chart.ctx;
-                            var chartArea = chart.chartArea;
-                            var labels = chart.data.labels;
+                                for (var i = 0; i < timeRanges.length; i++) {
+                                    var startTime = timeRanges[i].start_time;
+                                    var endTime = timeRanges[i].end_time;
 
-                            var timeRanges = [
-                                {% for interval in intervals_by_numbacr %}
-                                    {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
-                                {% endfor %}
-                            ];
+                                    var startIndex = labels.indexOf(startTime);
+                                    var endIndex = labels.indexOf(endTime);
 
-                            for (var i = 0; i < timeRanges.length; i++) {
-                                var startTime = timeRanges[i].start_time;
-                                var endTime = timeRanges[i].end_time;
+                                    if (startIndex !== -1 && endIndex !== -1) {
+                                        var startX = chart.scales['x'].getPixelForValue(startTime);
+                                        var endX = chart.scales['x'].getPixelForValue(endTime);
 
-                                var startIndex = labels.indexOf(startTime);
-                                var endIndex = labels.indexOf(endTime);
+                                        var backgroundColor = i % 2 === 0 ? 'rgba(250,62,62,0.5)' : 'rgba(145,248,97,0.5)';
+                                        ctx.fillStyle = backgroundColor;
 
-                                if (startIndex !== -1 && endIndex !== -1) {
-                                    var startX = chart.scales['x'].getPixelForValue(startTime);
-                                    var endX = chart.scales['x'].getPixelForValue(endTime);
-
-                                    var backgroundColor = i % 2 === 0 ? 'rgba(250,62,62,0.5)' : 'rgba(145,248,97,0.5)';
-                                    ctx.fillStyle = backgroundColor;
-
-                                    ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+                                        ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+                                    }
                                 }
                             }
                         }
-                    }]
-
-
+                    ]
                 });
             });
 
@@ -1001,7 +1041,7 @@
                     }
                 }
             });
-   document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function () {
                 var ctx2 = document.getElementById('myChart2').getContext('2d');
 // Найти индекс соответствующий времени 16:30 и 18:00
 
@@ -1011,6 +1051,34 @@
                     data: {
                         labels: {{ data.labels|safe }},
                         datasets: [
+                            {
+                                label: 'МинТемп',
+                                borderColor: 'rgb(99,135,255)',
+                                data: {{ data.mintemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-1',
+                            },
+                                                        {
+                                label: 'MaксТемп',
+                                borderColor: 'rgb(99,135,255)',
+                                data: {{ data.maxtemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-1',
+                            },
+                             {
+                                label: 'МаксДавл',
+                                borderColor: 'rgb(0,0,255)',
+                                data: {{ data.maxpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                                                        {
+                                label: 'МинДавление',
+                                borderColor: 'rgb(0,0,255)',
+                                data: {{ data.minpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
                             {
                                 label: 'Давление',
                                 borderColor: 'rgba(255, 205, 86, 1)',
@@ -1028,41 +1096,47 @@
                             }
                         ]
                     },
+ options: {
+                elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
 
+    },
+                    plugins: [
+                        {
+                            beforeDraw: function (chart) {
+                                var ctx = chart.ctx;
+                                var chartArea = chart.chartArea;
+                                var labels = chart.data.labels;
 
-                    plugins: [{
-                        beforeDraw: function (chart) {
-                            var ctx = chart.ctx;
-                            var chartArea = chart.chartArea;
-                            var labels = chart.data.labels;
+                                var timeRanges = [
+                                    {% for interval in intervals_by_numbacr %}
+                                        {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
+                                    {% endfor %}
+                                ];
 
-                            var timeRanges = [
-                                {% for interval in intervals_by_numbacr %}
-                                    {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
-                                {% endfor %}
-                            ];
+                                for (var i = 0; i < timeRanges.length; i++) {
+                                    var startTime = timeRanges[i].start_time;
+                                    var endTime = timeRanges[i].end_time;
 
-                            for (var i = 0; i < timeRanges.length; i++) {
-                                var startTime = timeRanges[i].start_time;
-                                var endTime = timeRanges[i].end_time;
+                                    var startIndex = labels.indexOf(startTime);
+                                    var endIndex = labels.indexOf(endTime);
 
-                                var startIndex = labels.indexOf(startTime);
-                                var endIndex = labels.indexOf(endTime);
+                                    if (startIndex !== -1 && endIndex !== -1) {
+                                        var startX = chart.scales['x'].getPixelForValue(startTime);
+                                        var endX = chart.scales['x'].getPixelForValue(endTime);
 
-                                if (startIndex !== -1 && endIndex !== -1) {
-                                    var startX = chart.scales['x'].getPixelForValue(startTime);
-                                    var endX = chart.scales['x'].getPixelForValue(endTime);
+                                        var backgroundColor = i % 2 === 0 ? 'rgba(250,62,62,0.5)' : 'rgba(145,248,97,0.5)';
+                                        ctx.fillStyle = backgroundColor;
 
-                                    var backgroundColor = i % 2 === 0 ? 'rgba(250,62,62,0.5)' : 'rgba(145,248,97,0.5)';
-                                    ctx.fillStyle = backgroundColor;
-
-                                    ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+                                        ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+                                    }
                                 }
                             }
                         }
-                    }]
-
-
+                    ]
                 });
             });
         </script>

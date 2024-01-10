@@ -104,10 +104,7 @@ def update_items31(request):
 
     table31 = Table31.objects.filter(startdata=datetime.date.today(),
                                      starttime__gte=startSmena,
-                                     starttime__lte=spotSmena).filter(uchastok="Триблок") | Table31.objects.filter(
-        startdata=datetime.date.today(),
-        starttime__gte=startSmena,
-        starttime__lte=spotSmena).filter(uchastok="Этикетировка")
+                                     starttime__lte=spotSmena)
     return render(request, 'Line31/table_body31.html', {'table31': table31})
 
 
@@ -140,10 +137,7 @@ def getData31(requst):
 
     table31 = Table31.objects.filter(startdata=datetime.date.today(),
                                      starttime__gte=startSmena,
-                                     starttime__lte=spotSmena).filter(uchastok="Триблок") | Table31.objects.filter(
-        startdata=datetime.date.today(),
-        starttime__gte=startSmena,
-        starttime__lte=spotSmena).filter(uchastok="Этикетировка")
+                                     starttime__lte=spotSmena)
 
     speed31 = Speed31.objects.filter(data=datetime.date.today(),
                                      time__gte=startSmena,
