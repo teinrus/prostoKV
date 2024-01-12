@@ -840,16 +840,45 @@
                 var ctx2 = document.getElementById('myChart2').getContext('2d');
 
                 var myChart2 = new Chart(ctx2, {
+
                     type: 'line',
                     data: {
                         labels: {{ data.labels|safe }},
                         datasets: [
                             {
+                                label: 'МинТемп',
+                                borderColor: 'rgb(253,204,2, 0.5)',
+                                data: {{ data.mintemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                                                        {
+                                label: 'MaксТемп',
+                                borderColor: 'rgb(253,204,2, 0.5)',
+                                data: {{ data.maxtemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                             {
+                                label: 'МаксДавл',
+                                borderColor: 'rgb(253,204,2, 0.5)',
+                                data: {{ data.maxpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                                                        {
+                                label: 'МинДавление',
+                                borderColor: 'rgb(253,204,2, 0.5)',
+                                data: {{ data.minpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                            {
                                 label: 'Давление',
                                 borderColor: 'rgb(0,59,255)',
                                 data: {{ data.nappress|safe }},
                                 fill: false,
-                                yAxisID: 'y-axis-0',
+                                yAxisID: 'y-axis-0'
                             },
                             {
                                 label: 'Температура',
@@ -857,43 +886,17 @@
                                 data: {{ data.naptemp|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0',
-                            },
-                            {
-                                label: 'МинТемп',
-                                borderColor: 'rgb(253,204,2)',
-                                data: {{ data.mintemp|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
-                                                        {
-                                label: 'MaксТемп',
-                                borderColor: 'rgb(253,204,2)',
-                                data: {{ data.maxtemp|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },                            {
-                                label: 'МаксДавл',
-                                borderColor: 'rgb(253,204,2)',
-                                data: {{ data.maxpress|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
-                                                        {
-                                label: 'МинДавление',
-                                borderColor: 'rgb(253,204,2)',
-                                data: {{ data.minpress|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
+
                             }
                         ]
                     },
-                    options: {
+ options: {
                 elements: {
                     point:{
                         radius: 0
                     }
                 },
-        scales: {
+             scales: {
             yAxes: [{
                 id: 'y-axis-0',
                 ticks: {
@@ -903,6 +906,7 @@
                 },
             }]
         }
+
     },
                     plugins: [
                         {
@@ -1053,35 +1057,35 @@
                         datasets: [
                             {
                                 label: 'МинТемп',
-                                borderColor: 'rgb(99,135,255)',
+                                borderColor: 'rgb(253,204,2, 0.5)',
                                 data: {{ data.mintemp|safe }},
                                 fill: false,
-                                yAxisID: 'y-axis-1',
+                                yAxisID: 'y-axis-0',
                             },
                                                         {
                                 label: 'MaксТемп',
-                                borderColor: 'rgb(99,135,255)',
+                                borderColor: 'rgb(253,204,2, 0.5)',
                                 data: {{ data.maxtemp|safe }},
                                 fill: false,
-                                yAxisID: 'y-axis-1',
+                                yAxisID: 'y-axis-0',
                             },
                              {
                                 label: 'МаксДавл',
-                                borderColor: 'rgb(0,0,255)',
+                                borderColor: 'rgb(253,204,2, 0.5)',
                                 data: {{ data.maxpress|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0',
                             },
                                                         {
                                 label: 'МинДавление',
-                                borderColor: 'rgb(0,0,255)',
+                                borderColor: 'rgb(253,204,2, 0.5)',
                                 data: {{ data.minpress|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0',
                             },
                             {
                                 label: 'Давление',
-                                borderColor: 'rgba(255, 205, 86, 1)',
+                                borderColor: 'rgb(0,59,255)',
                                 data: {{ data.nappress|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0'
@@ -1091,7 +1095,7 @@
                                 borderColor: 'rgba(255, 99, 132, 1)',
                                 data: {{ data.naptemp|safe }},
                                 fill: false,
-                                yAxisID: 'y-axis-1',
+                                yAxisID: 'y-axis-0',
 
                             }
                         ]
@@ -1102,6 +1106,16 @@
                         radius: 0
                     }
                 },
+             scales: {
+            yAxes: [{
+                id: 'y-axis-0',
+                ticks: {
+                    min: -2,
+                    max: 6,
+                    stepSize: 1,
+                },
+            }]
+        }
 
     },
                     plugins: [

@@ -114,7 +114,7 @@ def update(request):
                 n = "Guid_Uchastok"
                 b = Table5.objects.get(id=pk).uchastok
 
-
+                print(b)
                 v = uchastok_test.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
                                               Uchastok=b).Guid_Uchastok
 
