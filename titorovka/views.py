@@ -481,13 +481,13 @@ def Sotchet(request):
         lableChart = []
         dataChart = []
 
-    uch = uchastok.objects.all()
-    uch_v = uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
+    uch = uchastok_test.objects.all()
+    uch_v = uchastok_test.objects.all()
 
-    prichAll = prichina.objects.all()
+    prichAll = prichina_test.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
-        podrazdeleniaEl.append(el.key)
+        podrazdeleniaEl.append(el.Key)
     otv_p = set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
@@ -964,13 +964,13 @@ def SotchetIgr(request):
         lableChart = []
         dataChart = []
 
-    uch = uchastok.objects.all()
-    uch_v = uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат")
+    uch = uchastok_test.objects.all()
+    uch_v = uchastok_test.objects.all()
 
-    prichAll = prichina.objects.all()
+    prichAll = prichina_test.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
-        podrazdeleniaEl.append(el.key)
+        podrazdeleniaEl.append(el.Key)
     otv_p = set(podrazdeleniaEl)
 
     prich = list(prichAll.values())

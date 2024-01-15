@@ -3,21 +3,25 @@ from django.db import models
 
 # Общиие показатели
 class prichina(models.Model):
-    key = models.CharField('Подразделение', max_length=50, default='Не определено', blank=True, null=True)
-    prichina = models.CharField('Причина', max_length=50, default='Не определена', blank=True, null=True)
+    Guid_Prichina = models.CharField('Guid', max_length=36, default='Не определено', blank=True, null=True)
+    Key = models.CharField('Подразделение', max_length=50, default='Не определено', blank=True, null=True)
+    Prichina = models.CharField('Причина', max_length=50, default='Не определена', blank=True, null=True)
 
     def __str__(self):
-        return str(self.prichina)
+        return str(self.Prichina)
 
     class Meta:
         verbose_name_plural = "Причина простоя"
 
 
 class uchastok(models.Model):
-    uchastok = models.CharField('Где произошол простой', max_length=50, default='Не определено', blank=True, null=True)
+    Guid_Line = models.CharField('Guid', max_length=36, default='Не определено', blank=True, null=True)
+    Line = models.CharField('Линия', max_length=50, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
+    Uchastok = models.CharField('Где произошол простой', max_length=50, default='Не определено', blank=True, null=True)
 
     def __str__(self):
-        return str(self.uchastok)
+        return str(self.Uchastok)
 
     class Meta:
         verbose_name_plural = "Участок линии"
