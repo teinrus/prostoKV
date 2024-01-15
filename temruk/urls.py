@@ -11,7 +11,11 @@ urlpatterns = [
 
 
     path('', views.index, name='home'),
+
     path('tv5', views.TV5, name='tv5'),
+    path('tv2', views.TV2, name='tv2'),
+    path('tv4', views.TV4, name='tv4'),
+
 
     path('temruk', views.temruk, name='temruk'),
 

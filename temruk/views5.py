@@ -1,11 +1,11 @@
 from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Sum
+from django.db.models import Sum, Min, Max
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from temruk.models import Table5, Speed5, ProductionOutput5, bottling_plan, bottleExplosion5, prichina_test, \
-    uchastok_test
+    uchastok_test, Line5Indicators
 from pyModbusTCP.client import ModbusClient
 
 slave_address = '192.168.88.230'
@@ -113,8 +113,6 @@ def update(request):
             try:
                 n = "Guid_Uchastok"
                 b = Table5.objects.get(id=pk).uchastok
-
-                print(b)
                 v = uchastok_test.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
                                               Uchastok=b).Guid_Uchastok
 
@@ -213,8 +211,75 @@ def getData(request):
     data_chart = [sp.triblok for sp in speed5_queryset]
     boomOut = get_boom_out(boom)
     temp_chart = [str(sp.time) for sp in boom]
+    indicators=Line5Indicators.objects.filter(time__gte=start_time,
+                                                                time__lte=stop_time,
+                                                                data=today)
+    indicators_chart = indicators
+
+    acr_chart = {
+        'labels': [obj.time.strftime('%H:%M:%S') for obj in indicators_chart if obj.time is not None],
+        'naptemp': [round(obj.naptemp, 1) for obj in indicators_chart if obj.naptemp is not None],
+        'nappress': [round(obj.nappress, 1) for obj in indicators_chart if obj.nappress is not None],
+        'mintemp': [-1.6 for obj in indicators_chart if obj.nappress is not None],
+        'maxtemp': [0 for obj in indicators_chart if obj.nappress is not None],
+        'minpress': [4.9 for obj in indicators_chart if obj.nappress is not None],
+        'maxpress': [5.3 for obj in indicators_chart if obj.nappress is not None],
+    }
+
+    intervals_by_numbacr = []
+    try:
+        indicators_with_times = indicators.values(
+            'numbacr',
+            'data',
+        ).annotate(
+            start_time=Min('time'),
+            end_time=Max('time')
+        ).order_by('data', 'start_time')
+
+        # Создаем список для сгруппированных записей
+        date_time_numbacr_list = []
+
+        for indicator in indicators_with_times:
+
+
+            numbacr = indicator['numbacr']
+            first_time = indicator['start_time']
+            last_time = indicator['end_time']
+            first_data = indicator['data']
+
+
+
+            record = {
+                'numbacr': numbacr,
+                'first_data': first_data,
+                'first_time': first_time,
+                'last_time': last_time,
+
+            }
+            date_time_numbacr_list.append(record)
+
+
+        sorted_date_time_numbacr_list = sorted(date_time_numbacr_list, key=lambda x: (x['first_data'], x['first_time']))
+
+        # Преобразование времени в объекты datetime для более удобной работы
+
+
+
+
+        for record in sorted_date_time_numbacr_list:
+            record['start_time'] = record['first_time'].strftime('%H:%M:%S')
+            record['end_time'] = record['last_time'].strftime('%H:%M:%S')
+            # Добавление интервала для данного акратофора в словарь с найденными ближайшими значениями времени
+            interval = {'start_time': record['start_time'], 'end_time': record['end_time']}
+            intervals_by_numbacr.append(interval)
+
+    except:
+        print("intervals_by_numbacr")
+
+
 
     return JsonResponse({
+        "acr_chart":acr_chart,
         "allProc": all_proc,
         'sumProstoy': sum_prostoy,
         'avgSpeed': avg_speed,
@@ -223,6 +288,8 @@ def getData(request):
         'dataChart_triblok': data_chart,
         "boomOut": boomOut,
         "temp_chart": temp_chart,
+
+
     })
 
 

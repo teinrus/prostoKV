@@ -20,6 +20,10 @@ from django.http import HttpResponse
 from django.db.models import Avg, F
 from django.db.models.functions import Round
 
+from .views2 import get_shift_number
+from .views5 import get_shift_times, get_plan_quantity, calculate_production_percentage, get_total_prostoy, \
+    get_average_speed, get_total_product, get_boom_out
+
 
 def mod_bus(reg, bit_temp):
     slave_address = '192.168.88.230'
@@ -77,8 +81,213 @@ def index(request):
         return redirect('titorovka')
 
 def TV5(request):
-    print("tut")
+    start_time, stop_time = get_shift_times()
+
+    today = datetime.date.today().isoformat()
+
+    plan_quantity = get_plan_quantity()
+
+    table5_queryset = Table5.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
+    speed5_queryset = Speed5.objects.filter(data=today, time__range=(start_time, stop_time))
+    production_output5_queryset = ProductionOutput5.objects.filter(data=today, time__range=(start_time, stop_time))
+    boom = bottleExplosion5.objects.filter(data=datetime.date.today(), time__range=(start_time, stop_time))
+
+    all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output5_queryset),
+                                               start_time, stop_time)
+    sum_prostoy = get_total_prostoy(table5_queryset)
+    avg_speed = get_average_speed(speed5_queryset)
+    sum_product = get_total_product(production_output5_queryset)
+
+    lable_chart = [str(sp.time) for sp in speed5_queryset]
+    data_chart = [sp.triblok for sp in speed5_queryset]
+    boomOut = get_boom_out(boom)
+    temp_chart = [str(sp.time) for sp in boom]
+    indicators = Line5Indicators.objects.filter(time__gte=start_time,
+                                                time__lte=stop_time,
+                                                data=today)
+    indicators_chart = indicators
+
+    acr_chart = {
+        'labels': [obj.time.strftime('%H:%M:%S') for obj in indicators_chart if obj.time is not None],
+        'naptemp': [round(obj.naptemp, 1) for obj in indicators_chart if obj.naptemp is not None],
+        'nappress': [round(obj.nappress, 1) for obj in indicators_chart if obj.nappress is not None],
+        'mintemp': [-1.6 for obj in indicators_chart if obj.nappress is not None],
+        'maxtemp': [0 for obj in indicators_chart if obj.nappress is not None],
+        'minpress': [4.9 for obj in indicators_chart if obj.nappress is not None],
+        'maxpress': [5.3 for obj in indicators_chart if obj.nappress is not None],
+    }
+
+    intervals_by_numbacr = []
+    try:
+        indicators_with_times = indicators.values(
+            'numbacr',
+            'data',
+        ).annotate(
+            start_time=Min('time'),
+            end_time=Max('time')
+        ).order_by('data', 'start_time')
+
+        # Создаем список для сгруппированных записей
+        date_time_numbacr_list = []
+
+        for indicator in indicators_with_times:
+            numbacr = indicator['numbacr']
+            first_time = indicator['start_time']
+            last_time = indicator['end_time']
+            first_data = indicator['data']
+
+            record = {
+                'numbacr': numbacr,
+                'first_data': first_data,
+                'first_time': first_time,
+                'last_time': last_time,
+
+            }
+            date_time_numbacr_list.append(record)
+
+        sorted_date_time_numbacr_list = sorted(date_time_numbacr_list, key=lambda x: (x['first_data'], x['first_time']))
+
+        # Преобразование времени в объекты datetime для более удобной работы
+
+        for record in sorted_date_time_numbacr_list:
+            start_time = datetime.time.strftime(record['first_time'], '%H:%M:%S')
+
+            end_time = datetime.time.strftime(record['last_time'], '%H:%M:%S')
+
+            # Добавление интервала для данного акратофора в словарь с найденными ближайшими значениями времени
+            interval = {'start_time': start_time, 'end_time': end_time}
+            intervals_by_numbacr.append(interval)
+
+    except:
+        print("alarme")
+
     return render(request, "tv/tv5.html", {
+
+        "indicators": sorted_date_time_numbacr_list,
+        "intervals_by_numbacr": intervals_by_numbacr,
+
+        "acr_chart": acr_chart,
+        "allProc": all_proc,
+        'sumProstoy': sum_prostoy,
+        'avgSpeed': avg_speed,
+        'sumProduct': sum_product,
+        'lableChart': lable_chart,
+        'dataChart_triblok': data_chart,
+        "boomOut": boomOut,
+        "temp_chart": temp_chart,
+    })
+
+def get_plan_quantity2():
+    try:
+        today = datetime.datetime.today()
+        shift_number = get_shift_number()
+        plan = bottling_plan.objects.filter(Data=today, GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
+        plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
+        return plan_quantity
+    except Exception as e:
+        return 31000
+def TV2(request):
+    start_time, stop_time = get_shift_times()
+
+    today = datetime.date.today().isoformat()
+
+    plan_quantity = get_plan_quantity2()
+
+    table2_queryset = Table2.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
+    speed2_queryset = Speed2.objects.filter(data=today, time__range=(start_time, stop_time))
+
+    production_output2_queryset = ProductionOutput2.objects.filter(data=today, time__range=(start_time, stop_time))
+
+
+    all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output2_queryset),
+                                               start_time, stop_time)
+    sum_prostoy = get_total_prostoy(table2_queryset)
+    avg_speed = get_average_speed(speed2_queryset)
+    sum_product = get_total_product(production_output2_queryset)
+
+    lable_chart = [str(sp.time) for sp in speed2_queryset]
+    data_chart = [sp.triblok for sp in speed2_queryset]
+
+    indicators = Line2Indicators.objects.filter(time__gte=start_time,
+                                                time__lte=stop_time,
+                                                data=today)
+    indicators_chart = indicators
+
+    acr_chart = {
+        'labels': [obj.time.strftime('%H:%M:%S') for obj in indicators_chart if obj.time is not None],
+        'naptemp': [round(obj.naptemp, 1) for obj in indicators_chart if obj.naptemp is not None],
+        'nappress': [round(obj.nappress, 1) for obj in indicators_chart if obj.nappress is not None],
+        'mintemp': [-1.6 for obj in indicators_chart if obj.nappress is not None],
+        'maxtemp': [0 for obj in indicators_chart if obj.nappress is not None],
+        'minpress': [4.9 for obj in indicators_chart if obj.nappress is not None],
+        'maxpress': [5.3 for obj in indicators_chart if obj.nappress is not None],
+    }
+
+    intervals_by_numbacr = []
+    try:
+        indicators_with_times = indicators.values(
+            'numbacr',
+            'data',
+        ).annotate(
+            start_time=Min('time'),
+            end_time=Max('time')
+        ).order_by('data', 'start_time')
+
+        # Создаем список для сгруппированных записей
+        date_time_numbacr_list = []
+
+        for indicator in indicators_with_times:
+            numbacr = indicator['numbacr']
+            first_time = indicator['start_time']
+            last_time = indicator['end_time']
+            first_data = indicator['data']
+
+            record = {
+                'numbacr': numbacr,
+                'first_data': first_data,
+                'first_time': first_time,
+                'last_time': last_time,
+
+            }
+            date_time_numbacr_list.append(record)
+
+        sorted_date_time_numbacr_list = sorted(date_time_numbacr_list, key=lambda x: (x['first_data'], x['first_time']))
+
+        # Преобразование времени в объекты datetime для более удобной работы
+
+        for record in sorted_date_time_numbacr_list:
+            start_time = datetime.time.strftime(record['first_time'], '%H:%M:%S')
+
+            end_time = datetime.time.strftime(record['last_time'], '%H:%M:%S')
+
+            # Добавление интервала для данного акратофора в словарь с найденными ближайшими значениями времени
+            interval = {'start_time': start_time, 'end_time': end_time}
+            intervals_by_numbacr.append(interval)
+
+    except:
+        print("alarme")
+
+    return render(request, "tv/tv2.html", {
+
+        "indicators": sorted_date_time_numbacr_list,
+        "intervals_by_numbacr": intervals_by_numbacr,
+
+        "acr_chart": acr_chart,
+        "allProc": all_proc,
+        'sumProstoy': sum_prostoy,
+        'avgSpeed': avg_speed,
+        'sumProduct': sum_product,
+        'lable_chart': lable_chart,
+        'data_chart': data_chart,
+
+    })
+
+def TV4(request):
+
+
+    return render(request, "tv/tv4.html", {
+
+
 
     })
 

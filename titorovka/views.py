@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from pyModbusTCP.client import ModbusClient
 
-from temruk.models import bottling_plan, prichina, uchastok
+from temruk.models import bottling_plan, prichina, uchastok, uchastok_test, prichina_test
 from .forms import Otchet, OtchetIgr
 
 # Create your views here.
@@ -94,19 +94,16 @@ def index(request):
                                          time__gte=startSmena,
                                          time__lte=spotSmena)
 
-    prichAll = prichina.objects.all()
+    prichAll = prichina_test.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
-        podrazdeleniaEl.append(el.key)
+        podrazdeleniaEl.append(el.Key)
     otv_p = set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
-    uch = uchastok.objects.all().exclude(uchastok="Укупор").exclude(uchastok="Ополаскиватель").exclude(
-        uchastok="Розлив")
-    uch_vino = uchastok.objects.exclude(uchastok="Мюзлёвочный аппарат").exclude(uchastok="Укупор").exclude(
-        uchastok="Ополаскиватель").exclude(uchastok="Розлив")
-    uch_vino33 = uchastok.objects.all().exclude(uchastok="Триблок розлива").exclude(uchastok="Мюзлёвочный аппарат")
-
+    uch = uchastok_test.objects.all()
+    uch_vino = uchastok_test.objects.all()
+    uch_vino33 = uchastok_test.objects.all()
     return render(request, "titorovka.html", {
 
         'otv_p': otv_p,

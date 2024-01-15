@@ -9,8 +9,8 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
-        <h1 style="text-align:center">Простои линии 5</h1>
-    {% if not user.username == 'admin' and not user.username == 'master' %}
+        <h1 style="text-align:center">Простои линии 2</h1>
+
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
@@ -48,17 +48,19 @@
 }
 
                $(document).ready(function () {
+                           setTimeout(function () {
+            window.location.href = '/tv5';
+        }, 60000);
             var ctx = document.getElementById("Chart").getContext("2d");
             var config = {
                 type: 'bar',
                 data: {
-                    labels: [],
+                    labels: {{ lable_chart|safe }},
                     datasets: [{
-                        label: '# Производительность линии 5',
-                        data: [],
+                        label: '# Производительность линии 2',
+                        data: {{ data_chart|safe }},
                         borderWidth: 1,
                         borderColor: 'rgb(2,74,255)',
-                        backgroundColor: [] // Добавляем пустой массив для хранения цветов фона
                     }]
                 },
                 options: {
@@ -164,63 +166,10 @@
             var chart = new Chart(ctx, config);
             var chart2 = new Chart(ctx2, config2);
 
-            // Функция для обновления данных на странице
-            function dataUpdater() {
-                $.ajax({
-                    type: "post",
-                    url: 'getData',
-                }).done(function (newData) {
-                    // Обновление данных на странице
-                    $('#avgSpeeds').html(newData.avgSpeed);
-                    $('#allProc').html(newData.allProc);
-                    $('#boomOut').html(newData.boomOut);
-                    $('#sumProstoy').html(newData.sumProstoy);
-                    $('#sumProduct').html(newData.sumProduct);
 
-                    // Обновление данных и цветов на графике
-                    chart.data.labels = newData.lableChart;
-                    chart.data.datasets[0].data = newData.dataChart_triblok;
-
-                    // Массив, который будет хранить цвета для каждого элемента данных
-                    var backgroundColorArray = [];
-
-                    // Проходимся по каждому значению и определяем его цвет с помощью функции getColorByTime
-                    for (var i = 0; i < newData.lableChart.length; i++) {
-                        var value = newData.lableChart[i];
-                        var color = getColorByTime(value, newData.temp_chart);
-                        backgroundColorArray.push(color);
-                    }
-
-                    chart.data.datasets[0].backgroundColor = backgroundColorArray;
-
-                    // Обновление графика
-                    chart.update();
-
-                    {#chart2.data.datasets[0].data = newData.acr_chart.mintemp;#}
-                    {#chart2.data.datasets[1].data = newData.acr_chart.maxtemp;#}
-                    {#chart2.data.datasets[2].data = newData.acr_chart.maxpress;#}
-                    {#chart2.data.datasets[3].data = newData.acr_chart.minpress;#}
-                    {#chart2.data.datasets[4].data = newData.acr_chart.nappress;#}
-                    {#chart2.data.datasets[5].data = newData.acr_chart.naptemp;#}
-                    {##}
-                    {#chart2.update();#}
-                });
-
-                // Установка интервала для периодического обновления данных и графика
-                setInterval(dataUpdater, 5000);
-                        // Переход на другую страницу через 5 секунд
-        setTimeout(function () {
-            window.location.href = '/tv4';
-        }, 60000);
-            }
-
-            // Вызов функции dataUpdater для обновления данных и графика при загрузке страницы
-            dataUpdater();
         });
     </script>
-        <!-- Этот блок будет отображаться только если пользователь НЕ admin и НЕ master -->
 
-        <!-- Здесь идет разметка для графика и другой информации -->
         <div class="col__wrapper"
              style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
             <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
@@ -253,35 +202,35 @@
     <li class="col__item_temp">
         <ul>
             <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
-            <li id="avgSpeeds" style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+            <li id="avgSpeeds2" style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
         </ul>
     </li>
 
     <li class="col__item_temp">
         <ul>
             <li style="list-style-type: none; font-size:23px">Количество продукции:</li>
-            <li id="sumProduct" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+            <li id="sumProduct2" style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProduct }}</li>
         </ul>
     </li>
 
     <li class="col__item_temp">
         <ul>
             <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
-            <li id="sumProstoy" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+            <li id="sumProstoy2" style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProstoy }}</li>
         </ul>
     </li>
 
     <li class="col__item_temp">
         <ul>
             <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
-            <li id="allProc" style="text-align: center; font-size:70px; list-style-type: none;"></li>
+            <li id="allProc2" style="text-align: center; font-size:70px; list-style-type: none;"> {{ allProc }}</li>
         </ul>
     </li>
 
 
 </ul>
 
-    {% endif %}
+
 
 
         <script>
