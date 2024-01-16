@@ -975,8 +975,8 @@ def otchet(request):
         lableChart = []
         dataChart = []
 
-    uch = uchastok.objects.all()
-    uch_vino = uchastok_test
+    uch = uchastok_test.objects.all()
+    uch_vino =  uchastok_test.objects.all()
     uch5 = uchastok_test.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
 
 
