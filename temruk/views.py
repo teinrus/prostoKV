@@ -95,8 +95,8 @@ def TV5(request):
     all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output5_queryset),
                                                start_time, stop_time)
     sum_prostoy = get_total_prostoy(table5_queryset)
-    avg_speed = get_average_speed(speed5_queryset)
-    sum_product = get_total_product(production_output5_queryset)
+    avg_speed = '{0:,}'.format(int(get_average_speed(speed5_queryset))).replace(',', ' ')
+    sum_product = '{0:,}'.format(get_total_product(production_output5_queryset)).replace(',', ' ')
 
     lable_chart = [str(sp.time) for sp in speed5_queryset]
     data_chart = [sp.triblok for sp in speed5_queryset]
@@ -282,13 +282,43 @@ def TV2(request):
 
     })
 
+def get_plan_quantity4():
+    try:
+        today = datetime.datetime.today()
+        shift_number = get_shift_number()
+        plan = bottling_plan.objects.filter(Data=today, GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
+        plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
+        return plan_quantity
+    except Exception as e:
+        print("alarme")
+        return 31000
 def TV4(request):
+    start_time, stop_time = get_shift_times()
 
+    today = datetime.date.today().isoformat()
+
+    plan_quantity = get_plan_quantity()
+
+    table4_queryset = Table4.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
+    speed4_queryset = Speed4.objects.filter(data=today, time__range=(start_time, stop_time))
+    production_output4_queryset = ProductionOutput4.objects.filter(data=today, time__range=(start_time, stop_time))
+
+    all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output4_queryset),
+                                               start_time, stop_time)
+    sum_prostoy = get_total_prostoy(table4_queryset)
+    avg_speed = get_average_speed(speed4_queryset)
+    sum_product = get_total_product(production_output4_queryset)
+
+    lable_chart = [str(sp.time) for sp in speed4_queryset]
+    data_chart = [sp.triblok for sp in speed4_queryset]
 
     return render(request, "tv/tv4.html", {
-
-
-
+        "allProc4": all_proc,
+        'sumProstoy4': sum_prostoy,
+        'avgSpeed4': avg_speed,
+        'sumProduct4': sum_product,
+        'lableChart4': lable_chart,
+        'dataChart4_triblok': data_chart,
     })
 
 def temruk(request):

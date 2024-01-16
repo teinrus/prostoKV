@@ -1,183 +1,128 @@
 {% extends 'base.html' %}
 {% block content %}
+    {% if user.username == 'master' or user.username == 'admin' or user.username == 'operator4' %}
+        <script> // зависимости выпадающих списков таблицы
+        $(document).ready(function () {
+            var sor = [];
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+            $(function () {
+                $('#sample_data4').mousemove(function () {
+                    $('td.otv_pod', this).mousedown(function () {
+
+                        temp = '';
+                        for (let i = 0; i < test.length; i++) {
+                            if ($(this).text() === test[i].Key) {
+                                temp += test[i].Prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    })
+                });
+
+            });
+            {% if not user.username == 'master' %}
+                var dataTable2 = $('#sample_data4').DataTable();
+
+                $('#sample_data4').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: '/update4',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch_vino %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
+                    }
+                });
+            {% endif %}
+            $('#sample_data4').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: '/update4',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+                        temp = '%'
+                        for (let i = 0; i < test.length; i++) {
+                            if (value === test[i].Key) {
+                                temp += test[i].Prichina + '%'
+                            }
+                        }
+                        allProstoy = temp.split('%')
+                        sor = [];
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value: allProstoy[n], text: allProstoy[n]})
+                            }
+                        }
+                    }
+                }
+            });
+            $('#sample_data4').editable({
+                container: 'body',
+                selector: 'td.prichina',
+                url: '/update4',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+                    }
+                }
+            });
+
+            $('#sample_data4').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: '/update4',
+                title: 'comment',
+                type: 'POST',
+                value: "",
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+        });
 
 
-    <h1 style="text-align:center">Простои линии 4</h1>
-
-
-    {% if not user.username == 'master' and not user.username == 'admin' %}
-        <div class="col__wrapper"
-             style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
-            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
-                <canvas id="Chart4"></canvas>
-            </div>
-            <ul class="col__list">
-                <li class="col__item">
-                    <ul>
-                        <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
-                        <li id="avgSpeeds4"
-                            style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
-                    </ul>
-                </li>
-                <li class="col__item">
-                    <ul>
-                        <li style="text-align: center;font-size:23px">Количество продукции</li>
-                        <li id="sumProduct4"
-                            style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProduct4 }}</li>
-                    </ul>
-                <li class="col__item">
-                    <ul>
-                        <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
-                        <li id="sumProstoy4" style="text-align: center; font-size:70px; list-style-type: none;"></li>
-                    </ul>
-                <li class="col__item">
-                    <ul>
-                        <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
-                        <li id="allProc4" style="text-align: center; font-size:70px; list-style-type: none;"></li>
-                    </ul>
-
-            </ul>
-        </div>
+        </script>
     {% endif %}
-
-
-    <script>//ajax для перезагрузки графика
-
+<script>
 
     $(document).ready(function () {
 
                            setTimeout(function () {
             window.location.href = '/tv2';
-        }, 60000);
-        var ctx4 = document.getElementById("Chart4").getContext("2d");
-        var config4;
-        var chart4 = [];
-        $.ajax({
-            url: 'getData4',
-            method: 'post',
-            success: function (data) {
-
-                $('#avgSpeeds4').html(data.avgSpeed4);
-                $('#allProc4').html(data.allProc4);
-                $('#sumProduct4').html(data.sumProduct4);
-                $('#sumProstoy4').html(data.sumProstoy4);
-                config4 = {
-                    type: 'bar',
-                    data: {
-
-                        labels: data.lableChart4,
-                        datasets: [{
-                            label: '# Производительность триблок',
-                            data: data.dataChart4_triblok,
-                            borderWidth: 3,
-                            borderColor: 'rgb(76,125,248)',
-                        }],
-                {#{#}
-                {#            label: '# Производительность капсула',#}
-                {#            data: data.dataChart4_kapsula,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,130,248)',#}
-                {#            },{#}
-                {#            label: '# Производительность этикетировка',#}
-                {#            data: data.dataChart4_eticetka,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,248,216)',#}
-                {#             },{#}
-                {#            label: '# Производительность укладчик',#}
-                {#            data: data.dataChart4_ukladchik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,248,145)',#}
-                {#            },{#}
-                {#            label: '# Производительность заклейщик',#}
-                {#            data: data.dataChart4_zakleichik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(87,248,76)',#}
-                {##}
-                {#        }]#}
-                    },
-                    options: {
-
-                        elements: {
-                    point:{
-                        radius: 0
-                    }
-                },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                };
-                chart4 = new Chart(ctx4, config4);
-                dataUpdater();
-
-
-            }
-        });
-        setInterval(function () {
-
-            $.ajax({
-                url: 'getData4',
-                method: 'post',
-                success: function (data) {
-
-                    $('#avgSpeeds4').html(data.avgSpeed4);
-                    $('#allProc4').html(data.allProc4);
-                    $('#sumProstoy4').html(data.sumProstoy4);
-                    $('#sumProduct4').html(data.sumProduct4);
-                    dataUpdater();
-                }
-            });
-
-        }, 15000);
-
-
-        function dataUpdater() {
-            $.ajax({
-                type: "post",
-                url: 'getData4',
-            }).done(function (newData) {
-                chart4.data.labels = newData.lableChart4;
-                chart4.data.datasets[0].data = newData.dataChart4_triblok;
-                {#chart4.data.datasets[1].data = newData.dataChart4_kapsula;#}
-                {#chart4.data.datasets[2].data = newData.dataChart4_eticetka;#}
-                {#chart4.data.datasets[3].data = newData.dataChart4_ukladchik;#}
-                {#chart4.data.datasets[4].data = newData.dataChart4_zakleichik;#}
-                chart4.update();
-            });
-
-        }
-    })
-    ;
-    </script>
-
-    <script>
-
-        $(document).ready(function () {
-            var item_num4 = $(this).attr('id');
-            update_item(item_num4)
-            setInterval(function () {
-                if (!$(".popover-title").is(':visible')) {
-                    item_num4 = $(this).attr('id');
-                    update_item(item_num4);
-
-                }
-
-            }, 15000);
-
-            function update_item(item_num4) {
-                $('#sample_data4 tbody').load(
-                    "{% url 'update_items4' %}?item_num4=" + item_num4
-                );
-
-
-            }
-
-
-        });
-
-
-    </script>
-
+        }, 60000);});
+</script>
+        {% include 'Line4/Chart4.html' %}
 {% endblock %}
