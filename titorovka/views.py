@@ -451,7 +451,12 @@ def Sotchet(request):
 
     # Общее время простоя
     try:
-        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
+
+        if table_other:
+            sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')+table_other.aggregate(Sum('prostoy')).get('prostoy__sum')
+        else:
+            sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
+        print(sumProstoy)
         if sumProstoy == None:
             sumProstoy = datetime.timedelta(0)
     except:
