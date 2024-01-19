@@ -3,7 +3,7 @@ from datetime import datetime
 from django.db.models import Sum
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from temruk.models import Table2, Speed2, ProductionOutput2, bottling_plan
+from temruk.models import Table2, Speed2, ProductionOutput2, bottling_plan, prichina, uchastok
 from pyModbusTCP.client import ModbusClient
 
 slave_address = '192.168.88.230'
@@ -89,6 +89,33 @@ def update2(request):
         pk = request.POST.get('pk')
         name = request.POST.get('name')
         value = request.POST.get('value')
+        if name == "prichina":
+            try:
+                n = "Guid_Uchastok"
+                b = Table2.objects.get(id=pk).uchastok
+
+
+                v = uchastok.objects.get(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77",
+                                         Uchastok=b).Guid_Uchastok
+
+                a = Table2.objects.get(id=pk)
+                setattr(a, n, v)
+
+            except Table2.DoesNotExist:
+                setattr(a, n, v)
+            a.save()
+            # Запись гуид прицины
+            n = "Guid_Prichina"
+            v = prichina.objects.get(Prichina=value).Guid_Prichina
+            try:
+                a = Table2.objects.get(id=pk)
+                setattr(a, n, v)
+
+            except Table2.DoesNotExist:
+                a = Table2(id=pk, **{n: v})
+            a.save()
+        if name == "comment" and not Table2.objects.get(id=pk).prichina:
+            return HttpResponse('no')
 
         try:
             a = Table2.objects.get(id=pk)
@@ -103,6 +130,34 @@ def update2_2(request):
         pk = request.POST.get('pk')
         name = request.POST.get('name')
         value = request.POST.get('value')
+        if name == "prichina":
+            try:
+                n = "Guid_Uchastok"
+                b = Table2.objects.get(id=pk).uchastok
+
+
+                v = uchastok.objects.get(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77",
+                                              Uchastok=b).Guid_Uchastok
+
+                a = Table2.objects.get(id=pk)
+
+                setattr(a, n, v)
+
+            except Table2.DoesNotExist:
+                setattr(a, n, v)
+            a.save()
+            # Запись гуид прицины
+            n = "Guid_Prichina"
+            v = prichina.objects.get(Prichina=value).Guid_Prichina
+            try:
+                a = Table2.objects.get(id=pk)
+                setattr(a, n, v)
+
+            except Table2.DoesNotExist:
+                a = Table2(id=pk, **{n: v})
+            a.save()
+        if name == "comment" and not Table2.objects.get(id=pk).prichina:
+            return HttpResponse('no')
 
         try:
             a = Table2.objects.get(id=pk)

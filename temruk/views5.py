@@ -132,6 +132,8 @@ def update(request):
             except Table5.DoesNotExist:
                 a = Table5(id=pk, **{n: v})
             a.save()
+        if name == "comment" and not Table5.objects.get(id=pk).prichina:
+            return HttpResponse('no')
 
         try:
             a = Table5.objects.get(id=pk)
@@ -170,6 +172,8 @@ def update5_2(request):
             except Table5.DoesNotExist:
                 a = Table5(id=pk, **{n: v})
             a.save()
+        if name == "comment" and not Table5.objects.get(id=pk).prichina:
+            return HttpResponse('no')
 
         try:
             a = Table5.objects.get(id=pk)

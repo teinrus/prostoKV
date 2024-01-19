@@ -51,41 +51,17 @@ def update33(request):
 
         pk = request.POST.get('pk')
         name = request.POST.get('name')
-        v = request.POST.get('value')
+        value = request.POST.get('value')
+        if name == "comment" and not Table33.objects.get(id=pk).prichina:
+            return HttpResponse('no')
 
-        if name == 'uchastok':
-            try:
-                a = Table33.objects.get(id=pk)
-                a.uchastok = v
-                a.save()
-            except:
-                a = Table33(uchastok=v, id=pk)
-                a.save()
-        elif name == 'prichina':
-            try:
+        try:
+            a = Table33.objects.get(id=pk)
+            setattr(a, name, value)
+        except Table33.DoesNotExist:
+            a = Table33(id=pk, **{name: value})
 
-                a = Table33.objects.get(id=pk)
-                a.prichina = v
-                a.save()
-            except:
-                a = Table33(prichina=v, id=pk)
-                a.save()
-        elif name == 'otv_pod':
-            try:
-                a = Table33.objects.get(id=pk)
-                a.otv_pod = v
-                a.save()
-            except:
-                a = Table33(otv_pod=v, id=pk)
-                a.save()
-        elif name == 'comment':
-            try:
-                a = Table33.objects.get(id=pk)
-                a.comment = v
-                a.save()
-            except:
-                a = Table33(comment=v, id=pk)
-                a.save()
+        a.save()
 
     return HttpResponse('yes')
 

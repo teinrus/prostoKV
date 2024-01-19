@@ -52,41 +52,18 @@ def update24(request):
 
         pk = request.POST.get('pk')
         name = request.POST.get('name')
-        v = request.POST.get('value')
+        value = request.POST.get('value')
+        if name == "comment" and not Table24.objects.get(id=pk).prichina:
+            return HttpResponse('no')
 
-        if name == 'uchastok':
-            try:
-                a = Table24.objects.get(id=pk)
-                a.uchastok = v
-                a.save()
-            except:
-                a = Table24(uchastok=v, id=pk)
-                a.save()
-        elif name == 'prichina':
-            try:
+        try:
+            a = Table24.objects.get(id=pk)
+            setattr(a, name, value)
+        except Table24.DoesNotExist:
+            a = Table24(id=pk, **{name: value})
 
-                a = Table24.objects.get(id=pk)
-                a.prichina = v
-                a.save()
-            except:
-                a = Table24(prichina=v, id=pk)
-                a.save()
-        elif name == 'otv_pod':
-            try:
-                a = Table24.objects.get(id=pk)
-                a.otv_pod = v
-                a.save()
-            except:
-                a = Table24(otv_pod=v, id=pk)
-                a.save()
-        elif name == 'comment':
-            try:
-                a = Table24.objects.get(id=pk)
-                a.comment = v
-                a.save()
-            except:
-                a = Table24(comment=v, id=pk)
-                a.save()
+        a.save()
+        return HttpResponse('yes')
 
     return HttpResponse('yes')
 

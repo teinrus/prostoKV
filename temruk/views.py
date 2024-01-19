@@ -354,10 +354,9 @@ def temruk(request):
     prich = list(prichAll.values())
 
 
-    uch = uchastok_test.objects.all()
-    uch5=uchastok_test.objects.all().filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
-
-    uch_vino = uch.exclude(Uchastok="Мюзлёвочный аппарат")
+    uch = uchastok.objects.all().filter(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77")
+    uch_vino = uchastok.objects.all().filter(Guid_Line="b84d1e71-1109-11e6-b0ff-005056ac2c77")
+    uch5 = uchastok_test.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
     return render(request, "temruk.html", {
 
         'otv_p': otv_p,
@@ -975,8 +974,8 @@ def otchet(request):
         lableChart = []
         dataChart = []
 
-    uch = uchastok_test.objects.all()
-    uch_vino =  uchastok_test.objects.all()
+    uch = uchastok.objects.all().filter(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77")
+    uch_vino = uchastok.objects.all().filter(Guid_Line="b84d1e71-1109-11e6-b0ff-005056ac2c77")
     uch5 = uchastok_test.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
 
 

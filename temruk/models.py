@@ -129,6 +129,8 @@ class Table2(models.Model):
     otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
+    Guid_Prichina = models.CharField('Guid причины', max_length=36, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
 
     def __str__(self):
         return str(self.startdata) + '_' + str(self.starttime) + '_' + str(self.id)
@@ -147,6 +149,8 @@ class Table4(models.Model):
     otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
+    Guid_Prichina = models.CharField('Guid причины', max_length=36, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
 
     def __str__(self):
         return str(self.startdata) + '_' + str(self.starttime) + '_' + str(self.id)
