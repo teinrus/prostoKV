@@ -9,43 +9,43 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
-        <h1 style="text-align:center">Простои линии 5</h1>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
+    <h1 style="text-align:center">Простои линии 5</h1>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
         // Функция для окрашивания элементов графика в зависимости от времени
         function getColorByTime(value, tempChartTimes) {
 
-        let timeParts = value.split(":");
-        let hours = parseInt(timeParts[0], 10);
-        let minutes = parseInt(timeParts[1], 10);
-        let seconds = parseInt(timeParts[2], 10);
+            let timeParts = value.split(":");
+            let hours = parseInt(timeParts[0], 10);
+            let minutes = parseInt(timeParts[1], 10);
+            let seconds = parseInt(timeParts[2], 10);
 
-        let currentDate = new Date();
-        let timeObject = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes, seconds);
+            let currentDate = new Date();
+            let timeObject = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hours, minutes, seconds);
 
 
-        for (var j = 0; j < tempChartTimes.length; j++) {
-            let timeParts2 = tempChartTimes[j].split(":");
-            let hours2 = parseInt(timeParts2[0], 10);
-            let minutes2 = parseInt(timeParts2[1], 10);
-            let seconds2 = parseInt(timeParts2[2], 10)
-            let currentDate2 = new Date();
-            let timeObject2 = new Date(currentDate2.getFullYear(), currentDate2.getMonth(), currentDate2.getDate(), hours2, minutes2,seconds2);
-            let newTimeM = new Date(timeObject2- 60 * 1000);
-            timeObject2.setMinutes(timeObject2.getMinutes() + 2);
-            let newTimeB = new Date(timeObject2);
-            // Проверяем, выполнялось ли уже это условие для данного времени
+            for (var j = 0; j < tempChartTimes.length; j++) {
+                let timeParts2 = tempChartTimes[j].split(":");
+                let hours2 = parseInt(timeParts2[0], 10);
+                let minutes2 = parseInt(timeParts2[1], 10);
+                let seconds2 = parseInt(timeParts2[2], 10)
+                let currentDate2 = new Date();
+                let timeObject2 = new Date(currentDate2.getFullYear(), currentDate2.getMonth(), currentDate2.getDate(), hours2, minutes2, seconds2);
+                let newTimeM = new Date(timeObject2 - 60 * 1000);
+                timeObject2.setMinutes(timeObject2.getMinutes() + 2);
+                let newTimeB = new Date(timeObject2);
+                // Проверяем, выполнялось ли уже это условие для данного времени
 
-            if (newTimeM < timeObject && timeObject < newTimeB) {
-               return '#ff0000';
+                if (newTimeM < timeObject && timeObject < newTimeB) {
+                    return '#ff0000';
+                }
             }
+
+            return 'rgb(2,74,255)'; // Зеленый, если не попадает в условие окрашивания в черный
         }
 
-    return 'rgb(2,74,255)'; // Зеленый, если не попадает в условие окрашивания в черный
-}
-
-               $(document).ready(function () {
+        $(document).ready(function () {
             var ctx = document.getElementById("Chart").getContext("2d");
             var config = {
                 type: 'bar',
@@ -72,105 +72,134 @@
                     }
                 }
             };
-             var ctx2 = document.getElementById("Chart2").getContext("2d");
+            var ctx2 = document.getElementById("Chart2").getContext("2d");
              var config2 = {
                 type: 'line',
-              options: {
-                elements: {
-                    point:{
-                        radius: 0
-                    }
-                }
-            },
-                data: {
-                    labels: {{ acr_chart.labels|safe }},
-                    datasets: [
-                            {
-                                label: 'МинТемп',
-                                borderColor: 'rgb(253,204,2,0.8)',
-                                borderWidth:5,
-                                data: {{ acr_chart.mintemp|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
-                                                        {
-                                label: 'MaксТемп',
-                                borderColor: 'rgb(253,204,2,0.8)',
-                                                            borderWidth:5,
-                                data: {{ acr_chart.maxtemp|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
-                             {
-                                label: 'МаксДавл',
-                                borderColor: 'rgb(253,204,2,0.8)',
-                                 borderWidth:5,
-                                data: {{ acr_chart.maxpress|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
-                                                        {
-                                label: 'МинДавление',
-                                borderColor: 'rgb(253,204,2,0.8)',
-                                                            borderWidth:5,
-                                data: {{ acr_chart.minpress|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
+                    data: {
+                        labels: {{ data.labels|safe }},
+                        datasets: [
                             {
                                 label: 'Давление',
                                 borderColor: 'rgb(0,59,255)',
-                                borderWidth:5,
-                                data: {{ acr_chart.nappress|safe }},
+                                data: {{ data.nappress|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0'
                             },
                             {
                                 label: 'Температура',
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                borderWidth:5,
-                                data: {{ acr_chart.naptemp|safe }},
+                                borderColor: 'rgb(4,119,4)',
+                                data: {{ data.naptemp|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0',
 
-                            }
+                            },
+                             {
+                                label: 'МаксДавл',
+                                borderColor: 'rgb(255,255,252)',
+                                data: {{ data.maxpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                                                        {
+                                label: 'МинДавление',
+                                borderColor: 'rgb(255,255,252)',
+                                data: {{ data.minpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+
+                                                        {
+                                label: 'МинТемп',
+                                borderColor: 'rgb(255,255,252)',
+                                data: {{ data.mintemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                                                        {
+                                label: 'MaксТемп',
+                                borderColor: 'rgb(255,255,252)',
+                                data: {{ data.maxtemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
                         ]
                     },
+ options: {
+                elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
+             scales: {
+            yAxes: [{
+                id: 'y-axis-0',
+                ticks: {
+                    min: -2,
+                    max: 6,
+                    stepSize: 1,
+                },
+            }]
+        }
 
-
+    },
                     plugins: [
                         {
-                            beforeDraw: function (chart) {
-                                var ctx = chart.ctx;
-                                var chartArea = chart.chartArea;
-                                var labels = chart.data.labels;
 
-                                var timeRanges = [
-                                    {% for interval in intervals_by_numbacr %}
-                                        {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
-                                    {% endfor %}
-                                ];
+beforeDraw: function (chart) {
+    var ctx = chart.ctx;
+    var chartArea = chart.chartArea;
+    var labels = chart.data.labels;
 
-                                for (var i = 0; i < timeRanges.length; i++) {
-                                    var startTime = timeRanges[i].start_time;
-                                    var endTime = timeRanges[i].end_time;
+    var timeRanges = [
+        {% for interval in intervals_by_numbacr %}
+            {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
+        {% endfor %}
+    ];
 
-                                    var startIndex = labels.indexOf(startTime);
-                                    var endIndex = labels.indexOf(endTime);
+    var gapSize = 10; // Размер разрыва
+    var blueColor = 'rgba(97,185,248,0.5)';
+    var redColor = 'rgba(171,152,152,0.5)';
 
-                                    if (startIndex !== -1 && endIndex !== -1) {
-                                        var startX = chart.scales['x'].getPixelForValue(startTime);
-                                        var endX = chart.scales['x'].getPixelForValue(endTime);
+    for (var i = 0; i < timeRanges.length; i++) {
+        var startTime = timeRanges[i].start_time;
+        var endTime = timeRanges[i].end_time;
 
-                                        var backgroundColor = i % 2 === 0 ? 'rgba(250,62,62,0.5)' : 'rgba(145,248,97,0.5)';
-                                        ctx.fillStyle = backgroundColor;
+        var startIndex = labels.indexOf(startTime);
+        var endIndex = labels.indexOf(endTime);
 
-                                        ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
-                                    }
-                                }
-                            }
+        var startX = chart.scales['x'].getPixelForValue(startTime) - gapSize;
+        var endX = chart.scales['x'].getPixelForValue(endTime) + gapSize;
+
+        var minYT ={{ data.maxtemp_chart }};
+        var maxYT = {{ data.mintemp_chart }};
+
+        var minYD ={{ data.minpress_chart }};
+        var maxYD = {{ data.maxpress_chart }};
+
+
+
+        var startYT = chart.scales['y-axis-0'].getPixelForValue(maxYT);
+        var endYT = chart.scales['y-axis-0'].getPixelForValue(minYT);
+
+        var startYD = chart.scales['y-axis-0'].getPixelForValue(maxYD);
+        var endYD = chart.scales['y-axis-0'].getPixelForValue(minYD);
+        // Draw red background
+        ctx.fillStyle = redColor;
+        ctx.fillRect(startX, startYT, endX - startX, endYT - startYT);
+        ctx.fillStyle = redColor;
+        ctx.fillRect(startX, startYD, endX - startX, endYD - startYD);
+        // Draw blue background
+        ctx.fillStyle = blueColor;
+        ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+
+
+    }
+},
+
+
                         }
                     ]
+
             };
 
             var chart = new Chart(ctx, config);
@@ -213,86 +242,86 @@
                 });
 
 
-                        // Переход на другую страницу через 5 секунд
-        setTimeout(function () {
-            window.location.href = '/tv4';
-        }, 60000);
+                // Переход на другую страницу через 5 секунд
+                setTimeout(function () {
+                    window.location.href = '/tv4';
+                }, 60000);
             }
 
             // Вызов функции dataUpdater для обновления данных и графика при загрузке страницы
             dataUpdater();
         });
     </script>
-        <!-- Этот блок будет отображаться только если пользователь НЕ admin и НЕ master -->
+    <!-- Этот блок будет отображаться только если пользователь НЕ admin и НЕ master -->
 
-        <!-- Здесь идет разметка для графика и другой информации -->
-        <div class="col__wrapper"
-             style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
-            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
-                <canvas id="Chart"></canvas>
-            </div>
-            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000;">
-                <canvas id="Chart2"></canvas>
-            </div>
-
-
+    <!-- Здесь идет разметка для графика и другой информации -->
+    <div class="col__wrapper"
+         style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
+        <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
+            <canvas id="Chart"></canvas>
         </div>
-<style>
-    .col__list_temp {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-    }
-
-    .col__item_temp {
-        width: 23%; /* Ширина элемента, чтобы уместить 4 элемента в строку */
-        margin-bottom: 20px;
-        border: 3px solid #070707;
-    }
-</style>
-
-<ul class="col__list_temp">
-    <!-- Здесь идет блок с различной информацией, который будет обновляться вместе с графиком -->
-    <!-- Данные с id="avgSpeeds", id="sumProduct", id="sumProstoy", и id="allProc" будут обновляться в коде JavaScript -->
-
-    <li class="col__item_temp">
-        <ul>
-            <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
-            <li id="avgSpeeds" style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
-        </ul>
-    </li>
-
-    <li class="col__item_temp">
-        <ul>
-            <li style="list-style-type: none; font-size:23px;text-align: center;">Количество продукции:</li>
-            <li id="sumProduct" style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProduct }}</li>
-        </ul>
-    </li>
-
-    <li class="col__item_temp">
-        <ul>
-            <li style="list-style-type: none; text-align: center; font-size:23px">Общее время простоя</li>
-            <li id="sumProstoy" style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProstoy }}</li>
-        </ul>
-    </li>
-
-    <li class="col__item_temp">
-        <ul>
-            <li style="list-style-type: none; font-size:23px ;text-align: center;">Процент выполнения</li>
-            <li id="allProc" style="text-align: center; font-size:70px; list-style-type: none;">{{ allProc }}</li>
-        </ul>
-    </li>
+        <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000;">
+            <canvas id="Chart2"></canvas>
+        </div>
 
 
-</ul>
+    </div>
+    <style>
+        .col__list_temp {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .col__item_temp {
+            width: 23%; /* Ширина элемента, чтобы уместить 4 элемента в строку */
+            margin-bottom: 20px;
+            border: 3px solid #070707;
+        }
+    </style>
+
+    <ul class="col__list_temp">
+        <!-- Здесь идет блок с различной информацией, который будет обновляться вместе с графиком -->
+        <!-- Данные с id="avgSpeeds", id="sumProduct", id="sumProstoy", и id="allProc" будут обновляться в коде JavaScript -->
+
+        <li class="col__item_temp">
+            <ul>
+                <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
+                <li id="avgSpeeds"
+                    style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+            </ul>
+        </li>
+
+        <li class="col__item_temp">
+            <ul>
+                <li style="list-style-type: none; font-size:23px;text-align: center;">Количество продукции:</li>
+                <li id="sumProduct"
+                    style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProduct }}</li>
+            </ul>
+        </li>
+
+        <li class="col__item_temp">
+            <ul>
+                <li style="list-style-type: none; text-align: center; font-size:23px">Общее время простоя</li>
+                <li id="sumProstoy"
+                    style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProstoy }}</li>
+            </ul>
+        </li>
+
+        <li class="col__item_temp">
+            <ul>
+                <li style="list-style-type: none; font-size:23px ;text-align: center;">Процент выполнения</li>
+                <li id="allProc" style="text-align: center; font-size:70px; list-style-type: none;">{{ allProc }}</li>
+            </ul>
+        </li>
 
 
+    </ul>
 
 
-        <script>
+    <script>
 
     </script>
-
 
 
     </div>

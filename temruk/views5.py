@@ -220,7 +220,7 @@ def getData(request):
                                                                 data=today)
     indicators_chart = indicators
 
-    acr_chart = {
+    data = {
         'labels': [obj.time.strftime('%H:%M:%S') for obj in indicators_chart if obj.time is not None],
         'naptemp': [round(obj.naptemp, 1) for obj in indicators_chart if obj.naptemp is not None],
         'nappress': [round(obj.nappress, 1) for obj in indicators_chart if obj.nappress is not None],
@@ -228,6 +228,10 @@ def getData(request):
         'maxtemp': [0 for obj in indicators_chart if obj.nappress is not None],
         'minpress': [4.9 for obj in indicators_chart if obj.nappress is not None],
         'maxpress': [5.3 for obj in indicators_chart if obj.nappress is not None],
+        'mintemp_chart': "-1.6",
+        'maxtemp_chart': "0",
+        'minpress_chart': "4.9",
+        'maxpress_chart': "5.3"
     }
 
     intervals_by_numbacr = []
@@ -283,7 +287,7 @@ def getData(request):
 
 
     return JsonResponse({
-        "acr_chart":acr_chart,
+        "data":data,
         "allProc": all_proc,
         'sumProstoy': sum_prostoy,
         'avgSpeed': avg_speed,

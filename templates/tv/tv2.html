@@ -79,88 +79,131 @@
              var ctx2 = document.getElementById("Chart2").getContext("2d");
              var config2 = {
                 type: 'line',
-                data: {
-                    labels: {{ acr_chart.labels|safe }},
-                    datasets: [
-                            {
-                                label: 'МинТемп',
-                                borderColor: 'rgb(253,204,2, 0.5)',
-                                data: {{ acr_chart.mintemp|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
-                                                        {
-                                label: 'MaксТемп',
-                                borderColor: 'rgb(253,204,2, 0.5)',
-                                data: {{ acr_chart.maxtemp|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
-                             {
-                                label: 'МаксДавл',
-                                borderColor: 'rgb(253,204,2, 0.5)',
-                                data: {{ acr_chart.maxpress|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
-                                                        {
-                                label: 'МинДавление',
-                                borderColor: 'rgb(253,204,2, 0.5)',
-                                data: {{ acr_chart.minpress|safe }},
-                                fill: false,
-                                yAxisID: 'y-axis-0',
-                            },
+                    data: {
+                        labels: {{ data.labels|safe }},
+                        datasets: [
                             {
                                 label: 'Давление',
                                 borderColor: 'rgb(0,59,255)',
-                                data: {{ acr_chart.nappress|safe }},
+                                data: {{ data.nappress|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0'
                             },
                             {
                                 label: 'Температура',
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                data: {{ acr_chart.naptemp|safe }},
+                                borderColor: 'rgb(4,119,4)',
+                                data: {{ data.naptemp|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0',
 
-                            }
+                            },
+                             {
+                                label: 'МаксДавл',
+                                borderColor: 'rgb(255,255,252)',
+                                data: {{ data.maxpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                                                        {
+                                label: 'МинДавление',
+                                borderColor: 'rgb(255,255,252)',
+                                data: {{ data.minpress|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+
+                                                        {
+                                label: 'МинТемп',
+                                borderColor: 'rgb(255,255,252)',
+                                data: {{ data.mintemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
+                                                        {
+                                label: 'MaксТемп',
+                                borderColor: 'rgb(255,255,252)',
+                                data: {{ data.maxtemp|safe }},
+                                fill: false,
+                                yAxisID: 'y-axis-0',
+                            },
                         ]
                     },
+ options: {
+                elements: {
+                    point:{
+                        radius: 0
+                    }
+                },
+             scales: {
+            yAxes: [{
+                id: 'y-axis-0',
+                ticks: {
+                    min: -2,
+                    max: 6,
+                    stepSize: 1,
+                },
+            }]
+        }
 
+    },
                     plugins: [
                         {
-                            beforeDraw: function (chart) {
-                                var ctx = chart.ctx;
-                                var chartArea = chart.chartArea;
-                                var labels = chart.data.labels;
 
-                                var timeRanges = [
-                                    {% for interval in intervals_by_numbacr %}
-                                        {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
-                                    {% endfor %}
-                                ];
+beforeDraw: function (chart) {
+    var ctx = chart.ctx;
+    var chartArea = chart.chartArea;
+    var labels = chart.data.labels;
 
-                                for (var i = 0; i < timeRanges.length; i++) {
-                                    var startTime = timeRanges[i].start_time;
-                                    var endTime = timeRanges[i].end_time;
+    var timeRanges = [
+        {% for interval in intervals_by_numbacr %}
+            {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
+        {% endfor %}
+    ];
 
-                                    var startIndex = labels.indexOf(startTime);
-                                    var endIndex = labels.indexOf(endTime);
+    var gapSize = 10; // Размер разрыва
+    var blueColor = 'rgba(97,185,248,0.5)';
+    var redColor = 'rgba(171,152,152,0.5)';
 
-                                    if (startIndex !== -1 && endIndex !== -1) {
-                                        var startX = chart.scales['x'].getPixelForValue(startTime);
-                                        var endX = chart.scales['x'].getPixelForValue(endTime);
+    for (var i = 0; i < timeRanges.length; i++) {
+        var startTime = timeRanges[i].start_time;
+        var endTime = timeRanges[i].end_time;
 
-                                        var backgroundColor = i % 2 === 0 ? 'rgba(250,62,62,0.5)' : 'rgba(145,248,97,0.5)';
-                                        ctx.fillStyle = backgroundColor;
+        var startIndex = labels.indexOf(startTime);
+        var endIndex = labels.indexOf(endTime);
 
-                                        ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
-                                    }
-                                }
-                            }
+        var startX = chart.scales['x'].getPixelForValue(startTime) - gapSize;
+        var endX = chart.scales['x'].getPixelForValue(endTime) + gapSize;
+
+        var minYT ={{ data.maxtemp_chart }};
+        var maxYT = {{ data.mintemp_chart }};
+
+        var minYD ={{ data.minpress_chart }};
+        var maxYD = {{ data.maxpress_chart }};
+
+
+
+        var startYT = chart.scales['y-axis-0'].getPixelForValue(maxYT);
+        var endYT = chart.scales['y-axis-0'].getPixelForValue(minYT);
+
+        var startYD = chart.scales['y-axis-0'].getPixelForValue(maxYD);
+        var endYD = chart.scales['y-axis-0'].getPixelForValue(minYD);
+        // Draw red background
+        ctx.fillStyle = redColor;
+        ctx.fillRect(startX, startYT, endX - startX, endYT - startYT);
+        ctx.fillStyle = redColor;
+        ctx.fillRect(startX, startYD, endX - startX, endYD - startYD);
+        // Draw blue background
+        ctx.fillStyle = blueColor;
+        ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+
+
+    }
+},
+
+
                         }
                     ]
+
             };
 
             var chart = new Chart(ctx, config);

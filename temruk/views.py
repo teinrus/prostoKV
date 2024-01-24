@@ -1,13 +1,10 @@
-
 import datetime
 
 import random
 
-
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Min, Max
-
 
 from django.shortcuts import redirect
 
@@ -80,6 +77,7 @@ def index(request):
     else:
         return redirect('titorovka')
 
+
 def TV5(request):
     start_time, stop_time = get_shift_times()
 
@@ -107,7 +105,7 @@ def TV5(request):
                                                 data=today)
     indicators_chart = indicators
 
-    acr_chart = {
+    data = {
         'labels': [obj.time.strftime('%H:%M:%S') for obj in indicators_chart if obj.time is not None],
         'naptemp': [round(obj.naptemp, 1) for obj in indicators_chart if obj.naptemp is not None],
         'nappress': [round(obj.nappress, 1) for obj in indicators_chart if obj.nappress is not None],
@@ -115,6 +113,12 @@ def TV5(request):
         'maxtemp': [0 for obj in indicators_chart if obj.nappress is not None],
         'minpress': [4.9 for obj in indicators_chart if obj.nappress is not None],
         'maxpress': [5.3 for obj in indicators_chart if obj.nappress is not None],
+        'mintemp_chart': "-1.6",
+        'maxtemp_chart': "0",
+        'minpress_chart': "4.9",
+        'maxpress_chart': "5.3"
+
+
     }
 
     intervals_by_numbacr = []
@@ -166,7 +170,7 @@ def TV5(request):
         "indicators": sorted_date_time_numbacr_list,
         "intervals_by_numbacr": intervals_by_numbacr,
 
-        "acr_chart": acr_chart,
+        "data": data,
         "allProc": all_proc,
         'sumProstoy': sum_prostoy,
         'avgSpeed': avg_speed,
@@ -177,15 +181,19 @@ def TV5(request):
         "temp_chart": temp_chart,
     })
 
+
 def get_plan_quantity2():
     try:
         today = datetime.datetime.today()
         shift_number = get_shift_number()
-        plan = bottling_plan.objects.filter(Data=today, GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
+        plan = bottling_plan.objects.filter(Data=today, GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
+                                            ShiftNumber=shift_number)
         plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
         return plan_quantity
     except Exception as e:
         return 31000
+
+
 def TV2(request):
     start_time, stop_time = get_shift_times()
 
@@ -197,7 +205,6 @@ def TV2(request):
     speed2_queryset = Speed2.objects.filter(data=today, time__range=(start_time, stop_time))
 
     production_output2_queryset = ProductionOutput2.objects.filter(data=today, time__range=(start_time, stop_time))
-
 
     all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output2_queryset),
                                                start_time, stop_time)
@@ -213,7 +220,7 @@ def TV2(request):
                                                 data=today)
     indicators_chart = indicators
 
-    acr_chart = {
+    data = {
         'labels': [obj.time.strftime('%H:%M:%S') for obj in indicators_chart if obj.time is not None],
         'naptemp': [round(obj.naptemp, 1) for obj in indicators_chart if obj.naptemp is not None],
         'nappress': [round(obj.nappress, 1) for obj in indicators_chart if obj.nappress is not None],
@@ -221,6 +228,10 @@ def TV2(request):
         'maxtemp': [0 for obj in indicators_chart if obj.nappress is not None],
         'minpress': [4.9 for obj in indicators_chart if obj.nappress is not None],
         'maxpress': [5.3 for obj in indicators_chart if obj.nappress is not None],
+        'mintemp_chart': "-1.6",
+        'maxtemp_chart': "0",
+        'minpress_chart': "4.9",
+        'maxpress_chart': "5.3"
     }
 
     intervals_by_numbacr = []
@@ -272,7 +283,7 @@ def TV2(request):
         "indicators": sorted_date_time_numbacr_list,
         "intervals_by_numbacr": intervals_by_numbacr,
 
-        "acr_chart": acr_chart,
+        "data": data,
         "allProc": all_proc,
         'sumProstoy': sum_prostoy,
         'avgSpeed': avg_speed,
@@ -282,16 +293,20 @@ def TV2(request):
 
     })
 
+
 def get_plan_quantity4():
     try:
         today = datetime.datetime.today()
         shift_number = get_shift_number()
-        plan = bottling_plan.objects.filter(Data=today, GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77', ShiftNumber=shift_number)
+        plan = bottling_plan.objects.filter(Data=today, GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
+                                            ShiftNumber=shift_number)
         plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
         return plan_quantity
     except Exception as e:
         print("alarme")
         return 31000
+
+
 def TV4(request):
     start_time, stop_time = get_shift_times()
 
@@ -320,6 +335,7 @@ def TV4(request):
         'lableChart4': lable_chart,
         'dataChart4_triblok': data_chart,
     })
+
 
 def temruk(request):
     if request.method == 'GET':
@@ -350,9 +366,7 @@ def temruk(request):
         podrazdeleniaEl.append(el.Key)
     otv_p = set(podrazdeleniaEl)
 
-
     prich = list(prichAll.values())
-
 
     uch = uchastok.objects.all().filter(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77")
     uch_vino = uchastok.objects.all().filter(Guid_Line="b84d1e71-1109-11e6-b0ff-005056ac2c77")
@@ -362,7 +376,7 @@ def temruk(request):
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
-        "uch5":uch5,
+        "uch5": uch5,
         'uch_vino': uch_vino,
 
         'table5': table5,
@@ -378,10 +392,9 @@ def temruk(request):
 
 
 def otchet(request):
-
     plan = 0
     table = []
-    table_triblok=[]
+    table_triblok = []
     temp_chart = []
     timeTemp = 0
 
@@ -442,9 +455,9 @@ def otchet(request):
                                                                     data__gte=form.cleaned_data["start_data"],
                                                                     data__lte=form.cleaned_data["finish_data"])
                         filter = Filter5.objects.filter(time__gte=datetime.time(0),
-                                                                    time__lte=datetime.time(23, 59),
-                                                                    data__gte=form.cleaned_data["start_data"],
-                                                                    data__lte=form.cleaned_data["finish_data"])
+                                                        time__lte=datetime.time(23, 59),
+                                                        data__gte=form.cleaned_data["start_data"],
+                                                        data__lte=form.cleaned_data["finish_data"])
 
 
                     except:
@@ -493,9 +506,9 @@ def otchet(request):
                                                                 data__gte=form.cleaned_data["start_data"],
                                                                 data__lte=form.cleaned_data["finish_data"])
                     filter = Filter5.objects.filter(time__gte=datetime.time(8),
-                                                                time__lte=datetime.time(16, 30),
-                                                                data__gte=form.cleaned_data["start_data"],
-                                                                data__lte=form.cleaned_data["finish_data"])
+                                                    time__lte=datetime.time(16, 30),
+                                                    data__gte=form.cleaned_data["start_data"],
+                                                    data__lte=form.cleaned_data["finish_data"])
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
                     boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                            data__lte=form.cleaned_data["finish_data"],
@@ -540,9 +553,9 @@ def otchet(request):
                                                                 data__gte=form.cleaned_data["start_data"],
                                                                 data__lte=form.cleaned_data["finish_data"])
                     filter = Filter5.objects.filter(time__gte=datetime.time(16, 30),
-                                                                time__lte=datetime.time(23, 59),
-                                                                data__gte=form.cleaned_data["start_data"],
-                                                                data__lte=form.cleaned_data["finish_data"])
+                                                    time__lte=datetime.time(23, 59),
+                                                    data__gte=form.cleaned_data["start_data"],
+                                                    data__lte=form.cleaned_data["finish_data"])
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
                     boom = bottleExplosion5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                            data__lte=form.cleaned_data["finish_data"],
@@ -587,9 +600,9 @@ def otchet(request):
                                                                     data__gte=form.cleaned_data["start_data"],
                                                                     data__lte=form.cleaned_data["finish_data"])
                         filter = Filter5.objects.filter(time__gte=datetime.time(00, 00),
-                                                                    time__lte=datetime.time(8, 00),
-                                                                    data__gte=form.cleaned_data["start_data"],
-                                                                    data__lte=form.cleaned_data["finish_data"])
+                                                        time__lte=datetime.time(8, 00),
+                                                        data__gte=form.cleaned_data["start_data"],
+                                                        data__lte=form.cleaned_data["finish_data"])
                     except:
                         print("alarme")
             try:
@@ -633,13 +646,13 @@ def otchet(request):
                         timeTemp = 0
                     try:
                         indicators = Line2Indicators.objects.filter(time__gte=datetime.time(0),
-                                                                time__lte=datetime.time(23, 59),
-                                                                data__gte=form.cleaned_data["start_data"],
-                                                                data__lte=form.cleaned_data["finish_data"])
+                                                                    time__lte=datetime.time(23, 59),
+                                                                    data__gte=form.cleaned_data["start_data"],
+                                                                    data__lte=form.cleaned_data["finish_data"])
                         filter = Filter2.objects.filter(time__gte=datetime.time(0),
-                                                                time__lte=datetime.time(23, 59),
-                                                                data__gte=form.cleaned_data["start_data"],
-                                                                data__lte=form.cleaned_data["finish_data"])
+                                                        time__lte=datetime.time(23, 59),
+                                                        data__gte=form.cleaned_data["start_data"],
+                                                        data__lte=form.cleaned_data["finish_data"])
                     except:
                         print("alarme")
             if form.cleaned_data["SmenaF"] == 'Смена 1':
@@ -678,9 +691,9 @@ def otchet(request):
                                                                 data__gte=form.cleaned_data["start_data"],
                                                                 data__lte=form.cleaned_data["finish_data"])
                     filter = Filter2.objects.filter(time__gte=datetime.time(8, 30),
-                                                                time__lte=datetime.time(16, 30),
-                                                                data__gte=form.cleaned_data["start_data"],
-                                                                data__lte=form.cleaned_data["finish_data"])
+                                                    time__lte=datetime.time(16, 30),
+                                                    data__gte=form.cleaned_data["start_data"],
+                                                    data__lte=form.cleaned_data["finish_data"])
                 except:
                     print("alarme")
             if form.cleaned_data["SmenaF"] == 'Смена 2':
@@ -690,9 +703,9 @@ def otchet(request):
                                                             data__gte=form.cleaned_data["start_data"],
                                                             data__lte=form.cleaned_data["finish_data"])
                 filter = Filter2.objects.filter(time__gte=datetime.time(16, 30),
-                                                            time__lte=datetime.time(23, 59),
-                                                            data__gte=form.cleaned_data["start_data"],
-                                                            data__lte=form.cleaned_data["finish_data"])
+                                                time__lte=datetime.time(23, 59),
+                                                data__gte=form.cleaned_data["start_data"],
+                                                data__lte=form.cleaned_data["finish_data"])
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(16, 30),
                                                starttime__lte=datetime.time(23, 59),
                                                startdata__gte=form.cleaned_data["start_data"],
@@ -730,9 +743,9 @@ def otchet(request):
                                                             data__gte=form.cleaned_data["start_data"],
                                                             data__lte=form.cleaned_data["finish_data"])
                 filter = Filter2.objects.filter(time__gte=datetime.time(00, 00),
-                                                            time__lte=datetime.time(8, 00),
-                                                            data__gte=form.cleaned_data["start_data"],
-                                                            data__lte=form.cleaned_data["finish_data"])
+                                                time__lte=datetime.time(8, 00),
+                                                data__gte=form.cleaned_data["start_data"],
+                                                data__lte=form.cleaned_data["finish_data"])
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(00, 00),
                                                starttime__lte=datetime.time(8, 00),
                                                startdata__gte=form.cleaned_data["start_data"],
@@ -762,7 +775,6 @@ def otchet(request):
                 except:
                     timeTemp = 0
 
-
             table = table2
             try:
 
@@ -791,9 +803,9 @@ def otchet(request):
                     productionOutput4 = ProductionOutput4.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                                          data__lte=form.cleaned_data["finish_data"])
                     filter = Filter4.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                   data__lte=form.cleaned_data["finish_data"],
-                                                   time__gte=datetime.time(0),
-                                                   time__lte=datetime.time(23, 59))
+                                                    data__lte=form.cleaned_data["finish_data"],
+                                                    time__gte=datetime.time(0),
+                                                    time__lte=datetime.time(23, 59))
 
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
@@ -824,9 +836,9 @@ def otchet(request):
                                                                      time__gte=datetime.time(8),
                                                                      time__lte=datetime.time(16, 30))
                 filter = Filter4.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                                     data__lte=form.cleaned_data["finish_data"],
-                                                                     time__gte=datetime.time(8),
-                                                                     time__lte=datetime.time(16, 30))
+                                                data__lte=form.cleaned_data["finish_data"],
+                                                time__gte=datetime.time(8),
+                                                time__lte=datetime.time(16, 30))
                 try:
                     plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                         Data__lte=form.cleaned_data["finish_data"],
@@ -857,9 +869,9 @@ def otchet(request):
                                                                      time__gte=datetime.time(16, 30),
                                                                      time__lte=datetime.time(23, 59))
                 filter = Filter4.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                                     data__lte=form.cleaned_data["finish_data"],
-                                                                     time__gte=datetime.time(16, 30),
-                                                                     time__lte=datetime.time(23, 59))
+                                                data__lte=form.cleaned_data["finish_data"],
+                                                time__gte=datetime.time(16, 30),
+                                                time__lte=datetime.time(23, 59))
                 try:
                     plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                         Data__lte=form.cleaned_data["finish_data"],
@@ -891,9 +903,9 @@ def otchet(request):
                                                                      time__gte=datetime.time(00, 00),
                                                                      time__lte=datetime.time(8, 00))
                 filter = Filter4.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                                     data__lte=form.cleaned_data["finish_data"],
-                                                                     time__gte=datetime.time(00, 00),
-                                                                     time__lte=datetime.time(8, 00))
+                                                data__lte=form.cleaned_data["finish_data"],
+                                                time__gte=datetime.time(00, 00),
+                                                time__lte=datetime.time(8, 00))
                 try:
                     plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                         Data__lte=form.cleaned_data["finish_data"],
@@ -966,7 +978,7 @@ def otchet(request):
     try:
         for sp in speed:
             lableChart.append(str(sp.time))
-            if sp.triblok>6800:
+            if sp.triblok > 6800:
                 dataChart.append(random.choice(dataChart))
             else:
                 dataChart.append(sp.triblok)
@@ -977,7 +989,6 @@ def otchet(request):
     uch = uchastok.objects.all().filter(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77")
     uch_vino = uchastok.objects.all().filter(Guid_Line="b84d1e71-1109-11e6-b0ff-005056ac2c77")
     uch5 = uchastok_test.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
-
 
     prichAll = prichina_test.objects.all()
     podrazdeleniaEl = []
@@ -991,18 +1002,22 @@ def otchet(request):
     smena = form.cleaned_data["SmenaF"]
     nachaloOt = form.cleaned_data["start_data"]
     okonchanieOt = form.cleaned_data["finish_data"]
-    sorted_date_time_numbacr_list=[]
+    sorted_date_time_numbacr_list = []
 
     indicators_chart = indicators
 
     data = {
         'labels': [obj.time.strftime('%H:%M:%S') for obj in indicators_chart if obj.time is not None],
-        'naptemp': [round(obj.naptemp,1) for obj in indicators_chart if obj.naptemp is not None],
-        'nappress': [round(obj.nappress,1) for obj in indicators_chart if obj.nappress is not None],
+        'naptemp': [round(obj.naptemp, 1) for obj in indicators_chart if obj.naptemp is not None],
+        'nappress': [round(obj.nappress, 1) for obj in indicators_chart if obj.nappress is not None],
         'mintemp': [-1.6 for obj in indicators_chart if obj.nappress is not None],
         'maxtemp': [0 for obj in indicators_chart if obj.nappress is not None],
         'minpress': [4.9 for obj in indicators_chart if obj.nappress is not None],
         'maxpress': [5.3 for obj in indicators_chart if obj.nappress is not None],
+        'mintemp_chart': "-1.6",
+        'maxtemp_chart': "0",
+        'minpress_chart': "4.9",
+        'maxpress_chart': "5.3"
     }
 
     intervals_by_numbacr = []
@@ -1015,13 +1030,10 @@ def otchet(request):
             start_time=Min('time'),
             end_time=Max('time')
         ).order_by('data', 'start_time')
-
         # Создаем список для сгруппированных записей
         date_time_numbacr_list = []
 
         for indicator in indicators_with_times:
-
-
             numbacr = indicator['numbacr']
             first_time = indicator['start_time']
             last_time = indicator['end_time']
@@ -1050,24 +1062,37 @@ def otchet(request):
                 'first_data': first_data,
                 'first_time': first_time,
                 'last_time': last_time,
-                'average_press':average_press,
+                'average_press': average_press,
                 'average_temp': average_temp,
-                'average_triblok_speed':average_triblok_speed,
-                'filter_data':filter_data,
+                'average_triblok_speed': average_triblok_speed,
+                'filter_data': filter_data,
 
             }
             date_time_numbacr_list.append(record)
-
 
         sorted_date_time_numbacr_list = sorted(date_time_numbacr_list, key=lambda x: (x['first_data'], x['first_time']))
 
         # Преобразование времени в объекты datetime для более удобной работы
 
-
-
-
-        for record in sorted_date_time_numbacr_list:
-
+        for i, record in enumerate(sorted_date_time_numbacr_list):
+            # if i >0:
+            #
+            #     t1 = datetime.timedelta(minutes=4)
+            #
+            #
+            #     start_time = datetime.time.strftime(record['first_time'], '%H:%M:%S')
+            #     temp_last=datetime.time.strftime((datetime.datetime.combine(datetime.datetime.today(), record['first_time']) + t1).time(), '%H:%M:%S')
+            #
+            #     interval = {'start_time': start_time, 'end_time': temp_last}
+            #     intervals_by_numbacr.append(interval)
+            #
+            #
+            #     start_time =datetime.time.strftime((datetime.datetime.combine(datetime.datetime.today(), record['first_time']) + t1).time(), '%H:%M:%S')
+            #     end_time = datetime.time.strftime(record['last_time'], '%H:%M:%S')
+            #     interval = {'start_time': start_time, 'end_time': end_time}
+            #     intervals_by_numbacr.append(interval)
+            #
+            # else:
             start_time = datetime.time.strftime(record['first_time'], '%H:%M:%S')
 
             end_time = datetime.time.strftime(record['last_time'], '%H:%M:%S')
@@ -1077,16 +1102,14 @@ def otchet(request):
             intervals_by_numbacr.append(interval)
 
     except:
-            pass
-
-
+        pass
 
     return render(request, "otchet.html", {
         'table': table,
-        "table_triblok":table_triblok,
+        "table_triblok": table_triblok,
         'form': form,
 
-        "data":data,
+        "data": data,
 
         "tempChart": temp_chart,
 
@@ -1114,7 +1137,7 @@ def otchet(request):
         'uch_vino': uch_vino,
 
         "indicators": sorted_date_time_numbacr_list,
-        "intervals_by_numbacr":intervals_by_numbacr
+        "intervals_by_numbacr": intervals_by_numbacr
 
     })
 
@@ -1189,7 +1212,7 @@ def otchetSmena(request):
     nomenklatura2 = []
     indicators2 = []
     indicators5 = []
-    co2_rozliv=[]
+    co2_rozliv = []
     co2_kupaj = []
 
     if datetime.time(hour=8) < datetime.datetime.now().time() < datetime.time(hour=16, minute=30):
@@ -1224,57 +1247,58 @@ def otchetSmena(request):
 
     try:
         co2_rozliv = CO2_Rozliv.objects.filter(time__gte=start_time,
-                                       time__lte=finish_time,
-                                       data__gte=start_data,
-                                       data__lte=finish_data
-                                       ).order_by('data', 'time').aggregate(sum_volume=Sum('volume'))['sum_volume']
+                                               time__lte=finish_time,
+                                               data__gte=start_data,
+                                               data__lte=finish_data
+                                               ).order_by('data', 'time').aggregate(sum_volume=Sum('volume'))[
+            'sum_volume']
 
-        co2_rozliv=round(co2_rozliv*1.96,2)
+        co2_rozliv = round(co2_rozliv * 1.96, 2)
     except:
-        co2_rozliv=0
+        co2_rozliv = 0
     try:
-        filter5= Filter5.objects.filter(time__gte=start_time,
-                                       time__lte=finish_time,
-                                       data__gte=start_data,
-                                       data__lte=finish_data
-                                       ).order_by('data', 'time').aggregate(
-                                                                    press1_avg=Avg('press1'),
-                                                                    press2_avg=Avg('press2')
-                                                                    )
+        filter5 = Filter5.objects.filter(time__gte=start_time,
+                                         time__lte=finish_time,
+                                         data__gte=start_data,
+                                         data__lte=finish_data
+                                         ).order_by('data', 'time').aggregate(
+            press1_avg=Avg('press1'),
+            press2_avg=Avg('press2')
+        )
     except:
-        filter5=0
+        filter5 = 0
     try:
-        filter4= Filter4.objects.filter(time__gte=start_time,
-                                       time__lte=finish_time,
-                                       data__gte=start_data,
-                                       data__lte=finish_data
-                                       ).order_by('data', 'time').aggregate(
-                                                                    press1_avg=Avg('press1'),
-                                                                    press2_avg=Avg('press2')
-                                                                    )
+        filter4 = Filter4.objects.filter(time__gte=start_time,
+                                         time__lte=finish_time,
+                                         data__gte=start_data,
+                                         data__lte=finish_data
+                                         ).order_by('data', 'time').aggregate(
+            press1_avg=Avg('press1'),
+            press2_avg=Avg('press2')
+        )
     except:
-        filter4=0
+        filter4 = 0
     try:
-        filter2= Filter2.objects.filter(time__gte=start_time,
-                                       time__lte=finish_time,
-                                       data__gte=start_data,
-                                       data__lte=finish_data
-                                       ).order_by('data', 'time').aggregate(
-                                                                    press1_avg=Avg('press1'),
-                                                                    press2_avg=Avg('press2')
-                                                                    )
+        filter2 = Filter2.objects.filter(time__gte=start_time,
+                                         time__lte=finish_time,
+                                         data__gte=start_data,
+                                         data__lte=finish_data
+                                         ).order_by('data', 'time').aggregate(
+            press1_avg=Avg('press1'),
+            press2_avg=Avg('press2')
+        )
     except:
-        filter2=0
+        filter2 = 0
     try:
         co2_kupaj = CO2_Kupaj.objects.filter(time__gte=start_time,
-                                       time__lte=finish_time,
-                                       data__gte=start_data,
-                                       data__lte=finish_data
-                                       ).order_by('data', 'time').aggregate(sum_volume=Sum('volume'))['sum_volume']
-        co2_kupaj=round(co2_kupaj*1.96,2)
+                                             time__lte=finish_time,
+                                             data__gte=start_data,
+                                             data__lte=finish_data
+                                             ).order_by('data', 'time').aggregate(sum_volume=Sum('volume'))[
+            'sum_volume']
+        co2_kupaj = round(co2_kupaj * 1.96, 2)
     except:
         co2_kupaj = 0
-
 
     table5 = Table5.objects.filter(starttime__gte=start_time,
                                    starttime__lte=finish_time,
@@ -1368,7 +1392,6 @@ def otchetSmena(request):
 
     except:
         plan = 0
-
 
     try:
         for el in plan:
@@ -1592,12 +1615,12 @@ def otchetSmena(request):
     except:
         itog_fact1 = 0
     try:
-        itog_fact =itog_fact1 + itog_fact2 + itog_fact4 + itog_fact5
+        itog_fact = itog_fact1 + itog_fact2 + itog_fact4 + itog_fact5
 
     except:
         itog_fact = 0
 
-    itog_otcl = otklonenie + otklonenie4 + otklonenie2+otklonenie1
+    itog_otcl = otklonenie + otklonenie4 + otklonenie2 + otklonenie1
     itog_proc = int(itog_fact / itog_plan * 100)
 
     try:
@@ -1637,13 +1660,12 @@ def otchetSmena(request):
 
     return render(request, "otchetSmena.html", {
 
-        "co2_rozliv":co2_rozliv,
+        "co2_rozliv": co2_rozliv,
         "co2_kupaj": co2_kupaj,
 
-        "filter5":filter5,
+        "filter5": filter5,
         "filter4": filter4,
         "filter2": filter2,
-
 
         "indicators2": indicators2,
         "indicators5": indicators5,
