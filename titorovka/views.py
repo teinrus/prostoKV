@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from pyModbusTCP.client import ModbusClient
 
-from temruk.models import bottling_plan, prichina, uchastok, uchastok_test, prichina_test
+from temruk.models import bottling_plan, prichina, uchastok
 from .forms import Otchet, OtchetIgr
 
 # Create your views here.
@@ -94,16 +94,16 @@ def index(request):
                                          time__gte=startSmena,
                                          time__lte=spotSmena)
 
-    prichAll = prichina_test.objects.all()
+    prichAll = prichina.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
         podrazdeleniaEl.append(el.Key)
     otv_p = set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
-    uch = uchastok_test.objects.all()
-    uch_vino = uchastok_test.objects.all()
-    uch_vino33 = uchastok_test.objects.all()
+    uch = uchastok.objects.all()
+    uch_vino = uchastok.objects.all()
+    uch_vino33 = uchastok.objects.all()
     return render(request, "titorovka.html", {
 
         'otv_p': otv_p,
@@ -486,10 +486,10 @@ def Sotchet(request):
         lableChart = []
         dataChart = []
 
-    uch = uchastok_test.objects.all()
-    uch_v = uchastok_test.objects.all()
+    uch = uchastok.objects.all()
+    uch_v = uchastok.objects.all()
 
-    prichAll = prichina_test.objects.all()
+    prichAll = prichina.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
         podrazdeleniaEl.append(el.Key)
@@ -969,10 +969,10 @@ def SotchetIgr(request):
         lableChart = []
         dataChart = []
 
-    uch = uchastok_test.objects.all()
-    uch_v = uchastok_test.objects.all()
+    uch = uchastok.objects.all()
+    uch_v = uchastok.objects.all()
 
-    prichAll = prichina_test.objects.all()
+    prichAll = prichina.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
         podrazdeleniaEl.append(el.Key)

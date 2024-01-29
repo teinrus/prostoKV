@@ -359,7 +359,7 @@ def temruk(request):
                                        time__lte=spotSmena)
 
     # prichAll = prichina.objects.all()
-    prichAll = prichina_test.objects.all()
+    prichAll = prichina.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
         # podrazdeleniaEl.append(el.key)
@@ -370,7 +370,7 @@ def temruk(request):
 
     uch = uchastok.objects.all().filter(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77")
     uch_vino = uchastok.objects.all().filter(Guid_Line="b84d1e71-1109-11e6-b0ff-005056ac2c77")
-    uch5 = uchastok_test.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
+    uch5 = uchastok.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
     return render(request, "temruk.html", {
 
         'otv_p': otv_p,
@@ -988,9 +988,9 @@ def otchet(request):
 
     uch = uchastok.objects.all().filter(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77")
     uch_vino = uchastok.objects.all().filter(Guid_Line="b84d1e71-1109-11e6-b0ff-005056ac2c77")
-    uch5 = uchastok_test.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
+    uch5 = uchastok.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
 
-    prichAll = prichina_test.objects.all()
+    prichAll = prichina.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
         podrazdeleniaEl.append(el.Key)
@@ -1645,18 +1645,7 @@ def otchetSmena(request):
 
     except:
         print("alarme")
-    # tableTest = Table5.objects.all()
-    # speedTest=Speed5.objects.all()
 
-    import csv
-    # with open('prostoy.csv', 'w') as file:
-    #     writer = csv.writer(file, delimiter=',')  # lineterminator='\n',
-    #     for i in tableTest:
-    #         writer.writerow(["Дата ", i.startdata, i.starttime,"Время простоя ", i.prostoy])
-    # with open('proizvod.csv', 'w') as file:
-    #     writer = csv.writer(file, delimiter=',')  # lineterminator='\n',
-    #     for i in speedTest:
-    #         writer.writerow(["Дата ", i.data, i.time,"Кол ", int(i.triblok)/20])
 
     return render(request, "otchetSmena.html", {
 
