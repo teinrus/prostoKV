@@ -4,8 +4,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum, Min, Max
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from temruk.models import Table5, Speed5, ProductionOutput5, bottling_plan, bottleExplosion5, prichina_test, \
-    uchastok_test, Line5Indicators
+from temruk.models import Table5, Speed5, ProductionOutput5, bottling_plan, bottleExplosion5, Line5Indicators, prichina, \
+    uchastok
 from pyModbusTCP.client import ModbusClient
 
 slave_address = '192.168.88.230'
@@ -113,7 +113,7 @@ def update(request):
             try:
                 n = "Guid_Uchastok"
                 b = Table5.objects.get(id=pk).uchastok
-                v = uchastok_test.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
+                v = uchastok.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
                                               Uchastok=b).Guid_Uchastok
 
                 a = Table5.objects.get(id=pk)
@@ -124,7 +124,7 @@ def update(request):
             a.save()
             # Запись гуид прицины
             n = "Guid_Prichina"
-            v = prichina_test.objects.get(Prichina=value).Guid_Prichina
+            v = prichina.objects.get(Prichina=value).Guid_Prichina
             try:
                 a = Table5.objects.get(id=pk)
                 setattr(a, n, v)
@@ -154,7 +154,7 @@ def update5_2(request):
             try:
                 n = "Guid_Uchastok"
                 b = Table5.objects.get(id=pk).uchastok
-                v = uchastok_test.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
+                v = uchastok.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
                                               Uchastok=b).Guid_Uchastok
                 a = Table5.objects.get(id=pk)
                 setattr(a, n, v)
@@ -164,7 +164,8 @@ def update5_2(request):
             a.save()
             # Запись гуид прицины
             n = "Guid_Prichina"
-            v = prichina_test.objects.get(Prichina=value).Guid_Prichina
+            v = prichina.objects.get(Prichina=value).Guid_Prichina
+
             try:
                 a = Table5.objects.get(id=pk)
                 setattr(a, n, v)
