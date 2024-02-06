@@ -21,6 +21,69 @@ from .views2 import get_shift_number
 from .views5 import get_shift_times, get_plan_quantity, calculate_production_percentage, get_total_prostoy, \
     get_average_speed, get_total_product, get_boom_out
 
+vid_prostoev = {
+    "Аварийные простои": ["Настройка после переналадки", "Поломка аппарата",
+                          "Отсутствие азота",
+                          "Отсутствие углекислоты",
+                          "Отсутствие сжатого воздуха",
+                          "Настройка налива",
+                          "Настройка",
+                          "Настройка принтера даты",
+                          "Поломка транспортера подачи на СГП",
+                          "Отсутствие комплектующих",
+                          "Скрытый брак",
+                          "Неправильное хранение комплектующих",
+                          "Тестирование новых комплектующих",
+                          "Согласованное использование комплектующих с отклонением",
+                          "Не выявленный брак комплектующих после приемки",
+                          "Разбилась бутылка в аппарате",
+                          "Отсутствие в/м",
+                          "Отсутствие анализа по в/м",
+                          "Доработка в/м",
+                          "Вспенивание в/м",
+                          "Доработка в процессе розлива",
+                          "Замена винных фильтров (к)",
+                          "Отсутствие персонала",
+                          "Сбой в работе помарочн. учета",
+                          "Некачественная мойка термотоннеля",
+                          "Замена винных фильтров",
+                          "Ручное оформление",
+
+                          "Переупаковка",
+                          "Ошибка сотрудников ЦР",
+                          "Замена баллона с углекислотой",
+                          "Замена водяных фильтров",
+                          "Отсутсвие места для готовой продукции",
+                          "Отсутствие электроэнергии",
+                          "Отсутствие воды",
+                          "Форс-мажор",
+                          "Отключение газа",
+                          "Сбой работы программного обеспечения"],
+    "Технологические простои": ["Ротация персонала",
+                                "Обед",
+                                "Замена контрэтикетки, этикетки, марки",
+                                "Замена QR",
+                                "Замена скотча",
+                                "Закрытие партии суточное",
+                                "Открытие партии суточное",
+                                "Замена рибона, коробочного стикера",
+                                "Порвалась к.этик, этикетка",
+                                "Переход на новый акратофор,емкость",
+                                "Наполнение термотоннеля",
+                                "Техническое обслуживание линии"],
+    "Переналадки": ["Переход по этикетке",
+                    "Переход по партии",
+                    "Переход по этикетке и в/м",
+                    "Переход по этикетке, в/м и бутылке без мойки",
+                    "Переход по этикетке, пробке, мюзле",
+                    "Мойка (сан. час)",
+                    "Переход по этикетке, в/м и бутылке с мойкой (2 ч)",
+                    "Переход на кольеретку",
+                    "Переход по этикетке, в/м и бутылке с мойкой (4 ч)",
+                    "Переход по в/м, этикетке, бутылке с мойкой (Линия 31)",
+                    "Переход по этикетке, в/м и бутылке (переход с изменением объема бутылки)"]
+}
+
 
 def mod_bus(reg, bit_temp):
     slave_address = '192.168.88.230'
@@ -117,7 +180,6 @@ def TV5(request):
         'maxtemp_chart': "0",
         'minpress_chart': "4.9",
         'maxpress_chart': "5.3"
-
 
     }
 
@@ -941,9 +1003,16 @@ def otchet(request):
         allProd = prod.aggregate(Sum('production')).get('production__sum')
         if (allProd == None):
             allProd = 0
+
+
+
     except:
         allProd = 0
 
+    if plan > 0 and allProd>0:
+        completion_percentage=round((allProd/plan)*100)
+    else:
+        completion_percentage=0
     # Общее количество  врывов бутылок
     try:
         boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
@@ -954,7 +1023,7 @@ def otchet(request):
 
     # Общее время простоя
     try:
-        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
+        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')+table_triblok.aggregate(Sum('prostoy')).get('prostoy__sum')
         if sumProstoy == None:
             sumProstoy = datetime.timedelta(0)
     except:
@@ -969,7 +1038,7 @@ def otchet(request):
     except:
         timeWork = 0
     try:
-        avgSpeed = round((allProd / timeWork.total_seconds() * 3600), 2)
+        avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
 
     except:
         avgSpeed = 0
@@ -1075,24 +1144,6 @@ def otchet(request):
         # Преобразование времени в объекты datetime для более удобной работы
 
         for i, record in enumerate(sorted_date_time_numbacr_list):
-            # if i >0:
-            #
-            #     t1 = datetime.timedelta(minutes=4)
-            #
-            #
-            #     start_time = datetime.time.strftime(record['first_time'], '%H:%M:%S')
-            #     temp_last=datetime.time.strftime((datetime.datetime.combine(datetime.datetime.today(), record['first_time']) + t1).time(), '%H:%M:%S')
-            #
-            #     interval = {'start_time': start_time, 'end_time': temp_last}
-            #     intervals_by_numbacr.append(interval)
-            #
-            #
-            #     start_time =datetime.time.strftime((datetime.datetime.combine(datetime.datetime.today(), record['first_time']) + t1).time(), '%H:%M:%S')
-            #     end_time = datetime.time.strftime(record['last_time'], '%H:%M:%S')
-            #     interval = {'start_time': start_time, 'end_time': end_time}
-            #     intervals_by_numbacr.append(interval)
-            #
-            # else:
             start_time = datetime.time.strftime(record['first_time'], '%H:%M:%S')
 
             end_time = datetime.time.strftime(record['last_time'], '%H:%M:%S')
@@ -1103,32 +1154,58 @@ def otchet(request):
 
     except:
         pass
+    try:
+        plan = "{0:,}".format(plan).replace(",", " ")
+    except:
+        pass
+
+    time_by_category = []
+
+    for k in vid_prostoev:
+        temp_time = datetime.timedelta(0)
+        for el in table:
+            if el.prichina in vid_prostoev[k]:
+                temp_time += time_to_timedelta(el.prostoy)
+        for el in table_triblok:
+            if el.prichina in vid_prostoev[k]:
+                temp_time += time_to_timedelta(el.prostoy)
+        time_by_category.append(format_timedelta(temp_time))
+
+
+
 
     return render(request, "otchet.html", {
         'table': table,
         "table_triblok": table_triblok,
         'form': form,
 
-        "data": data,
+
 
         "tempChart": temp_chart,
+        "indicators": sorted_date_time_numbacr_list,
+        "intervals_by_numbacr": intervals_by_numbacr,
+        "data": data,
+        'lableChart': lableChart,
+        'dataChart': dataChart,
 
         'line': line,
         'smena': smena,
         'nachaloOt': nachaloOt,
         'okonchanieOt': okonchanieOt,
 
-        'timeWork': timeWork,
-        'plan': plan,
-        'sumProstoy': sumProstoy,
 
-        'avgSpeed': avgSpeed,
+
+        'plan': plan,
+        "completion_percentage":completion_percentage,
+        'allProd': "{0:,}".format(allProd).replace(",", " "),
+
+        'sumProstoy': format_timedelta(sumProstoy),
+        "time_by_category":time_by_category,
+        'timeWork': format_timedelta(timeWork),
+
+        'avgSpeed': "{0:,}".format(avgSpeed).replace(",", " "),
 
         'boomOut': boomOut,
-        'allProd': allProd,
-
-        'lableChart': lableChart,
-        'dataChart': dataChart,
 
         'otv_p': otv_p,
         'prich': prich,
@@ -1136,11 +1213,21 @@ def otchet(request):
         'uch5': uch5,
         'uch_vino': uch_vino,
 
-        "indicators": sorted_date_time_numbacr_list,
-        "intervals_by_numbacr": intervals_by_numbacr
+
 
     })
-
+def time_to_timedelta(time_obj):
+    try:
+        return datetime.timedelta(hours=time_obj.hour, minutes=time_obj.minute, seconds=time_obj.second)
+    except:
+        return  datetime.timedelta(hours=0, minutes=0)
+def format_timedelta(td):
+    try:
+        hours, remainder = divmod(td.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return "{:02}:{:02}".format(int(hours), int(minutes))
+    except:
+        return  datetime.timedelta(hours=0, minutes=0)
 
 def start_perenaladka5(request):
     mod_bus(0, 1)
@@ -1354,15 +1441,15 @@ def otchetSmena(request):
                                    time__gte=start_time,
                                    time__lte=finish_time)
     try:
-        speed_triblok5 = round(speed.filter(triblok__gt=100).aggregate(Avg('triblok'))['triblok__avg'], 2)
+        speed_triblok5 = round(speed.filter(triblok__gt=100).aggregate(Avg('triblok'))['triblok__avg'])
     except:
         speed_triblok5 = 0
     try:
-        speed_triblok4 = round(speed4.filter(triblok__gt=100).aggregate(Avg('triblok'))['triblok__avg'], 2)
+        speed_triblok4 = round(speed4.filter(triblok__gt=100).aggregate(Avg('triblok'))['triblok__avg'])
     except:
         speed_triblok4 = 0
     try:
-        speed_triblok2 = round(speed2.filter(triblok__gt=100).aggregate(Avg('triblok'))['triblok__avg'], 2)
+        speed_triblok2 = round(speed2.filter(triblok__gt=100).aggregate(Avg('triblok'))['triblok__avg'])
     except:
         speed_triblok2 = 0
     try:
@@ -1541,20 +1628,20 @@ def otchetSmena(request):
 
     try:
 
-        avgSpeed = round((allProd / timeWork.total_seconds() * 3600), 2)
+        avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
 
     except:
         avgSpeed = 0
 
     try:
 
-        avgSpeed4 = round((allProd4 / timeWork4.total_seconds() * 3600), 2)
+        avgSpeed4 = round((allProd4 / timeWork4.total_seconds() * 3600))
 
     except:
         avgSpeed4 = 0
     try:
 
-        avgSpeed2 = round((allProd2 / timeWork2.total_seconds() * 3600), 2)
+        avgSpeed2 = round((allProd2 / timeWork2.total_seconds() * 3600))
     except:
         avgSpeed2 = 0
     try:
@@ -1645,7 +1732,6 @@ def otchetSmena(request):
 
     except:
         print("alarme")
-
 
     return render(request, "otchetSmena.html", {
 

@@ -148,7 +148,8 @@ def Sotchet(request):
                                                     startdata__gte=form.cleaned_data["start_data"],
                                                     startdata__lte=form.cleaned_data["finish_data"]
                                                     ).filter(uchastok="Триблок") | Table31.objects.filter(
-                        startdata=datetime.date.today(),
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
                         starttime__gte=startSmena,
                         starttime__lte=spotSmena).filter(uchastok="Этикетировка")).order_by('startdata', 'starttime')
                     table_other =Table31.objects.filter(starttime__gte=datetime.time(0),
@@ -471,7 +472,7 @@ def Sotchet(request):
     except:
         timeWork = 0
     try:
-        avgSpeed = round((allProd / timeWork.total_seconds() * 3600), 2)
+        avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
 
     except:
         avgSpeed = 0
@@ -513,12 +514,12 @@ def Sotchet(request):
         'okonchanieOt': okonchanieOt,
 
         'timeWork': timeWork,
-        'plan': plan,
+        'plan': "{0:,}".format(plan).replace(","," "),
         'sumProstoy': sumProstoy,
 
-        'avgSpeed': avgSpeed,
+        'avgSpeed': "{0:,}".format(avgSpeed).replace(","," "),
 
-        'allProd': allProd,
+        'allProd': "{0:,}".format(allProd).replace(","," "),
 
         'lableChart': lableChart,
         'dataChart': dataChart,
@@ -954,7 +955,7 @@ def SotchetIgr(request):
     except:
         timeWork = 0
     try:
-        avgSpeed = round((allProd / timeWork.total_seconds() * 3600), 2)
+        avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
 
     except:
         avgSpeed = 0
@@ -985,6 +986,11 @@ def SotchetIgr(request):
     nachaloOt = form.cleaned_data["start_data"]
     okonchanieOt = form.cleaned_data["finish_data"]
 
+    try:
+        plan = "{0:,}".format(plan).replace(",", " ")
+    except:
+        pass
+
     return render(request, "SotchetIgr.html", {
         'table': table,
         'form': form,
@@ -998,9 +1004,9 @@ def SotchetIgr(request):
         'plan': plan,
         'sumProstoy': sumProstoy,
 
-        'avgSpeed': avgSpeed,
+        'avgSpeed': "{0:,}".format(avgSpeed).replace(","," "),
 
-        'allProd': allProd,
+        'allProd': "{0:,}".format(allProd).replace(","," "),
 
         'lableChart': lableChart,
         'dataChart': dataChart,

@@ -662,20 +662,29 @@
 
     <div class="not-print" style="display: flex; justify-content: space-between;">
         <!-- Столбец с дополнительной информацией (слева) -->
-        <div class="col" style="width: 48%; margin-right: 2%;">
-            <ul style="margin-bottom: 15px">
+        <div class="col" style="width: 48%; margin-right: 2%; font-size: 105%; ">
+            <ul style="margin-bottom: 15px; padding-bottom: 30px;">
+                <li style="padding-bottom: 10px;">Общее время работы:<b style="font-size: 120%; "> {{ timeWork }}</b></li>
+
                 <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy }}</b></li>
-                <li>Общее время работы:<b style="font-size: 120%;"> {{ timeWork }}</b></li>
+
+                <li style="padding-left:20px;">Аварийные простои: <b style="font-size: 120%;"> {{ time_by_category.0 }}</b></li>
+                <li style="padding-left:20px;">Технологические простои: <b style="font-size: 120%;"> {{ time_by_category.1 }}</b></li>
+                <li style="padding-left:20px;">Переналадки: <b style="font-size: 120%;"> {{ time_by_category.2 }}</b></li>
+
+
                 {% if line == 'Линиия 5' %}
-                    <li>Количество взрывов {{ boomOut }}</li>
+                    <li  >Количество взрывов: <b style="font-size: 120%;"> {{ boomOut }}</b></li>
                 {% endif %}
+                <li style="padding-top: 20px;">План продукции:<b style="font-size: 120%;"> {{ plan }}</b></li>
+                <li>Количество продукции:<b style="font-size: 120%;"> {{ allProd }}   ({{ completion_percentage }}%)</b></li>
+                <li>Средняя производительность:<b style="font-size: 120%;"> {{ avgSpeed }}</b></li>
             </ul>
 
-            <ul>
-                <li>Средняя производительность:<b style="font-size: 120%;"> {{ avgSpeed }}</b></li>
-                <li>Количество продукции:<b style="font-size: 120%;"> {{ allProd }}</b></li>
-                <li>План продукции:<b style="font-size: 120%;"> {{ plan }}</b></li>
-            </ul>
+
+
+
+
         </div>
 
         <!-- Столбец с формой и кнопками (справа) -->
@@ -685,8 +694,9 @@
                     <form action="" method="get">
                         {{ form.as_ul }}
                         <input class="not-print" type="submit" value="Сформировать">
-                        <a onclick="window.print()">Распечатать</a>
+
                     </form>
+                    <a onclick="window.print()">Распечатать</a>
                 </li>
             </ul>
         </div>
@@ -860,14 +870,14 @@
                                 yAxisID: 'y-axis-0',
 
                             },
-                             {
+                            {
                                 label: 'МаксДавл',
                                 borderColor: 'rgb(255,255,252)',
                                 data: {{ data.maxpress|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0',
                             },
-                                                        {
+                            {
                                 label: 'МинДавление',
                                 borderColor: 'rgb(255,255,252)',
                                 data: {{ data.minpress|safe }},
@@ -875,14 +885,14 @@
                                 yAxisID: 'y-axis-0',
                             },
 
-                                                        {
+                            {
                                 label: 'МинТемп',
                                 borderColor: 'rgb(255,255,252)',
                                 data: {{ data.mintemp|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0',
                             },
-                                                        {
+                            {
                                 label: 'MaксТемп',
                                 borderColor: 'rgb(255,255,252)',
                                 data: {{ data.maxtemp|safe }},
@@ -891,77 +901,76 @@
                             },
                         ]
                     },
- options: {
-                elements: {
-                    point:{
-                        radius: 0
-                    }
-                },
-             scales: {
-            yAxes: [{
-                id: 'y-axis-0',
-                ticks: {
-                    min: -2,
-                    max: 6,
-                    stepSize: 1,
-                },
-            }]
-        }
+                    options: {
+                        elements: {
+                            point: {
+                                radius: 0
+                            }
+                        },
+                        scales: {
+                            yAxes: [{
+                                id: 'y-axis-0',
+                                ticks: {
+                                    min: -2,
+                                    max: 6,
+                                    stepSize: 1,
+                                },
+                            }]
+                        }
 
-    },
+                    },
                     plugins: [
                         {
 
-beforeDraw: function (chart) {
-    var ctx = chart.ctx;
-    var chartArea = chart.chartArea;
-    var labels = chart.data.labels;
+                            beforeDraw: function (chart) {
+                                var ctx = chart.ctx;
+                                var chartArea = chart.chartArea;
+                                var labels = chart.data.labels;
 
-    var timeRanges = [
-        {% for interval in intervals_by_numbacr %}
-            {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
-        {% endfor %}
-    ];
+                                var timeRanges = [
+                                    {% for interval in intervals_by_numbacr %}
+                                        {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
+                                    {% endfor %}
+                                ];
 
-    var gapSize = 10; // Размер разрыва
-    var blueColor = 'rgba(97,185,248,0.5)';
-    var redColor = 'rgba(171,152,152,0.5)';
+                                var gapSize = 10; // Размер разрыва
+                                var blueColor = 'rgba(97,185,248,0.5)';
+                                var redColor = 'rgba(171,152,152,0.5)';
 
-    for (var i = 0; i < timeRanges.length; i++) {
-        var startTime = timeRanges[i].start_time;
-        var endTime = timeRanges[i].end_time;
+                                for (var i = 0; i < timeRanges.length; i++) {
+                                    var startTime = timeRanges[i].start_time;
+                                    var endTime = timeRanges[i].end_time;
 
-        var startIndex = labels.indexOf(startTime);
-        var endIndex = labels.indexOf(endTime);
+                                    var startIndex = labels.indexOf(startTime);
+                                    var endIndex = labels.indexOf(endTime);
 
-        var startX = chart.scales['x'].getPixelForValue(startTime) - gapSize;
-        var endX = chart.scales['x'].getPixelForValue(endTime) + gapSize;
-        console.log();
-        var minYT ={{ data.maxtemp_chart }};
-        var maxYT = {{ data.mintemp_chart }};
+                                    var startX = chart.scales['x'].getPixelForValue(startTime) - gapSize;
+                                    var endX = chart.scales['x'].getPixelForValue(endTime) + gapSize;
+                                    console.log();
+                                    var minYT ={{ data.maxtemp_chart }};
+                                    var maxYT = {{ data.mintemp_chart }};
 
-        var minYD ={{ data.minpress_chart }};
-        var maxYD = {{ data.maxpress_chart }};
-
-
-
-        var startYT = chart.scales['y-axis-0'].getPixelForValue(maxYT);
-        var endYT = chart.scales['y-axis-0'].getPixelForValue(minYT);
-
-        var startYD = chart.scales['y-axis-0'].getPixelForValue(maxYD);
-        var endYD = chart.scales['y-axis-0'].getPixelForValue(minYD);
-        // Draw red background
-        ctx.fillStyle = redColor;
-        ctx.fillRect(startX, startYT, endX - startX, endYT - startYT);
-        ctx.fillStyle = redColor;
-        ctx.fillRect(startX, startYD, endX - startX, endYD - startYD);
-        // Draw blue background
-        ctx.fillStyle = blueColor;
-        ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+                                    var minYD ={{ data.minpress_chart }};
+                                    var maxYD = {{ data.maxpress_chart }};
 
 
-    }
-},
+                                    var startYT = chart.scales['y-axis-0'].getPixelForValue(maxYT);
+                                    var endYT = chart.scales['y-axis-0'].getPixelForValue(minYT);
+
+                                    var startYD = chart.scales['y-axis-0'].getPixelForValue(maxYD);
+                                    var endYD = chart.scales['y-axis-0'].getPixelForValue(minYD);
+                                    // Draw red background
+                                    ctx.fillStyle = redColor;
+                                    ctx.fillRect(startX, startYT, endX - startX, endYT - startYT);
+                                    ctx.fillStyle = redColor;
+                                    ctx.fillRect(startX, startYD, endX - startX, endYD - startYD);
+                                    // Draw blue background
+                                    ctx.fillStyle = blueColor;
+                                    ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+
+
+                                }
+                            },
 
 
                         }
@@ -1094,14 +1103,14 @@ beforeDraw: function (chart) {
                                 yAxisID: 'y-axis-0',
 
                             },
-                             {
+                            {
                                 label: 'МаксДавл',
                                 borderColor: 'rgb(255,255,252)',
                                 data: {{ data.maxpress|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0',
                             },
-                                                        {
+                            {
                                 label: 'МинДавление',
                                 borderColor: 'rgb(255,255,252)',
                                 data: {{ data.minpress|safe }},
@@ -1109,14 +1118,14 @@ beforeDraw: function (chart) {
                                 yAxisID: 'y-axis-0',
                             },
 
-                                                        {
+                            {
                                 label: 'МинТемп',
                                 borderColor: 'rgb(255,255,252)',
                                 data: {{ data.mintemp|safe }},
                                 fill: false,
                                 yAxisID: 'y-axis-0',
                             },
-                                                        {
+                            {
                                 label: 'MaксТемп',
                                 borderColor: 'rgb(255,255,252)',
                                 data: {{ data.maxtemp|safe }},
@@ -1125,77 +1134,76 @@ beforeDraw: function (chart) {
                             },
                         ]
                     },
- options: {
-                elements: {
-                    point:{
-                        radius: 0
-                    }
-                },
-             scales: {
-            yAxes: [{
-                id: 'y-axis-0',
-                ticks: {
-                    min: -2,
-                    max: 6,
-                    stepSize: 1,
-                },
-            }]
-        }
+                    options: {
+                        elements: {
+                            point: {
+                                radius: 0
+                            }
+                        },
+                        scales: {
+                            yAxes: [{
+                                id: 'y-axis-0',
+                                ticks: {
+                                    min: -2,
+                                    max: 6,
+                                    stepSize: 1,
+                                },
+                            }]
+                        }
 
-    },
+                    },
                     plugins: [
                         {
 
-beforeDraw: function (chart) {
-    var ctx = chart.ctx;
-    var chartArea = chart.chartArea;
-    var labels = chart.data.labels;
+                            beforeDraw: function (chart) {
+                                var ctx = chart.ctx;
+                                var chartArea = chart.chartArea;
+                                var labels = chart.data.labels;
 
-    var timeRanges = [
-        {% for interval in intervals_by_numbacr %}
-            {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
-        {% endfor %}
-    ];
+                                var timeRanges = [
+                                    {% for interval in intervals_by_numbacr %}
+                                        {start_time: '{{ interval.start_time }}', end_time: '{{ interval.end_time }}'},
+                                    {% endfor %}
+                                ];
 
-    var gapSize = 10; // Размер разрыва
-    var blueColor = 'rgba(97,185,248,0.5)';
-    var redColor = 'rgba(171,152,152,0.5)';
+                                var gapSize = 10; // Размер разрыва
+                                var blueColor = 'rgba(97,185,248,0.5)';
+                                var redColor = 'rgba(171,152,152,0.5)';
 
-    for (var i = 0; i < timeRanges.length; i++) {
-        var startTime = timeRanges[i].start_time;
-        var endTime = timeRanges[i].end_time;
+                                for (var i = 0; i < timeRanges.length; i++) {
+                                    var startTime = timeRanges[i].start_time;
+                                    var endTime = timeRanges[i].end_time;
 
-        var startIndex = labels.indexOf(startTime);
-        var endIndex = labels.indexOf(endTime);
+                                    var startIndex = labels.indexOf(startTime);
+                                    var endIndex = labels.indexOf(endTime);
 
-        var startX = chart.scales['x'].getPixelForValue(startTime) - gapSize;
-        var endX = chart.scales['x'].getPixelForValue(endTime) + gapSize;
-        console.log();
-        var minYT ={{ data.maxtemp_chart }};
-        var maxYT = {{ data.mintemp_chart }};
+                                    var startX = chart.scales['x'].getPixelForValue(startTime) - gapSize;
+                                    var endX = chart.scales['x'].getPixelForValue(endTime) + gapSize;
+                                    console.log();
+                                    var minYT ={{ data.maxtemp_chart }};
+                                    var maxYT = {{ data.mintemp_chart }};
 
-        var minYD ={{ data.minpress_chart }};
-        var maxYD = {{ data.maxpress_chart }};
-
-
-
-        var startYT = chart.scales['y-axis-0'].getPixelForValue(maxYT);
-        var endYT = chart.scales['y-axis-0'].getPixelForValue(minYT);
-
-        var startYD = chart.scales['y-axis-0'].getPixelForValue(maxYD);
-        var endYD = chart.scales['y-axis-0'].getPixelForValue(minYD);
-        // Draw red background
-        ctx.fillStyle = redColor;
-        ctx.fillRect(startX, startYT, endX - startX, endYT - startYT);
-        ctx.fillStyle = redColor;
-        ctx.fillRect(startX, startYD, endX - startX, endYD - startYD);
-        // Draw blue background
-        ctx.fillStyle = blueColor;
-        ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+                                    var minYD ={{ data.minpress_chart }};
+                                    var maxYD = {{ data.maxpress_chart }};
 
 
-    }
-},
+                                    var startYT = chart.scales['y-axis-0'].getPixelForValue(maxYT);
+                                    var endYT = chart.scales['y-axis-0'].getPixelForValue(minYT);
+
+                                    var startYD = chart.scales['y-axis-0'].getPixelForValue(maxYD);
+                                    var endYD = chart.scales['y-axis-0'].getPixelForValue(minYD);
+                                    // Draw red background
+                                    ctx.fillStyle = redColor;
+                                    ctx.fillRect(startX, startYT, endX - startX, endYT - startYT);
+                                    ctx.fillStyle = redColor;
+                                    ctx.fillRect(startX, startYD, endX - startX, endYD - startYD);
+                                    // Draw blue background
+                                    ctx.fillStyle = blueColor;
+                                    ctx.fillRect(startX, chartArea.top, endX - startX, chartArea.bottom - chartArea.top);
+
+
+                                }
+                            },
 
 
                         }

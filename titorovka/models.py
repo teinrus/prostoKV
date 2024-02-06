@@ -12,6 +12,9 @@ class Table31(models.Model):
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
 
+    Guid_Prichina = models.CharField('Guid причины', max_length=36, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
+
     def __str__(self):
         return str(self.startdata) + '_' + str(self.starttime) + '_' + str(self.id)
 
@@ -29,6 +32,9 @@ class Table33(models.Model):
     otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
+
+    Guid_Prichina = models.CharField('Guid причины', max_length=36, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
 
     def __str__(self):
         return str(self.startdata) + '_' + str(self.starttime) + '_' + str(self.id)
@@ -51,6 +57,9 @@ class Table24(models.Model):
     def __str__(self):
         return str(self.startdata) + '_' + str(self.starttime) + '_' + str(self.id)
 
+    Guid_Prichina = models.CharField('Guid причины', max_length=36, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
+
     class Meta:
         verbose_name_plural = "Простои 24 линии"
 
@@ -66,6 +75,8 @@ class Table25(models.Model):
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
 
+    Guid_Prichina = models.CharField('Guid причины', max_length=36, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
     def __str__(self):
         return str(self.startdata) + '_' + str(self.starttime) + '_' + str(self.id)
 
@@ -84,6 +95,9 @@ class Table26(models.Model):
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
 
+    Guid_Prichina = models.CharField('Guid причины', max_length=36, default='Не определено', blank=True, null=True)
+    Guid_Uchastok = models.CharField('Guid участок', max_length=36, default='Не определено', blank=True, null=True)
+
     def __str__(self):
         return str(self.startdata) + '_' + str(self.starttime) + '_' + str(self.id)
 
@@ -100,6 +114,7 @@ class Speed31(models.Model):
     eticetka = models.IntegerField('Скорость этикетки', default=0.0, blank=True, null=True)
     ukladchik = models.IntegerField('Скорость укладчика', default=0.0, blank=True, null=True)
     zakleichik = models.IntegerField('Скорость заклейщика', default=0.0, blank=True, null=True)
+
 
     def __str__(self):
         return str(self.data) + " " + str(self.time)
@@ -118,6 +133,7 @@ class Speed33(models.Model):
     ukladchik = models.IntegerField('Скорость укладчика', default=0.0, blank=True, null=True)
     zakleichik = models.IntegerField('Скорость заклейщика', default=0.0, blank=True, null=True)
 
+
     def __str__(self):
         return str(self.data) + " " + str(self.time)
 
@@ -134,6 +150,7 @@ class Speed24(models.Model):
     eticetka = models.IntegerField('Скорость этикетки', default=0.0, blank=True, null=True)
     ukladchik = models.IntegerField('Скорость укладчика', default=0.0, blank=True, null=True)
     zakleichik = models.IntegerField('Скорость заклейщика', default=0.0, blank=True, null=True)
+
 
     def __str__(self):
         return str(self.data) + " " + str(self.time)
@@ -152,6 +169,7 @@ class Speed25(models.Model):
     ukladchik = models.IntegerField('Скорость укладчика', default=0.0, blank=True, null=True)
     zakleichik = models.IntegerField('Скорость заклейщика', default=0.0, blank=True, null=True)
 
+
     def __str__(self):
         return str(self.data) + " " + str(self.time)
 
@@ -168,6 +186,7 @@ class Speed26(models.Model):
     eticetka = models.IntegerField('Скорость этикетки', default=0.0, blank=True, null=True)
     ukladchik = models.IntegerField('Скорость укладчика', default=0.0, blank=True, null=True)
     zakleichik = models.IntegerField('Скорость заклейщика', default=0.0, blank=True, null=True)
+
 
     def __str__(self):
         return str(self.data) + " " + str(self.time)
