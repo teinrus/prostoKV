@@ -4,7 +4,7 @@ from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 
-from temruk.models import bottling_plan, Nomenclature
+from temruk.models import bottling_plan, Nomenclature, uchastok, prichina
 from titorovka.models import *
 from pyModbusTCP.client import ModbusClient
 
@@ -48,10 +48,42 @@ def proc(startSmena, spotSmena, plan, colProduct):
 # изменение в таблице
 def update31(request):
     if request.method == 'POST':
-
         pk = request.POST.get('pk')
         name = request.POST.get('name')
         value = request.POST.get('value')
+        if name == "prichina":
+            b = Table31.objects.get(id=pk).uchastok
+
+            if b == "Автомат для одевания и обкатки колпака":
+                b = "Автомат для одевания и обкатки полиламинатной капсулы и термоусадосного колпака R&G"
+                v = uchastok.objects.get(Guid_Line="12ab36dc-0fb9-44d8-b14d-63230bf1c0cd",
+                                         Uchastok=b).Guid_Uchastok
+            elif b == "Автомат укладки бутылок в гофрокороб":
+                v = uchastok.objects.get(Guid_Uchastok="641cea98-e3b8-4386-8924-e15f8100cb4e").Guid_Uchastok
+            else:
+                v = uchastok.objects.get(Guid_Line="12ab36dc-0fb9-44d8-b14d-63230bf1c0cd",
+                                     Uchastok=b).Guid_Uchastok
+
+            try:
+                n = "Guid_Uchastok"
+
+                a = Table31.objects.get(id=pk)
+                setattr(a, n, v)
+
+            except Table31.DoesNotExist:
+
+                setattr(a, n, v)
+            a.save()
+            # Запись гуид прицины
+            n = "Guid_Prichina"
+            v = prichina.objects.get(Prichina=value).Guid_Prichina
+            try:
+                a = Table31.objects.get(id=pk)
+                setattr(a, n, v)
+
+            except Table31.DoesNotExist:
+                a = Table31(id=pk, **{n: v})
+            a.save()
         if name == "comment" and not Table31.objects.get(id=pk).prichina:
             return HttpResponse('no')
 
@@ -62,8 +94,7 @@ def update31(request):
             a = Table31(id=pk, **{name: value})
 
         a.save()
-
-    return HttpResponse('yes')
+        return HttpResponse('yes')
 
 
 # получение данных в таблицу

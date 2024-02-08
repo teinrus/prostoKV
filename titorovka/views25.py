@@ -5,7 +5,7 @@ from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
-from temruk.models import bottling_plan
+from temruk.models import bottling_plan, prichina, uchastok
 from titorovka.models import *
 from  pyModbusTCP.client import ModbusClient
 slave_address='10.36.20.4'
@@ -49,10 +49,35 @@ def proc(startSmena, spotSmena, plan, colProduct):
 # изменение в таблице
 def update25(request):
     if request.method == 'POST':
-
         pk = request.POST.get('pk')
         name = request.POST.get('name')
         value = request.POST.get('value')
+        if name == "prichina":
+            b = Table25.objects.get(id=pk).uchastok
+
+            v = uchastok.objects.get(Guid_Line="33b39bdb-a94a-4baf-bf9c-31ab906efb9e",
+                                     Uchastok=b).Guid_Uchastok
+
+            try:
+                n = "Guid_Uchastok"
+
+                a = Table25.objects.get(id=pk)
+                setattr(a, n, v)
+
+            except Table25.DoesNotExist:
+
+                setattr(a, n, v)
+            a.save()
+            # Запись гуид прицины
+            n = "Guid_Prichina"
+            v = prichina.objects.get(Prichina=value).Guid_Prichina
+            try:
+                a = Table25.objects.get(id=pk)
+                setattr(a, n, v)
+
+            except Table25.DoesNotExist:
+                a = Table25(id=pk, **{n: v})
+            a.save()
         if name == "comment" and not Table25.objects.get(id=pk).prichina:
             return HttpResponse('no')
 
@@ -63,8 +88,7 @@ def update25(request):
             a = Table25(id=pk, **{name: value})
 
         a.save()
-
-    return HttpResponse('yes')
+        return HttpResponse('yes')
 
 
 # получение данных в таблицу

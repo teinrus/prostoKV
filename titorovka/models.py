@@ -6,7 +6,7 @@ class Table31(models.Model):
     starttime = models.TimeField('Время начала простоя')
     prostoy = models.TimeField('Время простоя', blank=True, null=True)
 
-    uchastok = models.CharField('Где произошол простой', max_length=50, default='', blank=True, null=True)
+    uchastok = models.CharField('Где произошол простой', max_length=100, default='', blank=True, null=True)
     prichina = models.CharField('Причина', max_length=50, default='', blank=True, null=True)
     otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)
@@ -27,7 +27,7 @@ class Table33(models.Model):
     starttime = models.TimeField('Время начала простоя')
     prostoy = models.TimeField('Время простоя', blank=True, null=True)
 
-    uchastok = models.CharField('Где произошол простой', max_length=50, default='', blank=True, null=True)
+    uchastok = models.CharField('Где произошол простой', max_length=100, default='', blank=True, null=True)
     prichina = models.CharField('Причина', max_length=50, default='', blank=True, null=True)
     otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)

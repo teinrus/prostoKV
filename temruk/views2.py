@@ -94,6 +94,7 @@ def update2(request):
             if b== "Этикетировочная машина":
                 v="e84ba6d8-7e3c-48d1-a7c5-53789e1f3b2c"
             else:
+
                 v = uchastok.objects.get(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77",
                                          Uchastok=b).Guid_Uchastok
 

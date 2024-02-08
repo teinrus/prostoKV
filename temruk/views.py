@@ -81,7 +81,11 @@ vid_prostoev = {
                     "Переход на кольеретку",
                     "Переход по этикетке, в/м и бутылке с мойкой (4 ч)",
                     "Переход по в/м, этикетке, бутылке с мойкой (Линия 31)",
-                    "Переход по этикетке, в/м и бутылке (переход с изменением объема бутылки)"]
+                    "Переход по этикетке, в/м и бутылке (переход с изменением объема бутылки)"],
+
+    "ТО и Переналадки АСУП":["ТО",
+                        "Доналадка",
+                        "Переналадка"]
 }
 
 
@@ -840,8 +844,8 @@ def otchet(request):
             table = table2
             try:
 
-                table_triblok = table.filter(uchastok="Триблок")
-                table = table.exclude(uchastok="Триблок")
+                table_triblok = table.filter(uchastok="Квадроблок розлива")
+                table = table.exclude(uchastok="Квадроблок розлива")
 
             except:
                 pass
@@ -987,8 +991,8 @@ def otchet(request):
             table = table4
             try:
 
-                table_triblok = table.filter(uchastok="Триблок")
-                table = table.exclude(uchastok="Триблок")
+                table_triblok = table.filter(uchastok="Триблок (ополаскиватель, розлив, укупорка)")
+                table = table.exclude(uchastok="Триблок (ополаскиватель, розлив, укупорка)")
 
             except:
                 pass
@@ -1163,12 +1167,17 @@ def otchet(request):
 
     for k in vid_prostoev:
         temp_time = datetime.timedelta(0)
-        for el in table:
-            if el.prichina in vid_prostoev[k]:
-                temp_time += time_to_timedelta(el.prostoy)
-        for el in table_triblok:
-            if el.prichina in vid_prostoev[k]:
-                temp_time += time_to_timedelta(el.prostoy)
+        if k == "ТО и Переналадки АСУП":
+            for el in table:
+                if el.uchastok in vid_prostoev[k]:
+                    temp_time += time_to_timedelta(el.prostoy)
+        else:
+            for el in table:
+                if el.prichina in vid_prostoev[k]:
+                    temp_time += time_to_timedelta(el.prostoy)
+            for el in table_triblok:
+                if el.prichina in vid_prostoev[k]:
+                    temp_time += time_to_timedelta(el.prostoy)
         time_by_category.append(format_timedelta(temp_time))
 
 
@@ -1223,6 +1232,7 @@ def time_to_timedelta(time_obj):
         return  datetime.timedelta(hours=0, minutes=0)
 def format_timedelta(td):
     try:
+
         hours, remainder = divmod(td.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         return "{:02}:{:02}".format(int(hours), int(minutes))

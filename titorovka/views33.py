@@ -5,7 +5,7 @@ from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
-from temruk.models import bottling_plan
+from temruk.models import bottling_plan, prichina, uchastok
 from titorovka.models import *
 from  pyModbusTCP.client import ModbusClient
 slave_address='10.36.20.2'
@@ -48,10 +48,38 @@ def proc(startSmena, spotSmena, plan, colProduct):
 # изменение в таблице
 def update33(request):
     if request.method == 'POST':
-
         pk = request.POST.get('pk')
         name = request.POST.get('name')
         value = request.POST.get('value')
+        if name == "prichina":
+            b = Table33.objects.get(id=pk).uchastok
+            if b == "Автомат для одевания и обкатки колпака":
+                b="Автомат для одевания и обкатки полиламинатной капсулы и термоусадосного колпака"
+
+
+            v = uchastok.objects.get(Guid_Line="d65654f8-2e89-4044-bb10-4342a9d1b722",
+                                     Uchastok=b).Guid_Uchastok
+
+            try:
+                n = "Guid_Uchastok"
+
+                a = Table33.objects.get(id=pk)
+                setattr(a, n, v)
+
+            except Table33.DoesNotExist:
+
+                setattr(a, n, v)
+            a.save()
+            # Запись гуид прицины
+            n = "Guid_Prichina"
+            v = prichina.objects.get(Prichina=value).Guid_Prichina
+            try:
+                a = Table33.objects.get(id=pk)
+                setattr(a, n, v)
+
+            except Table33.DoesNotExist:
+                a = Table33(id=pk, **{n: v})
+            a.save()
         if name == "comment" and not Table33.objects.get(id=pk).prichina:
             return HttpResponse('no')
 
@@ -62,8 +90,8 @@ def update33(request):
             a = Table33(id=pk, **{name: value})
 
         a.save()
+        return HttpResponse('yes')
 
-    return HttpResponse('yes')
 
 
 # получение данных в таблицу
