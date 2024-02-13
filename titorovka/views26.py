@@ -194,6 +194,8 @@ def update26(request):
                 setattr(a, name, value)
                 a.save()
                 return HttpResponse('yes')
+
+
             v = uchastok.objects.get(Guid_Line="75709045-11b7-11e6-b0ff-005056ac2c77",
                                      Uchastok=b).Guid_Uchastok
 

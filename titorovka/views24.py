@@ -127,7 +127,12 @@ def update24(request):
                 setattr(a, name, value)
                 a.save()
                 return HttpResponse('yes')
-            v = uchastok.objects.get(Guid_Line="90aef8a3-8edd-4904-b22b-8f53d903f90d",
+            if b == "Моноблок автоматический PRISMA":
+                b = "Моноблок автоматический для распределения капсул PRISMA"
+                v = uchastok.objects.get(Guid_Line="90aef8a3-8edd-4904-b22b-8f53d903f90d",
+                                         Uchastok=b).Guid_Uchastok
+            else:
+                v = uchastok.objects.get(Guid_Line="90aef8a3-8edd-4904-b22b-8f53d903f90d",
                                          Uchastok=b).Guid_Uchastok
 
             try:
