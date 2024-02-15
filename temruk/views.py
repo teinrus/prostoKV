@@ -462,7 +462,7 @@ def otchet(request):
     table = []
     table_triblok = []
     temp_chart = []
-    timeTemp = 0
+    timeAll = 0
 
     indicators = []
     filter = []
@@ -507,13 +507,13 @@ def otchet(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
 
 
 
                     except:
-                        timeTemp = 0
+                        timeAll = 0
 
                     try:
                         indicators = Line5Indicators.objects.filter(time__gte=datetime.time(0),
@@ -561,11 +561,11 @@ def otchet(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = 1 + timeTemp.total_seconds() / 3600 / 24
-                        timeTemp = datetime.timedelta(hours=(8 * count), minutes=30 * count)
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = 1 + timeAll.total_seconds() / 3600 / 24
+                        timeAll = datetime.timedelta(hours=(8 * count), minutes=30 * count)
                     except:
-                        timeTemp = 0
+                        timeAll = 0
 
                     indicators = Line5Indicators.objects.filter(time__gte=datetime.time(8),
                                                                 time__lte=datetime.time(16, 30),
@@ -608,12 +608,12 @@ def otchet(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeTemp.total_seconds() / 3600 / 24 + 1
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp = datetime.timedelta(hours=(7 * count), minutes=30 * count)
+                        timeAll = datetime.timedelta(hours=(7 * count), minutes=30 * count)
                     except:
-                        timeTemp = 0
+                        timeAll = 0
                     indicators = Line5Indicators.objects.filter(time__gte=datetime.time(16, 30),
                                                                 time__lte=datetime.time(23, 59),
                                                                 data__gte=form.cleaned_data["start_data"],
@@ -654,12 +654,12 @@ def otchet(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeTemp.total_seconds() / 3600 / 24 + 1
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
                     try:
                         indicators = Line5Indicators.objects.filter(time__gte=datetime.time(00, 00),
                                                                     time__lte=datetime.time(8, 00),
@@ -706,10 +706,10 @@ def otchet(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
                     except:
-                        timeTemp = 0
+                        timeAll = 0
                     try:
                         indicators = Line2Indicators.objects.filter(time__gte=datetime.time(0),
                                                                     time__lte=datetime.time(23, 59),
@@ -745,12 +745,12 @@ def otchet(request):
                     plan = 0
                 try:
 
-                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+                    timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(8 * count), minutes=30 * count)
+                    timeAll = datetime.timedelta(hours=(8 * count), minutes=30 * count)
                 except:
-                    timeTemp = 0
+                    timeAll = 0
                 try:
                     indicators = Line2Indicators.objects.filter(time__gte=datetime.time(8, 30),
                                                                 time__lte=datetime.time(16, 30),
@@ -796,12 +796,12 @@ def otchet(request):
 
                 try:
 
-                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+                    timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(7 * count), minutes=30 * count)
+                    timeAll = datetime.timedelta(hours=(7 * count), minutes=30 * count)
                 except:
-                    timeTemp = 0
+                    timeAll = 0
 
             if form.cleaned_data["SmenaF"] == 'Смена 3':
                 indicators = Line2Indicators.objects.filter(time__gte=datetime.time(00, 00),
@@ -834,12 +834,12 @@ def otchet(request):
                 except:
                     plan = 0
                 try:
-                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+                    timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(8 * count))
+                    timeAll = datetime.timedelta(hours=(8 * count))
                 except:
-                    timeTemp = 0
+                    timeAll = 0
 
             table = table2
             try:
@@ -881,12 +881,12 @@ def otchet(request):
                     except:
                         plan = 0
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
 
 
                     except:
-                        timeTemp = 0
+                        timeAll = 0
             if form.cleaned_data["SmenaF"] == 'Смена 1':
                 table4 = Table4.objects.filter(starttime__gte=datetime.time(8),
                                                starttime__lte=datetime.time(16, 30),
@@ -914,12 +914,12 @@ def otchet(request):
                 except:
                     plan = 0
                 try:
-                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+                    timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(8 * count), minutes=30 * count)
+                    timeAll = datetime.timedelta(hours=(8 * count), minutes=30 * count)
                 except:
-                    timeTemp = 0
+                    timeAll = 0
             if form.cleaned_data["SmenaF"] == 'Смена 2':
                 table4 = Table4.objects.filter(starttime__gte=datetime.time(16, 30),
                                                starttime__lte=datetime.time(23, 59),
@@ -947,12 +947,12 @@ def otchet(request):
                 except:
                     plan = 0
                 try:
-                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+                    timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(7 * count), minutes=30 * count)
+                    timeAll = datetime.timedelta(hours=(7 * count), minutes=30 * count)
                 except:
-                    timeTemp = 0
+                    timeAll = 0
 
             if form.cleaned_data["SmenaF"] == 'Смена 3':
                 table4 = Table4.objects.filter(starttime__gte=datetime.time(00, 00),
@@ -981,12 +981,12 @@ def otchet(request):
                 except:
                     plan = 0
                 try:
-                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+                    timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                    timeTemp = datetime.timedelta(hours=(8 * count))
+                    timeAll = datetime.timedelta(hours=(8 * count))
                 except:
-                    timeTemp = 0
+                    timeAll = 0
 
             table = table4
             try:
@@ -1034,18 +1034,14 @@ def otchet(request):
         sumProstoy = 0
     # Средняя скорость
     try:
-        if sumProstoy > timeTemp:
-            sumProstoy = timeTemp
-        timeWork = (timeTemp - sumProstoy)
+        if sumProstoy > timeAll:
+            sumProstoy = timeAll
+        timeWork = (timeAll - sumProstoy)
 
 
     except:
         timeWork = 0
-    try:
-        avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
 
-    except:
-        avgSpeed = 0
 
     # Данные для графика
     try:
@@ -1164,6 +1160,7 @@ def otchet(request):
         pass
 
     time_by_category = []
+    time_by_category_time = []
 
     for k in vid_prostoev:
         temp_time = datetime.timedelta(0)
@@ -1179,8 +1176,17 @@ def otchet(request):
                 if el.prichina in vid_prostoev[k]:
                     temp_time += time_to_timedelta(el.prostoy)
         time_by_category.append(format_timedelta(temp_time))
+        time_by_category_time.append(temp_time)
 
-
+    try:
+        avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
+        excludeSpeed = round((allProd / (timeWork+time_by_category_time[1]+
+                                         time_by_category_time[3]+time_by_category_time[3]).total_seconds() * 3600))
+        allSpeed = round((allProd / timeAll.total_seconds() * 3600))
+    except:
+        avgSpeed = 0
+        excludeSpeed = 0
+        allSpeed = 0
 
 
     return render(request, "otchet.html", {
@@ -1213,6 +1219,8 @@ def otchet(request):
         'timeWork': format_timedelta(timeWork),
 
         'avgSpeed': "{0:,}".format(avgSpeed).replace(",", " "),
+        'excludeSpeed': "{0:,}".format(excludeSpeed).replace(",", " "),
+        'allSpeed': "{0:,}".format(allSpeed).replace(",", " "),
 
         'boomOut': boomOut,
 

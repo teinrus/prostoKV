@@ -51,7 +51,6 @@ def get_plan_quantity():
         plan = bottling_plan.objects.filter(Data=today, GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
                                             ShiftNumber=shift_number)
         plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum']
-
         return plan_quantity
 
     except Exception as e:
