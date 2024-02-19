@@ -319,14 +319,14 @@ def Sotchet(request):
                         timeAll = 0
         elif form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 33'):
-            uchastok_rozliv = "Автомат укупорочный Arol"
+            uchastok_rozliv = "Автомат розлива BORELLI"
             if form.cleaned_data["SmenaF"] == 'Смена 0':
                 table = (Table33.objects.filter(starttime__gte=datetime.time(0),
                                                 starttime__lte=datetime.time(23, 59),
                                                 startdata__gte=form.cleaned_data["start_data"],
                                                 startdata__lte=form.cleaned_data["finish_data"]
                                                 ).filter(
-                    uchastok=uchastok_rozliv) | Table33.objects.filter(
+                    uchastok__icontains=uchastok_rozliv) | Table33.objects.filter(
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
                     starttime__gte=startSmena,
@@ -336,7 +336,7 @@ def Sotchet(request):
                                                      starttime__lte=datetime.time(23, 59),
                                                      startdata__gte=form.cleaned_data["start_data"],
                                                      startdata__lte=form.cleaned_data["finish_data"]
-                                                     ).exclude(uchastok=uchastok_rozliv).exclude(
+                                                     ).exclude(uchastok__icontains=uchastok_rozliv).exclude(
                     uchastok="Автомат этикетировочный PE") \
                     .order_by('startdata', 'starttime')
 
@@ -373,7 +373,7 @@ def Sotchet(request):
                                                 startdata__gte=form.cleaned_data["start_data"],
                                                 startdata__lte=form.cleaned_data["finish_data"]
                                                 ).filter(
-                    uchastok=uchastok_rozliv) | Table33.objects.filter(
+                    uchastok__icontains=uchastok_rozliv) | Table33.objects.filter(
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
                     starttime__gte=startSmena,
@@ -383,7 +383,7 @@ def Sotchet(request):
                                                      starttime__lte=datetime.time(16, 00),
                                                      startdata__gte=form.cleaned_data["start_data"],
                                                      startdata__lte=form.cleaned_data["finish_data"]
-                                                     ).exclude(uchastok=uchastok_rozliv).exclude(
+                                                     ).exclude(uchastok__icontains=uchastok_rozliv).exclude(
                     uchastok="Автомат этикетировочный PE") \
                     .order_by('startdata', 'starttime')
 
@@ -417,7 +417,7 @@ def Sotchet(request):
                                                 startdata__gte=form.cleaned_data["start_data"],
                                                 startdata__lte=form.cleaned_data["finish_data"]
                                                 ).filter(
-                    uchastok=uchastok_rozliv) | Table33.objects.filter(
+                    uchastok__icontains=uchastok_rozliv) | Table33.objects.filter(
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
                     starttime__gte=startSmena,
@@ -427,7 +427,7 @@ def Sotchet(request):
                                                      starttime__lte=datetime.time(23, 59),
                                                      startdata__gte=form.cleaned_data["start_data"],
                                                      startdata__lte=form.cleaned_data["finish_data"]
-                                                     ).exclude(uchastok=uchastok_rozliv).exclude(
+                                                     ).exclude(uchastok__icontains=uchastok_rozliv).exclude(
                     uchastok="Автомат этикетировочный PE") \
                     .order_by('startdata', 'starttime')
                 speed = Speed33.objects.filter(data__gte=form.cleaned_data["start_data"],
@@ -461,7 +461,7 @@ def Sotchet(request):
                                                 startdata__gte=form.cleaned_data["start_data"],
                                                 startdata__lte=form.cleaned_data["finish_data"]
                                                 ).filter(
-                    uchastok=uchastok_rozliv) | Table33.objects.filter(
+                    uchastok__icontains=uchastok_rozliv) | Table33.objects.filter(
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
                     starttime__gte=startSmena,
@@ -471,7 +471,7 @@ def Sotchet(request):
                                                      starttime__lte=datetime.time(8, 00),
                                                      startdata__gte=form.cleaned_data["start_data"],
                                                      startdata__lte=form.cleaned_data["finish_data"]
-                                                     ).exclude(uchastok=uchastok_rozliv).exclude(
+                                                     ).exclude(uchastok__icontains=uchastok_rozliv).exclude(
                     uchastok="Автомат этикетировочный PE") \
                     .order_by('startdata', 'starttime')
                 speed = Speed33.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
@@ -639,7 +639,8 @@ def Sotchet(request):
 def SotchetIgr(request):
     plan = 0
     table = []
-    timeTemp = 0
+    table_other = []
+    timeAll = 0
     form = OtchetIgr(request.GET)
     if form.is_valid():
         # Сортировка по дате
@@ -647,11 +648,24 @@ def SotchetIgr(request):
                 form.cleaned_data["LineF"] == 'Линиия 24'):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
-                    table = Table24.objects.filter(starttime__gte=datetime.time(0),
-                                                   starttime__lte=datetime.time(23, 59),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table24.objects.filter(starttime__gte=datetime.time(0),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok="Моноблок Изобарического розлива") | Table24.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
+                                                                                                       'starttime')
+                    table_other = Table24.objects.filter(starttime__gte=datetime.time(0),
+                                                         starttime__lte=datetime.time(23, 59),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(uchastok="Моноблок Изобарического розлива").exclude(
+                        uchastok="Этикетировочный аппарат") \
+                        .order_by('startdata', 'starttime')
 
                     speed = Speed24.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
@@ -672,20 +686,33 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
 
 
 
                     except:
-                        timeTemp = 0
+                        timeAll = 0
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
-                    table = Table24.objects.filter(starttime__gte=datetime.time(8),
-                                                   starttime__lte=datetime.time(16, 00),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table24.objects.filter(starttime__gte=datetime.time(8),
+                                                    starttime__lte=datetime.time(16, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok="Моноблок Изобарического розлива") | Table24.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
+                                                                                                       'starttime')
+                    table_other = Table24.objects.filter(starttime__gte=datetime.time(8),
+                                                         starttime__lte=datetime.time(16, 00),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(uchastok="Моноблок Изобарического розлива").exclude(
+                        uchastok="Этикетировочный аппарат") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed24.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(8),
@@ -705,17 +732,30 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = 1 + timeTemp.total_seconds() / 3600 / 24
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = 1 + timeAll.total_seconds() / 3600 / 24
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
-                    table = Table24.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                   starttime__lte=datetime.time(23, 59),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table24.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok="Моноблок Изобарического розлива") | Table24.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
+                                                                                                       'starttime')
+                    table_other = Table24.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                         starttime__lte=datetime.time(23, 59),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(uchastok="Моноблок Изобарического розлива").exclude(
+                        uchastok="Этикетировочный аппарат") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed24.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(16, 00),
@@ -735,18 +775,31 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeTemp.total_seconds() / 3600 / 24 + 1
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
-                    table = Table24.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                   starttime__lte=datetime.time(8, 00),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table24.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                    starttime__lte=datetime.time(8, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok="Моноблок Изобарического розлива") | Table24.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
+                                                                                                       'starttime')
+                    table_other = Table24.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                         starttime__lte=datetime.time(8, 00),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(uchastok="Моноблок Изобарического розлива").exclude(
+                        uchastok="Этикетировочный аппарат") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed24.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
                                                                          data__lte=form.cleaned_data["finish_data"],
                                                                          time__gte=datetime.time(00, 00),
@@ -766,21 +819,35 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeTemp.total_seconds() / 3600 / 24 + 1
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
         elif form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 26'):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
-                    table = Table26.objects.filter(starttime__gte=datetime.time(0),
-                                                   starttime__lte=datetime.time(23, 59),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table26.objects.filter(starttime__gte=datetime.time(0, 00),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok="Триблок CLIFOM") | Table26.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        'startdata',
+                        'starttime')
+                    table_other = Table26.objects.filter(starttime__gte=datetime.time(0, 00),
+                                                         starttime__lte=datetime.time(23, 59),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(uchastok="Триблок CLIFOM").exclude(
+                        uchastok="Этикетировочный аппарат S2T6/Ri") \
+                        .order_by('startdata', 'starttime')
 
                     speed = Speed26.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
@@ -801,20 +868,34 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
 
 
 
                     except:
-                        timeTemp = 0
+                        timeAll = 0
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
-                    table = Table26.objects.filter(starttime__gte=datetime.time(8),
-                                                   starttime__lte=datetime.time(16, 00),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table26.objects.filter(starttime__gte=datetime.time(8),
+                                                    starttime__lte=datetime.time(16, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok="Триблок CLIFOM") | Table26.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        'startdata',
+                        'starttime')
+                    table_other = Table26.objects.filter(starttime__gte=datetime.time(8, 00),
+                                                         starttime__lte=datetime.time(16, 00),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(uchastok="Триблок CLIFOM").exclude(
+                        uchastok="Этикетировочный аппарат S2T6/Ri") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed26.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(8),
@@ -834,17 +915,31 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = 1 + timeTemp.total_seconds() / 3600 / 24
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = 1 + timeAll.total_seconds() / 3600 / 24
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
-                    table = Table26.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                   starttime__lte=datetime.time(23, 59),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table26.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok="Триблок CLIFOM") | Table26.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        'startdata',
+                        'starttime')
+                    table_other = Table26.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                         starttime__lte=datetime.time(23, 59),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(uchastok="Триблок CLIFOM").exclude(
+                        uchastok="Этикетировочный аппарат S2T6/Ri") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed26.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(16, 00),
@@ -864,18 +959,32 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeTemp.total_seconds() / 3600 / 24 + 1
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
-                    table = Table26.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                   starttime__lte=datetime.time(8, 00),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table26.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                    starttime__lte=datetime.time(8, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok="Триблок CLIFOM") | Table26.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        'startdata',
+                        'starttime')
+                    table_other = Table26.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                         starttime__lte=datetime.time(8, 00),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(uchastok="Триблок CLIFOM").exclude(
+                        uchastok="Этикетировочный аппарат S2T6/Ri") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed26.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
                                                                          data__lte=form.cleaned_data["finish_data"],
                                                                          time__gte=datetime.time(00, 00),
@@ -895,22 +1004,36 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeTemp.total_seconds() / 3600 / 24 + 1
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
         elif form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 25'):
             if form.cleaned_data["SmenaF"]:
                 if form.cleaned_data["SmenaF"] == 'Смена 0':
-                    table = Table25.objects.filter(starttime__gte=datetime.time(0),
-                                                   starttime__lte=datetime.time(23, 59),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
-
+                    table = (Table25.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok__icontains="Блок розлива") | Table25.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        'startdata',
+                        'starttime')
+                    table_other = Table25.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                         starttime__lte=datetime.time(23, 59),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(
+                        uchastok__icontains="Блок розлива и укупорки модель ASTRO").exclude(
+                        uchastok="Этикетировочный аппарат") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed25.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(0),
@@ -930,20 +1053,35 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)
 
 
 
                     except:
-                        timeTemp = 0
+                        timeAll = 0
 
                 if form.cleaned_data["SmenaF"] == 'Смена 1':
-                    table = Table25.objects.filter(starttime__gte=datetime.time(8),
-                                                   starttime__lte=datetime.time(16, 00),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table25.objects.filter(starttime__gte=datetime.time(8, 00),
+                                                    starttime__lte=datetime.time(16, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok__icontains="Блок розлива") | Table25.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        'startdata',
+                        'starttime')
+                    table_other = Table25.objects.filter(starttime__gte=datetime.time(8, 00),
+                                                         starttime__lte=datetime.time(16, 00),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(
+                        uchastok__icontains="Блок розлива и укупорки модель ASTRO").exclude(
+                        uchastok="Этикетировочный аппарат") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed25.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(8),
@@ -963,17 +1101,32 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = 1 + timeTemp.total_seconds() / 3600 / 24
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = 1 + timeAll.total_seconds() / 3600 / 24
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 2':
-                    table = Table25.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                   starttime__lte=datetime.time(23, 59),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table25.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                    starttime__lte=datetime.time(23, 59),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok__icontains="Блок розлива") | Table25.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        'startdata',
+                        'starttime')
+                    table_other = Table25.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                         starttime__lte=datetime.time(23, 59),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(
+                        uchastok__icontains="Блок розлива и укупорки модель ASTRO").exclude(
+                        uchastok="Этикетировочный аппарат") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed25.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(16, 00),
@@ -993,18 +1146,33 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeTemp.total_seconds() / 3600 / 24 + 1
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
                 if form.cleaned_data["SmenaF"] == 'Смена 3':
-                    table = Table25.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                   starttime__lte=datetime.time(8, 00),
-                                                   startdata__gte=form.cleaned_data["start_data"],
-                                                   startdata__lte=form.cleaned_data["finish_data"]
-                                                   ).order_by('startdata', 'starttime')
+                    table = (Table25.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                    starttime__lte=datetime.time(8, 00),
+                                                    startdata__gte=form.cleaned_data["start_data"],
+                                                    startdata__lte=form.cleaned_data["finish_data"]
+                                                    ).filter(
+                        uchastok__icontains="Блок розлива") | Table25.objects.filter(
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=startSmena,
+                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        'startdata',
+                        'starttime')
+                    table_other = Table25.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                         starttime__lte=datetime.time(8, 00),
+                                                         startdata__gte=form.cleaned_data["start_data"],
+                                                         startdata__lte=form.cleaned_data["finish_data"]
+                                                         ).exclude(
+                        uchastok__icontains="Блок розлива и укупорки модель ASTRO").exclude(
+                        uchastok="Этикетировочный аппарат") \
+                        .order_by('startdata', 'starttime')
                     speed = Speed25.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
                                                                          data__lte=form.cleaned_data["finish_data"],
                                                                          time__gte=datetime.time(00, 00),
@@ -1024,12 +1192,12 @@ def SotchetIgr(request):
                         plan = 0
 
                     try:
-                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeTemp.total_seconds() / 3600 / 24 + 1
+                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                        count = timeAll.total_seconds() / 3600 / 24 + 1
 
-                        timeTemp = datetime.timedelta(hours=(8 * count))
+                        timeAll = datetime.timedelta(hours=(8 * count))
                     except:
-                        timeTemp = 0
+                        timeAll = 0
 
     lableChart = []
     dataChart = []
@@ -1044,16 +1212,17 @@ def SotchetIgr(request):
 
     # Общее время простоя
     try:
-        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
+        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum') + table_other.aggregate(Sum('prostoy')).get(
+            'prostoy__sum')
         if sumProstoy == None:
             sumProstoy = datetime.timedelta(0)
     except:
         sumProstoy = 0
     # Средняя скорость
     try:
-        if sumProstoy > timeTemp:
-            sumProstoy = timeTemp
-        timeWork = (timeTemp - sumProstoy)
+        if sumProstoy > timeAll:
+            sumProstoy = timeAll
+        timeWork = (timeAll - sumProstoy)
 
 
     except:
@@ -1090,13 +1259,48 @@ def SotchetIgr(request):
     nachaloOt = form.cleaned_data["start_data"]
     okonchanieOt = form.cleaned_data["finish_data"]
 
+    time_by_category = []
+    time_by_category_time = []
+
+    for k in vid_prostoev:
+        temp_time = datetime.timedelta(0)
+        if k == "ТО и Переналадки АСУП":
+            for el in table:
+                if el.uchastok in vid_prostoev[k]:
+                    temp_time += time_to_timedelta(el.prostoy)
+            for el in table_other:
+                if el.uchastok in vid_prostoev[k]:
+                    temp_time += time_to_timedelta(el.prostoy)
+        else:
+            for el in table:
+                if el.prichina in vid_prostoev[k]:
+                    temp_time += time_to_timedelta(el.prostoy)
+            for el in table_other:
+                if el.prichina in vid_prostoev[k]:
+                    temp_time += time_to_timedelta(el.prostoy)
+        time_by_category.append(format_timedelta(temp_time))
+        time_by_category_time.append(temp_time)
+
     try:
-        plan = "{0:,}".format(plan).replace(",", " ")
+        avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
+        excludeSpeed = round((allProd / (timeWork + time_by_category_time[1] +
+                                         time_by_category_time[3] + time_by_category_time[3]).total_seconds() * 3600))
+        allSpeed = round((allProd / timeAll.total_seconds() * 3600))
     except:
-        pass
+        avgSpeed = 0
+        excludeSpeed = 0
+        allSpeed = 0
+    try:
+        if plan > 0 and allProd > 0:
+            completion_percentage = round((allProd / plan) * 100)
+        else:
+            completion_percentage = 0
+    except:
+        completion_percentage = 0
 
     return render(request, "SotchetIgr.html", {
         'table': table,
+        'table_other': table_other,
         'form': form,
 
         'line': line,
@@ -1104,13 +1308,17 @@ def SotchetIgr(request):
         'nachaloOt': nachaloOt,
         'okonchanieOt': okonchanieOt,
 
-        'timeWork': timeWork,
         'plan': plan,
-        'sumProstoy': sumProstoy,
+        "completion_percentage": completion_percentage,
+        'allProd': "{0:,}".format(allProd).replace(",", " "),
+
+        'sumProstoy': format_timedelta(sumProstoy),
+        "time_by_category": time_by_category,
+        'timeWork': format_timedelta(timeWork),
 
         'avgSpeed': "{0:,}".format(avgSpeed).replace(",", " "),
-
-        'allProd': "{0:,}".format(allProd).replace(",", " "),
+        'excludeSpeed': "{0:,}".format(excludeSpeed).replace(",", " "),
+        'allSpeed': "{0:,}".format(allSpeed).replace(",", " "),
 
         'lableChart': lableChart,
         'dataChart': dataChart,
