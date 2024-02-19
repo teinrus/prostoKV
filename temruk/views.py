@@ -83,9 +83,9 @@ vid_prostoev = {
                     "Переход по в/м, этикетке, бутылке с мойкой (Линия 31)",
                     "Переход по этикетке, в/м и бутылке (переход с изменением объема бутылки)"],
 
-    "ТО и Переналадки АСУП":["ТО",
-                        "Доналадка",
-                        "Переналадка"]
+    "ТО и Переналадки АСУП": ["ТО",
+                              "Доналадка",
+                              "Переналадка"]
 }
 
 
@@ -1012,11 +1012,13 @@ def otchet(request):
 
     except:
         allProd = 0
-
-    if plan > 0 and allProd>0:
-        completion_percentage=round((allProd/plan)*100)
-    else:
-        completion_percentage=0
+    try:
+        if plan > 0 and allProd > 0:
+            completion_percentage = round((allProd / plan) * 100)
+        else:
+            completion_percentage = 0
+    except:
+        completion_percentage = 0
     # Общее количество  врывов бутылок
     try:
         boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
@@ -1027,7 +1029,8 @@ def otchet(request):
 
     # Общее время простоя
     try:
-        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')+table_triblok.aggregate(Sum('prostoy')).get('prostoy__sum')
+        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum') + table_triblok.aggregate(Sum('prostoy')).get(
+            'prostoy__sum')
         if sumProstoy == None:
             sumProstoy = datetime.timedelta(0)
     except:
@@ -1041,7 +1044,6 @@ def otchet(request):
 
     except:
         timeWork = 0
-
 
     # Данные для графика
     try:
@@ -1110,7 +1112,7 @@ def otchet(request):
 
             average_triblok_speed = speed.filter(
                 time__range=(first_time, last_time),
-                triblok__gt=1000
+                triblok__gt=0
             ).aggregate(average_triblok_speed=Avg('triblok'))['average_triblok_speed']
             average_press = indicators.filter(
                 time__range=(first_time, last_time),
@@ -1180,21 +1182,18 @@ def otchet(request):
 
     try:
         avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-        excludeSpeed = round((allProd / (timeWork+time_by_category_time[1]+
-                                         time_by_category_time[3]+time_by_category_time[3]).total_seconds() * 3600))
+        excludeSpeed = round((allProd / (timeWork + time_by_category_time[1] +
+                                         time_by_category_time[3] + time_by_category_time[3]).total_seconds() * 3600))
         allSpeed = round((allProd / timeAll.total_seconds() * 3600))
     except:
         avgSpeed = 0
         excludeSpeed = 0
         allSpeed = 0
 
-
     return render(request, "otchet.html", {
         'table': table,
         "table_triblok": table_triblok,
         'form': form,
-
-
 
         "tempChart": temp_chart,
         "indicators": sorted_date_time_numbacr_list,
@@ -1208,14 +1207,12 @@ def otchet(request):
         'nachaloOt': nachaloOt,
         'okonchanieOt': okonchanieOt,
 
-
-
         'plan': plan,
-        "completion_percentage":completion_percentage,
+        "completion_percentage": completion_percentage,
         'allProd': "{0:,}".format(allProd).replace(",", " "),
 
         'sumProstoy': format_timedelta(sumProstoy),
-        "time_by_category":time_by_category,
+        "time_by_category": time_by_category,
         'timeWork': format_timedelta(timeWork),
 
         'avgSpeed': "{0:,}".format(avgSpeed).replace(",", " "),
@@ -1230,14 +1227,16 @@ def otchet(request):
         'uch5': uch5,
         'uch_vino': uch_vino,
 
-
-
     })
+
+
 def time_to_timedelta(time_obj):
     try:
         return datetime.timedelta(hours=time_obj.hour, minutes=time_obj.minute, seconds=time_obj.second)
     except:
-        return  datetime.timedelta(hours=0, minutes=0)
+        return datetime.timedelta(hours=0, minutes=0)
+
+
 def format_timedelta(td):
     try:
 
@@ -1245,7 +1244,8 @@ def format_timedelta(td):
         minutes, seconds = divmod(remainder, 60)
         return "{:02}:{:02}".format(int(hours), int(minutes))
     except:
-        return  datetime.timedelta(hours=0, minutes=0)
+        return datetime.timedelta(hours=0, minutes=0)
+
 
 def start_perenaladka5(request):
     mod_bus(0, 1)
