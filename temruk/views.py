@@ -459,8 +459,8 @@ def temruk(request):
 
 def otchet(request):
     plan = 0
+    table_other = []
     table = []
-    table_triblok = []
     temp_chart = []
     timeAll = 0
 
@@ -479,7 +479,7 @@ def otchet(request):
                                                            data__lte=form.cleaned_data["finish_data"],
                                                            time__range=(datetime.time(0), datetime.time(23, 59)))
                     temp_chart = [str(sp.time) for sp in boom]
-                    table = Table5.objects.filter(starttime__gte=datetime.time(0),
+                    table_other = Table5.objects.filter(starttime__gte=datetime.time(0),
                                                   starttime__lte=datetime.time(23, 59),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
@@ -534,7 +534,7 @@ def otchet(request):
                                                            data__lte=form.cleaned_data["finish_data"],
                                                            time__range=(datetime.time(8), datetime.time(16, 30)))
                     temp_chart = [str(sp.time) for sp in boom]
-                    table = Table5.objects.filter(starttime__gte=datetime.time(8),
+                    table_other = Table5.objects.filter(starttime__gte=datetime.time(8),
                                                   starttime__lte=datetime.time(16, 30),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
@@ -581,7 +581,7 @@ def otchet(request):
                                                            time__range=(datetime.time(16, 30), datetime.time(23, 59)))
                     temp_chart = [str(sp.time) for sp in boom]
 
-                    table = Table5.objects.filter(starttime__gte=datetime.time(16, 30),
+                    table_other = Table5.objects.filter(starttime__gte=datetime.time(16, 30),
                                                   starttime__lte=datetime.time(23, 59),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
@@ -627,7 +627,7 @@ def otchet(request):
                                                            data__lte=form.cleaned_data["finish_data"],
                                                            time__range=(datetime.time(00, 00), datetime.time(8, 00)))
                     temp_chart = [str(sp.time) for sp in boom]
-                    table = Table5.objects.filter(starttime__gte=datetime.time(00, 00),
+                    table_other = Table5.objects.filter(starttime__gte=datetime.time(00, 00),
                                                   starttime__lte=datetime.time(8, 00),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
@@ -673,8 +673,8 @@ def otchet(request):
                         print("alarme")
             try:
 
-                table_triblok = table.filter(uchastok="Триблок розлива")
-                table = table.exclude(uchastok="Триблок розлива")
+                table = table_other.filter(uchastok="Триблок розлива")
+                table_other = table_other.exclude(uchastok="Триблок розлива")
 
             except:
                 pass
@@ -841,11 +841,11 @@ def otchet(request):
                 except:
                     timeAll = 0
 
-            table = table2
+            table_other = table2
             try:
 
-                table_triblok = table.filter(uchastok="Квадроблок розлива")
-                table = table.exclude(uchastok="Квадроблок розлива")
+                table = table_other.filter(uchastok="Квадроблок розлива")
+                table_other = table_other.exclude(uchastok="Квадроблок розлива")
 
             except:
                 pass
@@ -988,11 +988,11 @@ def otchet(request):
                 except:
                     timeAll = 0
 
-            table = table4
+            table_other = table4
             try:
 
-                table_triblok = table.filter(uchastok="Триблок (ополаскиватель, розлив, укупорка)")
-                table = table.exclude(uchastok="Триблок (ополаскиватель, розлив, укупорка)")
+                table = table_other.filter(uchastok="Триблок (ополаскиватель, розлив, укупорка)")
+                table_other = table_other.exclude(uchastok="Триблок (ополаскиватель, розлив, укупорка)")
 
             except:
                 pass
@@ -1029,7 +1029,7 @@ def otchet(request):
 
     # Общее время простоя
     try:
-        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum') + table_triblok.aggregate(Sum('prostoy')).get(
+        sumProstoy = table_other.aggregate(Sum('prostoy')).get('prostoy__sum') + table.aggregate(Sum('prostoy')).get(
             'prostoy__sum')
         if sumProstoy == None:
             sumProstoy = datetime.timedelta(0)
@@ -1167,14 +1167,17 @@ def otchet(request):
     for k in vid_prostoev:
         temp_time = datetime.timedelta(0)
         if k == "ТО и Переналадки АСУП":
-            for el in table:
+            for el in table_other:
                 if el.uchastok in vid_prostoev[k]:
                     temp_time += time_to_timedelta(el.prostoy)
+                for el in table:
+                    if el.uchastok in vid_prostoev[k]:
+                        temp_time += time_to_timedelta(el.prostoy)
         else:
-            for el in table:
+            for el in table_other:
                 if el.prichina in vid_prostoev[k]:
                     temp_time += time_to_timedelta(el.prostoy)
-            for el in table_triblok:
+            for el in table:
                 if el.prichina in vid_prostoev[k]:
                     temp_time += time_to_timedelta(el.prostoy)
         time_by_category.append(format_timedelta(temp_time))
@@ -1191,8 +1194,8 @@ def otchet(request):
         allSpeed = 0
 
     return render(request, "otchet.html", {
-        'table': table,
-        "table_triblok": table_triblok,
+        'table_other': table_other,
+        "table": table,
         'form': form,
 
         "tempChart": temp_chart,

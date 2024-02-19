@@ -991,7 +991,7 @@
 
         </script>
 
-        {% if table_triblok %}
+        {% if table %}
             <table id="sample_data" class="table table-bordered table-striped">
             <thead>
             <tr>
@@ -1006,7 +1006,7 @@
             </thead>
             <tbody>
 
-            {% for row in table_triblok %}
+            {% for row in table %}
                 <tr>
                     <td>{{ row.startdata|date:"d.m.Y" }}</td>
                     <td>{{ row.starttime }}</td>
@@ -1042,7 +1042,7 @@
                 <th>Комментарий</th>
             </thead>
             <tbody>
-            {% for row in table %}
+            {% for row in table_other %}
                 <tr>
                     <td>{{ row.startdata|date:"d.m.Y" }}</td>
                     <td>{{ row.starttime }}</td>
@@ -1222,7 +1222,7 @@
                 });
             });
         </script>
-        {% if table_triblok %}
+        {% if table %}
             <table id="sample_data2_2" class="table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -1236,7 +1236,7 @@
                     <th>Комментарий</th>
                 </thead>
                 <tbody>
-                {% for row in table_triblok %}
+                {% for row in table %}
                     <tr>
                         <td>{{ row.startdata|date:"d.m.Y" }}</td>
                         <td>{{ row.starttime }}</td>
@@ -1272,7 +1272,7 @@
                 <th>Комментарий</th>
             </thead>
             <tbody>
-            {% for row in table %}
+            {% for row in table_other %}
                 <tr>
                     <td>{{ row.startdata|date:"d.m.Y" }}</td>
                     <td>{{ row.starttime }}</td>
@@ -1320,7 +1320,7 @@
                 }
             });
         </script>
-        {% if table_triblok %}
+        {% if table %}
             <table id="sample_data4" class="table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -1334,7 +1334,7 @@
                     <th>Комментарий</th>
                 </thead>
                 <tbody>
-                {% for row in table_triblok %}
+                {% for row in table %}
                     <tr>
                         <td>{{ row.startdata|date:"d.m.Y" }}</td>
                         <td>{{ row.starttime }}</td>
@@ -1370,7 +1370,7 @@
                 <th>Комментарий</th>
             </thead>
             <tbody>
-            {% for row in table %}
+            {% for row in table_other %}
                 <tr>
                     <td>{{ row.startdata|date:"d.m.Y" }}</td>
                     <td>{{ row.starttime }}</td>

@@ -573,6 +573,9 @@ def Sotchet(request):
             for el in table:
                 if el.uchastok in vid_prostoev[k]:
                     temp_time += time_to_timedelta(el.prostoy)
+            for el in table_other:
+                if el.uchastok in vid_prostoev[k]:
+                    temp_time += time_to_timedelta(el.prostoy)
         else:
             for el in table:
                 if el.prichina in vid_prostoev[k]:
