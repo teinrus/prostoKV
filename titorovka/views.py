@@ -149,10 +149,10 @@ def Sotchet(request):
                                                     startdata__gte=form.cleaned_data["start_data"],
                                                     startdata__lte=form.cleaned_data["finish_data"]
                                                     ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
+                        starttime__gte=datetime.time(0),
+                        starttime__lte=datetime.time(23, 59),
                         startdata__gte=form.cleaned_data["start_data"],
-                        startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                        startdata__lte=form.cleaned_data["finish_data"]).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
                                                                                                           'starttime')
                     table_other = Table31.objects.filter(starttime__gte=datetime.time(0),
                                                          starttime__lte=datetime.time(23, 59),
@@ -195,9 +195,10 @@ def Sotchet(request):
                                                     startdata__gte=form.cleaned_data["start_data"],
                                                     startdata__lte=form.cleaned_data["finish_data"]
                                                     ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
-                        startdata=datetime.date.today(),
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                        starttime__gte=datetime.time(8),
+                        starttime__lte=datetime.time(16, 00),
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"]).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
                                                                                                           'starttime')
                     table_other = Table31.objects.filter(starttime__gte=datetime.time(8),
                                                          starttime__lte=datetime.time(16, 00),
@@ -237,9 +238,10 @@ def Sotchet(request):
                                                     startdata__gte=form.cleaned_data["start_data"],
                                                     startdata__lte=form.cleaned_data["finish_data"]
                                                     ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
-                        startdata=datetime.date.today(),
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=datetime.time(16, 00),
+                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
                                                                                                           'starttime') \
                         .order_by('startdata', 'starttime')
                     table_other = Table31.objects.filter(starttime__gte=datetime.time(16, 00),
@@ -280,9 +282,10 @@ def Sotchet(request):
                                                     startdata__gte=form.cleaned_data["start_data"],
                                                     startdata__lte=form.cleaned_data["finish_data"]
                                                     ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
-                        startdata=datetime.date.today(),
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                        startdata__gte=form.cleaned_data["start_data"],
+                        startdata__lte=form.cleaned_data["finish_data"],
+                        starttime__gte=datetime.time(00, 00),
+                        starttime__lte=datetime.time(8, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
                                                                                                           'starttime')
                     table_other = Table31.objects.filter(starttime__gte=datetime.time(00, 00),
                                                          starttime__lte=datetime.time(8, 00),
@@ -329,8 +332,8 @@ def Sotchet(request):
                     uchastok__icontains=uchastok_rozliv) | Table33.objects.filter(
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
-                    starttime__gte=startSmena,
-                    starttime__lte=spotSmena).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                    starttime__gte=datetime.time(0),
+                    starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
                                                                                                       'starttime')
                 table_other = Table33.objects.filter(starttime__gte=datetime.time(0),
                                                      starttime__lte=datetime.time(23, 59),
@@ -376,8 +379,8 @@ def Sotchet(request):
                     uchastok__icontains=uchastok_rozliv) | Table33.objects.filter(
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
-                    starttime__gte=startSmena,
-                    starttime__lte=spotSmena).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                    starttime__gte=datetime.time(8),
+                    starttime__lte=datetime.time(16, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
                                                                                                       'starttime')
                 table_other = Table33.objects.filter(starttime__gte=datetime.time(8),
                                                      starttime__lte=datetime.time(16, 00),
@@ -420,8 +423,8 @@ def Sotchet(request):
                     uchastok__icontains=uchastok_rozliv) | Table33.objects.filter(
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
-                    starttime__gte=startSmena,
-                    starttime__lte=spotSmena).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                    starttime__gte=datetime.time(16, 00),
+                    starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
                                                                                                       'starttime')
                 table_other = Table33.objects.filter(starttime__gte=datetime.time(16, 00),
                                                      starttime__lte=datetime.time(23, 59),
@@ -464,8 +467,8 @@ def Sotchet(request):
                     uchastok__icontains=uchastok_rozliv) | Table33.objects.filter(
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
-                    starttime__gte=startSmena,
-                    starttime__lte=spotSmena).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                    starttime__gte=datetime.time(00, 00),
+                    starttime__lte=datetime.time(8, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
                                                                                                       'starttime')
                 table_other = Table33.objects.filter(starttime__gte=datetime.time(00, 00),
                                                      starttime__lte=datetime.time(8, 00),
@@ -656,8 +659,8 @@ def SotchetIgr(request):
                         uchastok="Моноблок Изобарического розлива") | Table24.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
+                        starttime__gte=datetime.time(0),
+                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
                                                                                                        'starttime')
                     table_other = Table24.objects.filter(starttime__gte=datetime.time(0),
                                                          starttime__lte=datetime.time(23, 59),
@@ -703,8 +706,8 @@ def SotchetIgr(request):
                         uchastok="Моноблок Изобарического розлива") | Table24.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
+                        starttime__gte=datetime.time(8),
+                        starttime__lte=datetime.time(16, 00)).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
                                                                                                        'starttime')
                     table_other = Table24.objects.filter(starttime__gte=datetime.time(8),
                                                          starttime__lte=datetime.time(16, 00),
@@ -746,8 +749,8 @@ def SotchetIgr(request):
                         uchastok="Моноблок Изобарического розлива") | Table24.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
+                        starttime__gte=datetime.time(16, 00),
+                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
                                                                                                        'starttime')
                     table_other = Table24.objects.filter(starttime__gte=datetime.time(16, 00),
                                                          starttime__lte=datetime.time(23, 59),
@@ -837,16 +840,16 @@ def SotchetIgr(request):
                         uchastok="Триблок CLIFOM") | Table26.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        starttime__gte=datetime.time(0, 00),
+                        starttime__lte=datetime.time(23, 59)).filter(uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
                         'startdata',
                         'starttime')
                     table_other = Table26.objects.filter(starttime__gte=datetime.time(0, 00),
                                                          starttime__lte=datetime.time(23, 59),
                                                          startdata__gte=form.cleaned_data["start_data"],
                                                          startdata__lte=form.cleaned_data["finish_data"]
-                                                         ).exclude(uchastok="Триблок CLIFOM").exclude(
-                        uchastok="Этикетировочный аппарат S2T6/Ri") \
+                                                         ).exclude(uchastok__icontains="Триблок CLIFOM").exclude(
+                        uchastok__icontains="Этикетировочный аппарат S2T6/Ri") \
                         .order_by('startdata', 'starttime')
 
                     speed = Speed26.objects.filter(data__gte=form.cleaned_data["start_data"],
@@ -885,16 +888,17 @@ def SotchetIgr(request):
                         uchastok="Триблок CLIFOM") | Table26.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        starttime__gte=datetime.time(8),
+                        starttime__lte=datetime.time(16, 00),).filter(uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
                         'startdata',
                         'starttime')
+                    print(*table, sep= "\n")
                     table_other = Table26.objects.filter(starttime__gte=datetime.time(8, 00),
                                                          starttime__lte=datetime.time(16, 00),
                                                          startdata__gte=form.cleaned_data["start_data"],
                                                          startdata__lte=form.cleaned_data["finish_data"]
                                                          ).exclude(uchastok="Триблок CLIFOM").exclude(
-                        uchastok="Этикетировочный аппарат S2T6/Ri") \
+                        uchastok__icontains="Этикетировочный аппарат S2T6/Ri") \
                         .order_by('startdata', 'starttime')
                     speed = Speed26.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
@@ -929,8 +933,9 @@ def SotchetIgr(request):
                         uchastok="Триблок CLIFOM") | Table26.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        starttime__gte=datetime.time(16, 00),
+                        starttime__lte=datetime.time(23, 59)
+                    ).filter(uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
                         'startdata',
                         'starttime')
                     table_other = Table26.objects.filter(starttime__gte=datetime.time(16, 00),
@@ -938,7 +943,7 @@ def SotchetIgr(request):
                                                          startdata__gte=form.cleaned_data["start_data"],
                                                          startdata__lte=form.cleaned_data["finish_data"]
                                                          ).exclude(uchastok="Триблок CLIFOM").exclude(
-                        uchastok="Этикетировочный аппарат S2T6/Ri") \
+                        uchastok__icontains="Этикетировочный аппарат S2T6/Ri") \
                         .order_by('startdata', 'starttime')
                     speed = Speed26.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                    data__lte=form.cleaned_data["finish_data"],
@@ -974,8 +979,8 @@ def SotchetIgr(request):
                         uchastok="Триблок CLIFOM") | Table26.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        starttime__gte=datetime.time(00, 00),
+                        starttime__lte=datetime.time(8, 00)).filter(uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
                         'startdata',
                         'starttime')
                     table_other = Table26.objects.filter(starttime__gte=datetime.time(00, 00),
@@ -983,7 +988,7 @@ def SotchetIgr(request):
                                                          startdata__gte=form.cleaned_data["start_data"],
                                                          startdata__lte=form.cleaned_data["finish_data"]
                                                          ).exclude(uchastok="Триблок CLIFOM").exclude(
-                        uchastok="Этикетировочный аппарат S2T6/Ri") \
+                        uchastok__icontains="Этикетировочный аппарат S2T6/Ri") \
                         .order_by('startdata', 'starttime')
                     speed = Speed26.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
                                                                          data__lte=form.cleaned_data["finish_data"],
@@ -1022,8 +1027,8 @@ def SotchetIgr(request):
                         uchastok__icontains="Блок розлива") | Table25.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        starttime__gte=datetime.time(00, 00),
+                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Этикетировочный аппарат")).order_by(
                         'startdata',
                         'starttime')
                     table_other = Table25.objects.filter(starttime__gte=datetime.time(00, 00),
@@ -1070,8 +1075,8 @@ def SotchetIgr(request):
                         uchastok__icontains="Блок розлива") | Table25.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        starttime__gte=datetime.time(8, 00),
+                        starttime__lte=datetime.time(16, 00)).filter(uchastok="Этикетировочный аппарат")).order_by(
                         'startdata',
                         'starttime')
                     table_other = Table25.objects.filter(starttime__gte=datetime.time(8, 00),
@@ -1115,8 +1120,8 @@ def SotchetIgr(request):
                         uchastok__icontains="Блок розлива") | Table25.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        starttime__gte=datetime.time(16, 00),
+                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Этикетировочный аппарат")).order_by(
                         'startdata',
                         'starttime')
                     table_other = Table25.objects.filter(starttime__gte=datetime.time(16, 00),
@@ -1161,8 +1166,8 @@ def SotchetIgr(request):
                         uchastok__icontains="Блок розлива") | Table25.objects.filter(
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=startSmena,
-                        starttime__lte=spotSmena).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        starttime__gte=datetime.time(00, 00),
+                        starttime__lte=datetime.time(8, 00)).filter(uchastok="Этикетировочный аппарат")).order_by(
                         'startdata',
                         'starttime')
                     table_other = Table25.objects.filter(starttime__gte=datetime.time(00, 00),
