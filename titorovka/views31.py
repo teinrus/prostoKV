@@ -134,6 +134,7 @@ def update31(request):
             else:
                 v = uchastok.objects.get(Guid_Line="12ab36dc-0fb9-44d8-b14d-63230bf1c0cd",
                                      Uchastok=b).Guid_Uchastok
+                print(v)
 
             try:
                 n = "Guid_Uchastok"
