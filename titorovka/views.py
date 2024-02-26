@@ -1341,7 +1341,7 @@ def start_perenaladka31(request):
     return HttpResponse('yes')
 
 
-def start_donaladka31(request):
+def start_adaptacia31(request):
     mod_bus(0, 2)
     return HttpResponse('yes')
 

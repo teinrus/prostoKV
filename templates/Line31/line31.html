@@ -155,10 +155,11 @@
     </body>
     {% if not user.username == 'naladchikS' %}
         <input type="button" id="start_perenaladka31" value="Старт переналадка"/>
-        <input type="button" id="start_donaladka31" value="Cтарт доналадка"/>
+
         <input type="button" id="TO31" value="ТО"/>
         <input type="button" id="rabota31" value="Работа"/>
         <input type="button" id="Oformlenie31" value="Оформление"/>
+        <input type="button" id="start_adaptacia31" value="Адаптация"/>
 
     {% endif %}
     <script>
@@ -170,10 +171,10 @@
 
             });
         })
-        $('#start_donaladka31').click(function () {
+        $('#start_adaptacia31').click(function () {
             $.ajax({
                 type: "POST",
-                url: "{% url 'start_donaladka31' %}",
+                url: "{% url 'start_adaptacia31' %}",
             });
         })
         $('#rabota31').click(function () {
