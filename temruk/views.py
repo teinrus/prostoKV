@@ -1030,12 +1030,21 @@ def otchet(request):
 
     # Общее время простоя
     try:
-        sumProstoy = table_other.aggregate(Sum('prostoy')).get('prostoy__sum') + table.aggregate(Sum('prostoy')).get(
-            'prostoy__sum')
+        other=table_other.aggregate(Sum('prostoy')).get('prostoy__sum')
+        if not other :
+            other = datetime.timedelta(0)
+        osnova = table.aggregate(Sum('prostoy')).get('prostoy__sum')
+        if not osnova :
+            osnova = datetime.timedelta(0)
+
+
+        sumProstoy =osnova+other
         if sumProstoy == None:
             sumProstoy = datetime.timedelta(0)
+
     except:
         sumProstoy = 0
+
     # Средняя скорость
     try:
         if sumProstoy > timeAll:
