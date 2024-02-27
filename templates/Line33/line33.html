@@ -1,6 +1,6 @@
 {% block content %}
 
-    {% if user.username == 'masterS' or user.username == 'admin'%}
+    {% if user.username == 'masterS' or user.username == 'admin' %}
         <script> // зависимости выпадающих списков таблицы
         $(document).ready(function () {
             var sor = [];
@@ -122,14 +122,15 @@
     </table>
     </body>
 
-{% if not user.username == 'naladchikS'%}
-  <input type="button" id="start_perenaladka33" value="Старт переналадка"/>
-    <input type="button" id="start_donaladka33" value="Cтарт доналадка"/>
-    <input type="button" id="TO33" value="ТО"/>
-    <input type="button" id="rabota33" value="Работа"/>
-{% endif %}
+    {% if not user.username == 'naladchikS' %}
+        <input type="button" id="start_perenaladka33" value="Старт переналадка"/>
+        <input type="button" id="TO33" value="ТО"/>
+        <input type="button" id="rabota33" value="Работа"/>
+        <input type="button" id="Oformlenie33" value="Оформление"/>
+        <input type="button" id="start_adaptation33" value="Адаптация"/>
+    {% endif %}
 
-     <script>
+    <script>
         $('#start_perenaladka33').click(function () {
             $.ajax({
                 type: "POST",
@@ -137,10 +138,10 @@
 
             });
         })
- $('#start_donaladka33').click(function () {
+        $('#start_adaptation33').click(function () {
             $.ajax({
                 type: "POST",
-                url: "{% url 'start_donaladka33' %}",
+                url: "{% url 'start_adaptation33' %}",
 
             });
         })
@@ -156,11 +157,15 @@
                 url: "{% url 'TO33' %}",
             });
         })
-
+        $('#Oformlenie33').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'Oformlenie33' %}",
+            });
+        })
     </script>
 
 
 {% endblock %}
 
 
-</style>

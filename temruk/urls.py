@@ -8,8 +8,6 @@ from temruk.views import profile_view, profileOut_view, start_perenaladka5, star
 
 urlpatterns = [
 
-
-
     path('', views.index, name='home'),
 
     path('tv5', views.TV5, name='tv5'),
@@ -60,7 +58,7 @@ urlpatterns = [
 
 
     path('profile', profile_view, name='profile'),
-    path('profileOut', profileOut_view, name='profileOut'),
+    path('profileOut/', profileOut_view, name='profileOut'),
 
 
 

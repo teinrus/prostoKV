@@ -832,7 +832,7 @@
 
                 var savedOption = localStorage.getItem('selectedOption31');
                 if (savedOption === null) {
-                    savedOption =select.options[0].value;  // Устанавливаем нулевое значение по умолчанию
+                    savedOption = select.options[0].value;  // Устанавливаем нулевое значение по умолчанию
                     localStorage.setItem('selectedOption31', savedOption);
                 }
 
@@ -977,35 +977,47 @@
                     url: 'getBtn33',
                     method: 'post',
                     success: function (data) {
-                        if (data.buttons_reg[0] == 1) {
-                            $('#start_perenaladka33').attr('style', 'color:red; border: 1px solid blue;')
-                            $('#start_donaladka33').attr('style', 'color:black;')
+                        if (data.buttons_reg[0] == 16) {
+                            $('#start_perenaladka33').attr('style', 'color:black;')
+                            $('#start_adaptacia33').attr('style', 'color:black;')
                             $('#TO33').attr('style', 'color:black; ')
                             $('#rabota33').attr('style', 'color:black; ')
+                            $('#Oformlenie33').attr('style', 'color:green; border: 1px solid blue;')
+                        }
+                        if (data.buttons_reg[0] == 1) {
+                            $('#start_perenaladka33').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_adaptation33').attr('style', 'color:black;')
+                            $('#TO33').attr('style', 'color:black; ')
+                            $('#rabota33').attr('style', 'color:black; ')
+                            $('#Oformlenie33').attr('style', 'color:black; ')
                         }
                         if (data.buttons_reg[0] == 2) {
-                            $('#start_donaladka33').attr('style', 'color:red; border: 1px solid blue;')
+                            $('#start_adaptation33').attr('style', 'color:red; border: 1px solid blue;')
                             $('#start_perenaladka33').attr('style', 'color:black;')
                             $('#TO33').attr('style', 'color:black; ')
                             $('#rabota33').attr('style', 'color:black; ')
+                            $('#Oformlenie33').attr('style', 'color:black; ')
                         }
                         if (data.buttons_reg[0] == 8) {
                             $('#TO33').attr('style', 'color:red; border: 1px solid blue;')
                             $('#start_perenaladka33').attr('style', 'color:black;')
-                            $('#start_donaladka33').attr('style', 'color:black;')
+                            $('#start_adaptation33').attr('style', 'color:black;')
                             $('#rabota33').attr('style', 'color:black; ')
+                            $('#Oformlenie33').attr('style', 'color:black; ')
                         }
                         if (data.buttons_reg[0] == 4) {
                             $('#rabota33').attr('style', 'color:green; border: 1px solid blue;')
                             $('#start_perenaladka33').attr('style', 'color:black;')
-                            $('#start_donaladka33').attr('style', 'color:black;')
+                            $('#start_adaptation33').attr('style', 'color:black;')
                             $('#TO33').attr('style', 'color:black; ')
+                            $('#Oformlenie33').attr('style', 'color:black; ')
                         }
                         if (data.buttons_reg[0] == 0) {
                             $('#start_perenaladka33').attr('style', 'color:black;')
-                            $('#start_donaladka33').attr('style', 'color:black;')
+                            $('#start_adaptation33').attr('style', 'color:black;')
                             $('#TO33').attr('style', 'color:black; ')
                             $('#rabota33').attr('style', 'color:black; ')
+                            $('#Oformlenie33').attr('style', 'color:black; ')
                         }
 
                     }
@@ -1013,25 +1025,7 @@
             }, 2000);
 
 
-            $.ajax({
-                url: 'getBtn33',
-                method: 'post',
-                success: function (data) {
-                    if (data.buttons_reg[0] == 1) {
-                        $('#start_perenaladka33').attr('style', 'color:red; border: 1px solid blue;')
-                    }
-                    if (data.buttons_reg[0] == 2) {
-                        $('#start_donaladka33').attr('style', 'color:red; border: 1px solid blue;')
-                    }
-                    if (data.buttons_reg[0] == 8) {
-                        $('#TO33').attr('style', 'color:red; border: 1px solid blue;')
-                    }
-                    if (data.buttons_reg[0] == 4) {
-                        $('#rabota33').attr('style', 'color:green; border: 1px solid blue;')
-                    }
 
-                }
-            });
 
 
         });

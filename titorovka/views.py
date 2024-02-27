@@ -892,7 +892,7 @@ def SotchetIgr(request):
                         starttime__lte=datetime.time(16, 00),).filter(uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
                         'startdata',
                         'starttime')
-                    print(*table, sep= "\n")
+
                     table_other = Table26.objects.filter(starttime__gte=datetime.time(8, 00),
                                                          starttime__lte=datetime.time(16, 00),
                                                          startdata__gte=form.cleaned_data["start_data"],
@@ -1366,7 +1366,7 @@ def start_perenaladka33(request):
     return HttpResponse('yes')
 
 
-def start_donaladka33(request):
+def start_adaptation33(request):
     mod_bus(1, 2)
     return HttpResponse('yes')
 
@@ -1378,6 +1378,9 @@ def rabota33(request):
 
 def TO33(request):
     mod_bus(1, 8)
+    return HttpResponse('yes')
+def start_oformlenie33(request):
+    mod_bus(1, 16)
     return HttpResponse('yes')
 
 

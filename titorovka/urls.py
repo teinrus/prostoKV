@@ -1,8 +1,9 @@
 from django.urls import path
 from titorovka import views, views31, views33, views24, views26, views25
 from titorovka.views import start_perenaladka31, start_adaptacia31, rabota31, TO31, start_perenaladka33, rabota33, TO33, \
-    start_donaladka33, start_perenaladka24, start_donaladka24, rabota24, TO24, start_perenaladka26, start_donaladka26, \
-    rabota26, TO26, start_perenaladka25, start_donaladka25, rabota25, TO25, vid25, vid26, Oformlenie31
+    start_perenaladka24, start_donaladka24, rabota24, TO24, start_perenaladka26, start_donaladka26, \
+    rabota26, TO26, start_perenaladka25, start_donaladka25, rabota25, TO25, vid25, vid26, Oformlenie31, \
+    start_adaptation33, start_oformlenie33
 from titorovka.views31 import handle_select_position31, list_nomenklature31
 
 urlpatterns = [
@@ -22,13 +23,13 @@ urlpatterns = [
     path('list_nomenklature31', list_nomenklature31, name='list_nomenklature31'),
     path('handle_select_position31', handle_select_position31, name='handle_select_position31'),
 
-
     path('update_items33/', views33.update_items33, name='update_items33'),
     path('getData33', views33.getData33, name='getData33'),
     path(r'update33', views33.update33, name='update33'),
     path('getBtn33', views33.getBtn33, name='getBtn33'),
     path('start_perenaladka33/', start_perenaladka33, name='start_perenaladka33'),
-    path('start_donaladka33/', start_donaladka33, name='start_donaladka33'),
+    path('start_adaptation33/', start_adaptation33, name='start_adaptation33'),
+    path('start_oformlenie33/', start_oformlenie33, name='Oformlenie33'),
     path('rabota33/', rabota33, name='rabota33'),
     path('TO33/', TO33, name='TO33'),
 

@@ -86,7 +86,7 @@ vid_prostoev = {
     "ТО и Переналадки АСУП": ["ТО",
                               "Доналадка",
                               "Переналадка"],
-    "Обед":["Обед"]
+    "Обед": ["Обед"]
 }
 
 
@@ -481,10 +481,10 @@ def otchet(request):
                                                            time__range=(datetime.time(0), datetime.time(23, 59)))
                     temp_chart = [str(sp.time) for sp in boom]
                     table_other = Table5.objects.filter(starttime__gte=datetime.time(0),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                        starttime__lte=datetime.time(23, 59),
+                                                        startdata__gte=form.cleaned_data["start_data"],
+                                                        startdata__lte=form.cleaned_data["finish_data"]
+                                                        ).order_by('startdata', 'starttime')
 
                     speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
@@ -536,10 +536,10 @@ def otchet(request):
                                                            time__range=(datetime.time(8), datetime.time(16, 30)))
                     temp_chart = [str(sp.time) for sp in boom]
                     table_other = Table5.objects.filter(starttime__gte=datetime.time(8),
-                                                  starttime__lte=datetime.time(16, 30),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                        starttime__lte=datetime.time(16, 30),
+                                                        startdata__gte=form.cleaned_data["start_data"],
+                                                        startdata__lte=form.cleaned_data["finish_data"]
+                                                        ).order_by('startdata', 'starttime')
                     speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(8),
@@ -583,10 +583,10 @@ def otchet(request):
                     temp_chart = [str(sp.time) for sp in boom]
 
                     table_other = Table5.objects.filter(starttime__gte=datetime.time(16, 30),
-                                                  starttime__lte=datetime.time(23, 59),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                        starttime__lte=datetime.time(23, 59),
+                                                        startdata__gte=form.cleaned_data["start_data"],
+                                                        startdata__lte=form.cleaned_data["finish_data"]
+                                                        ).order_by('startdata', 'starttime')
                     speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(16, 30),
@@ -629,10 +629,10 @@ def otchet(request):
                                                            time__range=(datetime.time(00, 00), datetime.time(8, 00)))
                     temp_chart = [str(sp.time) for sp in boom]
                     table_other = Table5.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                  starttime__lte=datetime.time(8, 00),
-                                                  startdata__gte=form.cleaned_data["start_data"],
-                                                  startdata__lte=form.cleaned_data["finish_data"]
-                                                  ).order_by('startdata', 'starttime')
+                                                        starttime__lte=datetime.time(8, 00),
+                                                        startdata__gte=form.cleaned_data["start_data"],
+                                                        startdata__lte=form.cleaned_data["finish_data"]
+                                                        ).order_by('startdata', 'starttime')
                     speed = Speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(00, 00),
@@ -1030,15 +1030,14 @@ def otchet(request):
 
     # Общее время простоя
     try:
-        other=table_other.aggregate(Sum('prostoy')).get('prostoy__sum')
-        if not other :
+        other = table_other.aggregate(Sum('prostoy')).get('prostoy__sum')
+        if not other:
             other = datetime.timedelta(0)
         osnova = table.aggregate(Sum('prostoy')).get('prostoy__sum')
-        if not osnova :
+        if not osnova:
             osnova = datetime.timedelta(0)
 
-
-        sumProstoy =osnova+other
+        sumProstoy = osnova + other
         if sumProstoy == None:
             sumProstoy = datetime.timedelta(0)
 
@@ -1842,6 +1841,7 @@ def profile_view(request):
 
 
 def profileOut_view(request):
+    print("tut")
     logout(request)
     if request.method == 'GET':
         user_ip = request.META.get('HTTP_X_FORWARDED_FOR')
