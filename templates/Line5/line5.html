@@ -112,14 +112,12 @@
 
 
 <script>
-// Функция для сохранения выбранного значения в локальном хранилище
 function saveSelectedOption() {
     var selectElement = document.getElementById('Select5');
     var selectedOption = selectElement.value;
     localStorage.setItem('selectedOption', selectedOption);
 }
 
-// Функция для установки сохраненного значения при загрузке страницы
 function loadSavedOption() {
     var selectElement = document.getElementById('Select5');
     var savedOption = localStorage.getItem('selectedOption');
@@ -128,39 +126,47 @@ function loadSavedOption() {
     }
 }
 
-// Функция для отправки данных по XHR
-function sendData() {
-    var selectElement = document.getElementById('Select5');
-    var selectedOption = selectElement.value;
+function sendData(selectedOption) {
+    var selectedValue = selectedOption;
+    console.log(selectedValue);
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "{% url 'select5' %}", true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(JSON.stringify({selectedOption: selectedOption}));
+        // Отправляем выбранное значение на сервер через AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'select5' %}", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    console.log(response.selected_value);
+                    // Делайте что-то с ответом от сервера
+                } else {
+                    console.log('Error:', xhr.statusText);
+                }
+            }
+        };
+        xhr.send("selected_value=" + encodeURIComponent(selectedValue));
 }
 
-// Вызов функции загрузки сохраненного значения при загрузке страницы
 loadSavedOption();
 
-// Слушатель события изменения выбранного значения
-document.getElementById('Select5').addEventListener('change', function() {
+document.getElementById('Select5').addEventListener('change', function(event) {
     saveSelectedOption();
-    sendData(); // Вызываем функцию отправки данных при изменении выбранного значения
+    var selectedOption = event.target.value; // Получаем выбранное значение селекта
+    sendData(selectedOption); // Вызываем функцию отправки данных при изменении выбранного значения
 });
 
 // Устанавливаем интервал для отправки данных
 setInterval(function() {
     var now = new Date();
-    console.log("отправил")
-    if (now.getHours() === 16 && now.getMinutes() === 31  ) {
-        sendData();
-    } else if (now.getHours() === 0 && now.getMinutes() === 1  ){
-        sendData();
-    }else if (now.getHours() === 8 && now.getMinutes() === 1  ) {
-        sendData();
+    var selectedOption = document.getElementById('Select5').value;
+
+    if ((now.getHours() === 16 && now.getMinutes() === 31) ||
+        (now.getHours() === 0 && now.getMinutes() === 1) ||
+        (now.getHours() === 8 && now.getMinutes() === 1)) {
+        sendData(selectedOption);
     }
 }, 60000); // Проверяем каждую минуту
-
 
 </script>
 

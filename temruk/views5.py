@@ -346,16 +346,16 @@ def getBtn5(request):
     return JsonResponse(result)
 
 
-from django.utils import timezone
+
 
 
 def select5(request):
     if request.method == 'POST':
+        print(request.POST)
         selected_value = request.POST.get('selected_value')
-        # Здесь вы можете выполнить необходимые операции с выбранным значением
-        # и вернуть результат в формате JSON
-        response_data = {'selected_value': selected_value}
 
+        response_data = {'selected_value': selected_value}
+        print(selected_value)
         production_time = ProductionTime5(data=datetime.datetime.today(),
                                           time=datetime.datetime.now().strftime("%H:%M:%S"), type_bottle=selected_value)
         production_time.save()
