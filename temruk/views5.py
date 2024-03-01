@@ -278,11 +278,12 @@ def getData(request):
 
     except:
         print("intervals_by_numbacr")
-        # Получение времени начала и окончания из ProductionTime31
+        # Получение времени начала и окончания из ProductionTime
     start_times = list(ProductionTime5.objects.filter(data=datetime.date.today(),
                                                        time__gte=start_time,
                                                        time__lte=stop_time)
                        .values_list('time', flat=True))
+
     prod_name = list(ProductionTime5.objects.filter(data=datetime.date.today(),
                                                      time__gte=start_time,
                                                      time__lte=stop_time)
@@ -358,7 +359,6 @@ def select5(request):
         production_time = ProductionTime5(data=datetime.datetime.today(),
                                           time=datetime.datetime.now().strftime("%H:%M:%S"), type_bottle=selected_value)
         production_time.save()
-        print(production_time)
         return JsonResponse(response_data)
     else:
         # Вернуть ошибку, если запрос не является POST-запросом или не AJAX-запросом

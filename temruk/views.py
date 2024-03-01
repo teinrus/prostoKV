@@ -1,22 +1,18 @@
 import datetime
-
 import random
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg, F
 from django.db.models import Sum, Min, Max
-
+from django.db.models.functions import Round
+from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.shortcuts import render
+from pyModbusTCP.client import ModbusClient
 
 from temruk.models import *
 from .forms import Otchet
-from pyModbusTCP.client import ModbusClient
-from django.shortcuts import render
-from django.http import HttpResponse
-
-from django.db.models import Avg, F
-from django.db.models.functions import Round
-
 from .views2 import get_shift_number
 from .views5 import get_shift_times, get_plan_quantity, calculate_production_percentage, get_total_prostoy, \
     get_average_speed, get_total_product, get_boom_out
@@ -509,53 +505,78 @@ def otchet(request):
                                                             )
                         plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
 
-                        start_times = list(ProductionTime5.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                                          data__lte=form.cleaned_data["finish_data"],
-                                                                          time__gte=datetime.time(0),
-                                                                          time__lte=datetime.time(23, 59))
-                                           .values_list('time', flat=True))
+
+                    except:
+                        plan = 0
+                    try:
+
                         prod_name = list(ProductionTime5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                                         data__lte=form.cleaned_data["finish_data"],
                                                                         time__gte=datetime.time(0),
-                                                                        time__lte=datetime.time(23, 59))
-                                         .values_list('type_bottle', flat=True))
+                                                                        time__lte=datetime.time(23, 59)).order_by(
+                            'data', 'time')
+
+                                         )
                         # Пустой список для хранения скоростей
+
                         speeds = []
 
-                        # Получение скорости для каждого продукта из списка
+                        # # Получение скорости для каждого продукта из списка
                         for product in prod_name:
                             # Получение объекта SetProductionSpeed31 по названию продукта
-                            production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(
+                            production_speed = SetProductionSpeed.objects.filter(
+                                name_bottle=product.type_bottle).filter(
                                 line="5").first()
 
                             if production_speed:
                                 # Добавление скорости продукта в список
                                 speeds.append(production_speed.speed)
                             else:
-                                speeds.append(None)
+                                speeds.append(0)
 
-                        end_times = start_times[1:] + [speed.last().time]
-                        start_times = [str(time) for time in start_times]
-                        end_times = [str(time) for time in end_times]
+                        # Получение первого времени из объектов speed
+                        first_speed_time = (speed.first().data, speed.first().time)
+
+                        # Создание списка start_times с первым значением first_speed_time
+                        start_times = [first_speed_time]
+
+                        # Добавление оставшихся элементов из prod_name
+                        start_times += [(elem.data, elem.time) for elem in prod_name[1:]]
+
+                        end_times = [(elem.data, elem.time) for elem in prod_name[1:]]
+                        end_times.append(
+                            (speed.last().data, speed.last().time))
+
+                        start_times = [(time) for time in start_times]
+                        end_times = [(time) for time in end_times]
 
                         # Парное объединение элементов двух списков
-                        merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
-                                       zip(start_times, end_times, speeds, prod_name)]
+                        merged_list = [(elem1, elem2, elem3) for elem1, elem2, elem3 in
+                                       zip(start_times, end_times, speeds)]
 
-                        for sp in speed:
-                            trig = False
-                            for el in range(0, len(merged_list)):
-                                if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
-                                        <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
-                                    data_chartneed_speed.append(merged_list[el][2])
-                                    trig = True
+                        # Перебираем все интервалы времени в merged_list
 
-                            if not trig:
+                        # print(*merged_list, sep="\n")
+
+                        for el_speed in speed:
+                            speed_datetime = datetime.datetime.combine(el_speed.data, el_speed.time)
+                            speed_in_range = False
+                            for start_datetime, end_datetime, speed_value in merged_list:
+                                start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
+                                end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
+                                if start_datetime <= speed_datetime <= end_datetime:
+                                    data_chartneed_speed.append(speed_value)
+                                    speed_in_range = True
+                                    break
+                            if not speed_in_range:
                                 data_chartneed_speed.append(0)
-                        print(data_chartneed_speed)
-                    except:
-                        plan = 0
 
+
+
+
+                    except   Exception as e:
+                        # Вывод ошибки в консоль
+                        print("Произошла ошибка:", e)
                     try:
                         timeAll = form.cleaned_data["finish_data"] - form.cleaned_data[
                             "start_data"] + datetime.timedelta(days=1)

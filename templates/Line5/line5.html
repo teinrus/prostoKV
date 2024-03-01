@@ -112,6 +112,27 @@
 
 
 <script>
+function saveSelectedOption() {
+            var selectElement = document.getElementById('Select5');
+            var selectedOption = selectElement.value;
+            localStorage.setItem('selectedOption', selectedOption);
+        }
+
+        // Функция для установки сохраненного значения при загрузке страницы
+        function loadSavedOption() {
+            var selectElement = document.getElementById('Select5');
+            var savedOption = localStorage.getItem('selectedOption');
+            if (savedOption) {
+                selectElement.value = savedOption;
+            }
+        }
+
+        // Вызов функции загрузки сохраненного значения при загрузке страницы
+        loadSavedOption();
+
+        // Слушатель события изменения выбранного значения
+        document.getElementById('Select5').addEventListener('change', saveSelectedOption);
+
     var selectElement = document.getElementById("Select5");
     selectElement.addEventListener("change", function() {
         var selectedValue = this.value;
