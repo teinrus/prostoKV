@@ -4,6 +4,7 @@ from django.contrib.admin import AdminSite
 # Register your models here.
 from .models import *
 
+
 class CustomAdminSite(AdminSite):
     site_header = "Панель администратора АСУПростоев"
     site_title = "TNR"
@@ -12,9 +13,6 @@ class CustomAdminSite(AdminSite):
 
 
 TNR_admin_site = CustomAdminSite(name="customadmin")
-
-
-
 
 TNR_admin_site.register(Table2)
 TNR_admin_site.register(Speed2)
@@ -25,12 +23,10 @@ TNR_admin_site.register(Speed4)
 TNR_admin_site.register(Table5)
 TNR_admin_site.register(Speed5)
 
-
 TNR_admin_site.register(ProductionOutput1)
 TNR_admin_site.register(ProductionOutput2)
 TNR_admin_site.register(ProductionOutput4)
 TNR_admin_site.register(ProductionOutput5)
-
 
 TNR_admin_site.register(prichina)
 TNR_admin_site.register(uchastok)
@@ -54,3 +50,9 @@ TNR_admin_site.register(Filter5)
 
 TNR_admin_site.register(prichina_test)
 TNR_admin_site.register(uchastok_test)
+
+TNR_admin_site.register(SetProductionSpeed)
+TNR_admin_site.register(ProductionTime5)
+
+
+

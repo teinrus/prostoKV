@@ -119,18 +119,20 @@ def update33(request):
         name = request.POST.get('name')
         value = request.POST.get('value')
         if name == "prichina":
+
             b = Table33.objects.get(id=pk).uchastok
             if b in vid_prostoev["ТО и Переналадки АСУП"]:
                 a = Table33.objects.get(id=pk)
                 setattr(a, name, value)
                 a.save()
                 return HttpResponse('yes')
+            print(uchastok.objects.all().filter(Guid_Line="d65654f8-2e89-4044-bb10-4342a9d1b722"))
             if b == "Автомат для одевания и обкатки колпака":
                 b="Автомат для одевания и обкатки полиламинатной капсулы и термоусадосного колпака"
 
 
             v = uchastok.objects.get(Guid_Line="d65654f8-2e89-4044-bb10-4342a9d1b722",
-                                     Uchastok=b).Guid_Uchastok
+                                     Uchastok__icontains=b).Guid_Uchastok
 
             try:
                 n = "Guid_Uchastok"

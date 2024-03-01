@@ -5,7 +5,7 @@ from django.db.models import Sum, Min, Max
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from temruk.models import Table5, Speed5, ProductionOutput5, bottling_plan, bottleExplosion5, Line5Indicators, prichina, \
-    uchastok
+    uchastok, SetProductionSpeed, ProductionTime5
 from pyModbusTCP.client import ModbusClient
 
 slave_address = '192.168.88.230'
@@ -113,7 +113,7 @@ def update(request):
                 n = "Guid_Uchastok"
                 b = Table5.objects.get(id=pk).uchastok
                 v = uchastok.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
-                                              Uchastok=b).Guid_Uchastok
+                                         Uchastok=b).Guid_Uchastok
 
                 a = Table5.objects.get(id=pk)
                 setattr(a, n, v)
@@ -154,7 +154,7 @@ def update5_2(request):
                 n = "Guid_Uchastok"
                 b = Table5.objects.get(id=pk).uchastok
                 v = uchastok.objects.get(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77",
-                                              Uchastok=b).Guid_Uchastok
+                                         Uchastok=b).Guid_Uchastok
                 a = Table5.objects.get(id=pk)
                 setattr(a, n, v)
 
@@ -194,6 +194,7 @@ def update_items5(request):
 
 
 def getData(request):
+    dataChart5_need_speed = []
     start_time, stop_time = get_shift_times()
 
     today = datetime.date.today().isoformat()
@@ -202,6 +203,7 @@ def getData(request):
 
     table5_queryset = Table5.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
     speed5_queryset = Speed5.objects.filter(data=today, time__range=(start_time, stop_time))
+
     production_output5_queryset = ProductionOutput5.objects.filter(data=today, time__range=(start_time, stop_time))
     boom = bottleExplosion5.objects.filter(data=datetime.date.today(), time__range=(start_time, stop_time))
 
@@ -213,11 +215,12 @@ def getData(request):
 
     lable_chart = [str(sp.time) for sp in speed5_queryset]
     data_chart = [sp.triblok for sp in speed5_queryset]
+
     boomOut = get_boom_out(boom)
     temp_chart = [str(sp.time) for sp in boom]
-    indicators=Line5Indicators.objects.filter(time__gte=start_time,
-                                                                time__lte=stop_time,
-                                                                data=today)
+    indicators = Line5Indicators.objects.filter(time__gte=start_time,
+                                                time__lte=stop_time,
+                                                data=today)
     indicators_chart = indicators
 
     data = {
@@ -248,14 +251,10 @@ def getData(request):
         date_time_numbacr_list = []
 
         for indicator in indicators_with_times:
-
-
             numbacr = indicator['numbacr']
             first_time = indicator['start_time']
             last_time = indicator['end_time']
             first_data = indicator['data']
-
-
 
             record = {
                 'numbacr': numbacr,
@@ -266,13 +265,9 @@ def getData(request):
             }
             date_time_numbacr_list.append(record)
 
-
         sorted_date_time_numbacr_list = sorted(date_time_numbacr_list, key=lambda x: (x['first_data'], x['first_time']))
 
         # Преобразование времени в объекты datetime для более удобной работы
-
-
-
 
         for record in sorted_date_time_numbacr_list:
             record['start_time'] = record['first_time'].strftime('%H:%M:%S')
@@ -283,20 +278,59 @@ def getData(request):
 
     except:
         print("intervals_by_numbacr")
+        # Получение времени начала и окончания из ProductionTime31
+    start_times = list(ProductionTime5.objects.filter(data=datetime.date.today(),
+                                                       time__gte=start_time,
+                                                       time__lte=stop_time)
+                       .values_list('time', flat=True))
+    prod_name = list(ProductionTime5.objects.filter(data=datetime.date.today(),
+                                                     time__gte=start_time,
+                                                     time__lte=stop_time)
+                     .values_list('type_bottle', flat=True))
+    # Пустой список для хранения скоростей
+    speeds = []
 
+    # Получение скорости для каждого продукта из списка
+    for product in prod_name:
+        # Получение объекта SetProductionSpeed31 по названию продукта
+        production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(line="5").first()
 
+        if production_speed:
+            # Добавление скорости продукта в список
+            speeds.append(production_speed.speed)
+        else:
+            speeds.append(None)
+
+    end_times = start_times[1:] + [speed5_queryset.last().time]
+    start_times = [str(time) for time in start_times]
+    end_times = [str(time) for time in end_times]
+
+    # Парное объединение элементов двух списков
+    merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
+                   zip(start_times, end_times, speeds, prod_name)]
+
+    for sp in speed5_queryset:
+        trig = False
+        for el in range(0, len(merged_list)):
+            if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
+                    <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
+                dataChart5_need_speed.append(merged_list[el][2])
+                trig = True
+
+        if not trig:
+            dataChart5_need_speed.append(0)
 
     return JsonResponse({
-        "data":data,
+        "data": data,
         "allProc": all_proc,
         'sumProstoy': sum_prostoy,
         'avgSpeed': avg_speed,
         'sumProduct': sum_product,
         'lableChart': lable_chart,
         'dataChart_triblok': data_chart,
+        'dataChart5_need_speed': dataChart5_need_speed,
         "boomOut": boomOut,
         "temp_chart": temp_chart,
-
 
     })
 
@@ -309,3 +343,23 @@ def getBtn5(request):
     }
 
     return JsonResponse(result)
+
+
+from django.utils import timezone
+
+
+def select5(request):
+    if request.method == 'POST':
+        selected_value = request.POST.get('selected_value')
+        # Здесь вы можете выполнить необходимые операции с выбранным значением
+        # и вернуть результат в формате JSON
+        response_data = {'selected_value': selected_value}
+
+        production_time = ProductionTime5(data=datetime.datetime.today(),
+                                          time=datetime.datetime.now().strftime("%H:%M:%S"), type_bottle=selected_value)
+        production_time.save()
+        print(production_time)
+        return JsonResponse(response_data)
+    else:
+        # Вернуть ошибку, если запрос не является POST-запросом или не AJAX-запросом
+        return JsonResponse({'error': 'Invalid request'}, status=400)

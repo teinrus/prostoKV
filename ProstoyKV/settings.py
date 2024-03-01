@@ -3,16 +3,12 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY = 'django-insecure-at-0%%k0ye0f5=n0l%q7!6k$v0)+y*orju^hrbd%qf(h*8_3u('
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
-
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -55,15 +51,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ProstoyKV.wsgi.application'
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'temruk',
         'USER': 'postgres',
         'PASSWORD': '12345',
-        'HOST':  '192.168.88.231',
+        'HOST': '192.168.88.231',
         'PORT': '5432',
     },
     'titorovka_db': {
@@ -76,7 +70,7 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS=['route.db_routers.DB_S_Titorovskaya']
+DATABASE_ROUTERS = ['route.db_routers.DB_S_Titorovskaya']
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -97,12 +91,9 @@ LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Asia/Damascus'
 
-
 USE_I18N = True
 
 USE_TZ = True
-
-
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -111,6 +102,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

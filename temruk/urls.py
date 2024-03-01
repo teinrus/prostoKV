@@ -5,6 +5,7 @@ from temruk import views2
 from temruk import views5,views4
 from temruk.views import profile_view, profileOut_view, start_perenaladka5, start_donaladka5, rabota5, TO5, \
     start_perenaladka2, start_donaladka2, rabota2, TO2, start_perenaladka4, start_donaladka4, rabota4, TO4
+from temruk.views5 import select5
 
 urlpatterns = [
 
@@ -46,6 +47,7 @@ urlpatterns = [
     path('rabota5/', rabota5, name='rabota5'),
     path('TO5/', TO5, name='TO5'),
 
+
     path('start_perenaladka2/', start_perenaladka2, name='start_perenaladka2'),
     path('start_donaladka2/', start_donaladka2, name='start_donaladka2'),
     path('rabota2/', rabota2, name='rabota2'),
@@ -60,6 +62,6 @@ urlpatterns = [
     path('profile', profile_view, name='profile'),
     path('profileOut/', profileOut_view, name='profileOut'),
 
-
+    path('select5/', select5, name='select5'),
 
 ]

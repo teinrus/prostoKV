@@ -1,12 +1,12 @@
 import datetime
 
-from django.db.models import Count, Sum, Avg
+from django.db.models import Sum
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
+from pyModbusTCP.client import ModbusClient
 
 from temruk.models import bottling_plan, Nomenclature, uchastok, prichina
 from titorovka.models import *
-from pyModbusTCP.client import ModbusClient
 
 vid_prostoev = {
     "Аварийные простои": ["Настройка после переналадки", "Поломка аппарата",
@@ -325,7 +325,7 @@ def getBtn31(requst):
     return JsonResponse(result)
 
 def list_nomenklature31 (requst):
-    buttons_reg = modbus_client.read_input_registers(0)
+
 
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)

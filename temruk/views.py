@@ -431,15 +431,19 @@ def temruk(request):
     for el in prichAll:
         # podrazdeleniaEl.append(el.key)
         podrazdeleniaEl.append(el.Key)
-    otv_p = set(podrazdeleniaEl)
 
+    otv_p = set(podrazdeleniaEl)
     prich = list(prichAll.values())
+
+    select5 = SetProductionSpeed.objects.all().filter(line__in="5")
+    select5 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select5]
 
     uch = uchastok.objects.all().filter(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77")
     uch_vino = uchastok.objects.all().filter(Guid_Line="b84d1e71-1109-11e6-b0ff-005056ac2c77")
     uch5 = uchastok.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
-    return render(request, "temruk.html", {
 
+    return render(request, "temruk.html", {
+        "select5": select5,
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
@@ -470,7 +474,7 @@ def otchet(request):
 
     form = Otchet(request.GET)
     if form.is_valid():
-
+        data_chartneed_speed = []
         # Сортировка по дате
         if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 5'):
@@ -504,6 +508,51 @@ def otchet(request):
                                                             GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77',
                                                             )
                         plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+
+                        start_times = list(ProductionTime5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                          data__lte=form.cleaned_data["finish_data"],
+                                                                          time__gte=datetime.time(0),
+                                                                          time__lte=datetime.time(23, 59))
+                                           .values_list('time', flat=True))
+                        prod_name = list(ProductionTime5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                        data__lte=form.cleaned_data["finish_data"],
+                                                                        time__gte=datetime.time(0),
+                                                                        time__lte=datetime.time(23, 59))
+                                         .values_list('type_bottle', flat=True))
+                        # Пустой список для хранения скоростей
+                        speeds = []
+
+                        # Получение скорости для каждого продукта из списка
+                        for product in prod_name:
+                            # Получение объекта SetProductionSpeed31 по названию продукта
+                            production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(
+                                line="5").first()
+
+                            if production_speed:
+                                # Добавление скорости продукта в список
+                                speeds.append(production_speed.speed)
+                            else:
+                                speeds.append(None)
+
+                        end_times = start_times[1:] + [speed.last().time]
+                        start_times = [str(time) for time in start_times]
+                        end_times = [str(time) for time in end_times]
+
+                        # Парное объединение элементов двух списков
+                        merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
+                                       zip(start_times, end_times, speeds, prod_name)]
+
+                        for sp in speed:
+                            trig = False
+                            for el in range(0, len(merged_list)):
+                                if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
+                                        <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
+                                    data_chartneed_speed.append(merged_list[el][2])
+                                    trig = True
+
+                            if not trig:
+                                data_chartneed_speed.append(0)
+                        print(data_chartneed_speed)
                     except:
                         plan = 0
 
@@ -1206,7 +1255,7 @@ def otchet(request):
         'table_other': table_other,
         "table": table,
         'form': form,
-
+        "data_chartneed_speed": data_chartneed_speed,
         "tempChart": temp_chart,
         "indicators": sorted_date_time_numbacr_list,
         "intervals_by_numbacr": intervals_by_numbacr,

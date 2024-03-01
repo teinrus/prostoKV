@@ -51,13 +51,21 @@
                 type: 'bar',
                 data: {
                     labels: [],
-                    datasets: [{
+                    datasets: [ {
                         label: '# Производительность линии 5',
                         data: [],
                         borderWidth: 1,
                         borderColor: 'rgb(2,74,255)',
                         backgroundColor: [] // Добавляем пустой массив для хранения цветов фона
-                    }]
+                    },{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: [{{ dataChart5_need_speed }}],
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    pointRadius: 0,
+                },]
                 },
                 options: {
                     elements: {
@@ -91,6 +99,8 @@
                     // Обновление данных и цветов на графике
                     chart.data.labels = newData.lableChart;
                     chart.data.datasets[0].data = newData.dataChart_triblok;
+                    chart.data.datasets[1].data = newData.dataChart5_need_speed;
+
 
                     // Массив, который будет хранить цвета для каждого элемента данных
                     var backgroundColorArray = [];

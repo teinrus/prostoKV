@@ -104,6 +104,35 @@
 
 
     {% include 'Line5/Chart5.html' %}
+<select id="Select5">
+    {% for option in select5 %}
+        <option>{{ option }}</option>
+    {% endfor %}
+</select>
+
+
+<script>
+    var selectElement = document.getElementById("Select5");
+    selectElement.addEventListener("change", function() {
+        var selectedValue = this.value;
+        // Отправляем выбранное значение на сервер через AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url 'select5' %}", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    console.log(response.selected_value);
+                    // Делайте что-то с ответом от сервера
+                } else {
+                    console.log('Error:', xhr.statusText);
+                }
+            }
+        };
+        xhr.send("selected_value=" + encodeURIComponent(selectedValue));
+    });
+</script>
 
     <table id="sample_data" class="table table-bordered table-striped">
         <thead>
