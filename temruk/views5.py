@@ -351,7 +351,7 @@ def getBtn5(request):
 
 def select5(request):
     if request.method == 'POST':
-        print(request.POST)
+
         selected_value = request.POST.get('selected_value')
 
         response_data = {'selected_value': selected_value}

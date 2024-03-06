@@ -104,11 +104,13 @@
 
 
     {% include 'Line5/Chart5.html' %}
+    {% if not user.username == 'admin' %}
 <select id="Select5">
     {% for option in select5 %}
         <option>{{ option }}</option>
     {% endfor %}
 </select>
+    {%  endif %}
 
 
 <script>
@@ -128,7 +130,7 @@ function loadSavedOption() {
 
 function sendData(selectedOption) {
     var selectedValue = selectedOption;
-    console.log(selectedValue);
+
 
         // Отправляем выбранное значение на сервер через AJAX
         var xhr = new XMLHttpRequest();
@@ -149,7 +151,7 @@ function sendData(selectedOption) {
 }
 
 loadSavedOption();
-
+sendData(document.getElementById('Select5').value);
 document.getElementById('Select5').addEventListener('change', function(event) {
     saveSelectedOption();
     var selectedOption = event.target.value; // Получаем выбранное значение селекта
