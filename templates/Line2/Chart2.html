@@ -62,6 +62,14 @@
 
                         labels: data.lableChart2,
                         datasets: [{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: [{{ dataChart2_need_speed }}],
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    pointRadius: 0,
+                },{
                             label: '# Производительность линии 2',
                             data: data.dataChart2,
                             borderWidth: 3,
@@ -112,7 +120,8 @@
                 url: 'getData2',
             }).done(function (newData) {
                 chart2.data.labels = newData.lableChart2;
-                chart2.data.datasets[0].data = newData.dataChart2;
+                chart2.data.datasets[1].data = newData.dataChart2;
+                chart2.data.datasets[0].data = newData.dataChart2_need_speed;
                 chart2.update();
             });
 

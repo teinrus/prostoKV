@@ -53,6 +53,9 @@ TNR_admin_site.register(uchastok_test)
 
 TNR_admin_site.register(SetProductionSpeed)
 TNR_admin_site.register(ProductionTime5)
+TNR_admin_site.register(ProductionTime4)
+TNR_admin_site.register(ProductionTime2)
+
 
 
 

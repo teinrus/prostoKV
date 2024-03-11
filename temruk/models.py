@@ -424,6 +424,7 @@ class Line2Indicators(models.Model):
     class Meta:
         verbose_name_plural = "Показатели линии 2"
 
+
 class ProductionTime5(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
@@ -435,6 +436,7 @@ class ProductionTime5(models.Model):
     class Meta:
         verbose_name_plural = "Время работы на бутылке 5"
 
+
 class SetProductionSpeed(models.Model):
     name_bottle = models.CharField('Тип бутылки', max_length=50, default='', blank=True, null=True)
     line = models.IntegerField('Линия')
@@ -445,3 +447,27 @@ class SetProductionSpeed(models.Model):
 
     class Meta:
         verbose_name_plural = "Установленная скорость по типу бутылки"
+
+
+class ProductionTime2(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    type_bottle = models.CharField('Тип бутылки', max_length=150, default='', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Время работы на бутылке 2"
+
+
+class ProductionTime4(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    type_bottle = models.CharField('Тип бутылки', max_length=150, default='', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Время работы на бутылке 4"

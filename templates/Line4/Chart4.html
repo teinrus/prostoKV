@@ -60,33 +60,20 @@
 
                         labels: data.lableChart4,
                         datasets: [{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: [{{ dataChart4_need_speed }}],
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    pointRadius: 0,
+                },{
                             label: '# Производительность триблок',
                             data: data.dataChart4_triblok,
                             borderWidth: 3,
                             borderColor: 'rgb(76,125,248)',
                         }],
-                {#{#}
-                {#            label: '# Производительность капсула',#}
-                {#            data: data.dataChart4_kapsula,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,130,248)',#}
-                {#            },{#}
-                {#            label: '# Производительность этикетировка',#}
-                {#            data: data.dataChart4_eticetka,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,248,216)',#}
-                {#             },{#}
-                {#            label: '# Производительность укладчик',#}
-                {#            data: data.dataChart4_ukladchik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,248,145)',#}
-                {#            },{#}
-                {#            label: '# Производительность заклейщик',#}
-                {#            data: data.dataChart4_zakleichik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(87,248,76)',#}
-                {##}
-                {#        }]#}
+
                     },
                     options: {
 
@@ -132,11 +119,10 @@
                 url: 'getData4',
             }).done(function (newData) {
                 chart4.data.labels = newData.lableChart4;
-                chart4.data.datasets[0].data = newData.dataChart4_triblok;
-                {#chart4.data.datasets[1].data = newData.dataChart4_kapsula;#}
-                {#chart4.data.datasets[2].data = newData.dataChart4_eticetka;#}
-                {#chart4.data.datasets[3].data = newData.dataChart4_ukladchik;#}
-                {#chart4.data.datasets[4].data = newData.dataChart4_zakleichik;#}
+                chart4.data.datasets[1].data = newData.dataChart4_triblok;
+
+                chart4.data.datasets[0].data = newData.dataChart4_need_speed;
+
                 chart4.update();
             });
 

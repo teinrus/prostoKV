@@ -105,6 +105,65 @@
 
     {% include 'Line4/Chart4.html' %}
 
+    <select id="Select4">
+        {% for option in select4 %}
+            <option>{{ option }}</option>
+        {% endfor %}
+    </select>
+
+
+    <script>
+
+        function loadSavedOption() {
+            let selectElement = document.getElementById('Select4');
+            let savedOption = '{{ select_valve_4|escapejs }}';
+            if (savedOption){
+                 selectElement.value = savedOption;
+            }
+
+
+        }
+
+        function sendData(selectedOption) {
+            var selectedValue = selectedOption;
+            // Отправляем выбранное значение на сервер через AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "{% url 'select4' %}", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        console.log(response.selected_value);
+
+                    } else {
+                        console.log('Error:', xhr.statusText);
+                    }
+                }
+            };
+            xhr.send("selected_value=" + encodeURIComponent(selectedValue));
+        }
+
+        loadSavedOption();
+        sendData(document.getElementById('Select4').value);
+        document.getElementById('Select4').addEventListener('change', function (event) {
+            var selectedOption = event.target.value; // Получаем выбранное значение селекта
+            sendData(selectedOption); // Вызываем функцию отправки данных при изменении выбранного значения
+        });
+
+        // Устанавливаем интервал для отправки данных
+        setInterval(function () {
+            var now = new Date();
+            var selectedOption = document.getElementById('Select4').value;
+
+            if ((now.getHours() === 16 && now.getMinutes() === 31) ||
+                (now.getHours() === 0 && now.getMinutes() === 1) ||
+                (now.getHours() === 8 && now.getMinutes() === 1)) {
+                sendData(selectedOption);
+            }
+        }, 60000); // Проверяем каждую минуту
+
+    </script>
     <table id="sample_data4" class="table table-bordered table-striped">
         <thead>
         <tr>

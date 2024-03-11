@@ -433,16 +433,27 @@ def temruk(request):
 
     select5 = SetProductionSpeed.objects.all().filter(line__in="5")
     select5 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select5]
+    select4 = SetProductionSpeed.objects.all().filter(line__in="4")
+    select4 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select4]
+    select2 = SetProductionSpeed.objects.all().filter(line__in="2")
+    select2 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select2]
 
     select_valve = ProductionTime5.objects.last().type_bottle
-    print(select_valve)
+    select_valve_4 = ProductionTime4.objects.last().type_bottle
+    select_valve_2 = ProductionTime2.objects.last().type_bottle
+
     uch = uchastok.objects.all().filter(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77")
     uch_vino = uchastok.objects.all().filter(Guid_Line="b84d1e71-1109-11e6-b0ff-005056ac2c77")
     uch5 = uchastok.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
 
     return render(request, "temruk.html", {
         'select_valve': str(select_valve),
+        'select_valve_4': str(select_valve_4),
+        'select_valve_2': str(select_valve_2),
+
         "select5": select5,
+        "select4": select4,
+        "select2": select2,
 
         'otv_p': otv_p,
         'prich': prich,

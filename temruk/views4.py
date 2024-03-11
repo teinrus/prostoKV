@@ -3,7 +3,8 @@ from datetime import datetime
 from django.db.models import Sum
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from temruk.models import Table4, Speed4, ProductionOutput4, bottling_plan, uchastok, prichina
+from temruk.models import Table4, Speed4, ProductionOutput4, bottling_plan, uchastok, prichina, ProductionTime4, \
+    SetProductionSpeed
 from pyModbusTCP.client import ModbusClient
 
 slave_address = '192.168.88.230'
@@ -180,6 +181,7 @@ def update_items4(request):
 
 
 def getData4(request):
+    dataChart4_need_speed = []
     start_time, stop_time = get_shift_times()
 
     today = datetime.date.today().isoformat()
@@ -198,14 +200,59 @@ def getData4(request):
     lable_chart = [str(sp.time) for sp in speed4_queryset]
     data_chart = [sp.triblok for sp in speed4_queryset]
 
+       # Получение времени начала и окончания из ProductionTime
+    start_times = list(ProductionTime4.objects.filter(data=datetime.date.today(),
+                                                       time__gte=start_time,
+                                                       time__lte=stop_time)
+                       .values_list('time', flat=True))
+
+    prod_name = list(ProductionTime4.objects.filter(data=datetime.date.today(),
+                                                     time__gte=start_time,
+                                                     time__lte=stop_time)
+                     .values_list('type_bottle', flat=True))
+    # Пустой список для хранения скоростей
+    speeds = []
+
+    # Получение скорости для каждого продукта из списка
+    for product in prod_name:
+        # Получение объекта SetProductionSpeed31 по названию продукта
+        production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(line="4").first()
+
+        if production_speed:
+            # Добавление скорости продукта в список
+            speeds.append(production_speed.speed)
+        else:
+            speeds.append(None)
+
+    end_times = start_times[1:] + [speed4_queryset.last().time]
+    start_times = [str(time) for time in start_times]
+    end_times = [str(time) for time in end_times]
+
+    # Парное объединение элементов двух списков
+    merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
+                   zip(start_times, end_times, speeds, prod_name)]
+
+    for sp in speed4_queryset:
+        trig = False
+        for el in range(0, len(merged_list)):
+            if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
+                    <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
+                dataChart4_need_speed.append(merged_list[el][2])
+                trig = True
+
+        if not trig:
+            dataChart4_need_speed.append(0)
+
 
     return JsonResponse({
         "allProc4": all_proc,
         'sumProstoy4': sum_prostoy,
         'avgSpeed4': avg_speed,
         'sumProduct4': sum_product,
+
         'lableChart4': lable_chart,
         'dataChart4_triblok': data_chart,
+        'dataChart4_need_speed': dataChart4_need_speed,
     })
 
 def getBtn4(request):
@@ -216,3 +263,18 @@ def getBtn4(request):
     }
 
     return JsonResponse(result)
+
+def select4(request):
+    if request.method == 'POST':
+
+        selected_value = request.POST.get('selected_value')
+
+        response_data = {'selected_value': selected_value}
+        print(selected_value)
+        production_time = ProductionTime4(data=datetime.datetime.today(),
+                                          time=datetime.datetime.now().strftime("%H:%M:%S"), type_bottle=selected_value)
+        production_time.save()
+        return JsonResponse(response_data)
+    else:
+        # Вернуть ошибку, если запрос не является POST-запросом или не AJAX-запросом
+        return JsonResponse({'error': 'Invalid request'}, status=400)

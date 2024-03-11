@@ -1,10 +1,12 @@
-from django.template.defaulttags import url
 from django.urls import path
+
 from temruk import views
 from temruk import views2
-from temruk import views5,views4
+from temruk import views5, views4
 from temruk.views import profile_view, profileOut_view, start_perenaladka5, start_donaladka5, rabota5, TO5, \
     start_perenaladka2, start_donaladka2, rabota2, TO2, start_perenaladka4, start_donaladka4, rabota4, TO4
+from temruk.views2 import select2
+from temruk.views4 import select4
 from temruk.views5 import select5
 
 urlpatterns = [
@@ -15,7 +17,6 @@ urlpatterns = [
     path('tv2', views.TV2, name='tv2'),
     path('tv4', views.TV4, name='tv4'),
 
-
     path('temruk', views.temruk, name='temruk'),
 
     path(r'update', views5.update, name='update'),
@@ -25,11 +26,9 @@ urlpatterns = [
     path(r'update2', views2.update2, name='update2'),
     path(r'update2_2', views2.update2_2, name='update2_2'),
 
-
     path('getData', views5.getData, name='getData'),
     path('getData4', views4.getData4, name='getData4'),
     path('getData2', views2.getData2, name='getData2'),
-
 
     path('update_items5/', views5.update_items5, name='update_items5'),
     path('update_items4/', views4.update_items4, name='update_items4'),
@@ -47,7 +46,6 @@ urlpatterns = [
     path('rabota5/', rabota5, name='rabota5'),
     path('TO5/', TO5, name='TO5'),
 
-
     path('start_perenaladka2/', start_perenaladka2, name='start_perenaladka2'),
     path('start_donaladka2/', start_donaladka2, name='start_donaladka2'),
     path('rabota2/', rabota2, name='rabota2'),
@@ -58,10 +56,11 @@ urlpatterns = [
     path('rabota4/', rabota4, name='rabota4'),
     path('TO4/', TO4, name='TO4'),
 
-
     path('profile', profile_view, name='profile'),
     path('profileOut/', profileOut_view, name='profileOut'),
 
     path('select5/', select5, name='select5'),
+    path('select4/', select4, name='select4'),
+    path('select2/', select2, name='select2'),
 
 ]
