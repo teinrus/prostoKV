@@ -434,12 +434,16 @@ def temruk(request):
     select5 = SetProductionSpeed.objects.all().filter(line__in="5")
     select5 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select5]
 
+    select_valve = ProductionTime5.objects.last().type_bottle
+    print(select_valve)
     uch = uchastok.objects.all().filter(Guid_Line="48f7e8d8-1114-11e6-b0ff-005056ac2c77")
     uch_vino = uchastok.objects.all().filter(Guid_Line="b84d1e71-1109-11e6-b0ff-005056ac2c77")
     uch5 = uchastok.objects.filter(Guid_Line="22b8afd6-110a-11e6-b0ff-005056ac2c77")
 
     return render(request, "temruk.html", {
+        'select_valve': str(select_valve),
         "select5": select5,
+
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
@@ -516,7 +520,7 @@ def otchet(request):
                                                                         time__lte=datetime.time(23, 59)).order_by(
                             'data', 'time')
 
-                                         )
+                        )
                         # Пустой список для хранения скоростей
 
                         speeds = []

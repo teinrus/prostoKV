@@ -14,28 +14,28 @@
 
 
             });
-{% if not user.username == 'master' %}
-            var dataTable = $('#sample_data').DataTable();
+            {% if not user.username == 'master' %}
+                var dataTable = $('#sample_data').DataTable();
 
-            $('#sample_data').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: '/update',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-                        {% for el in uch %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
+                $('#sample_data').editable({
+                    container: 'body',
+                    selector: 'td.uchastok',
+                    url: '/update',
+                    title: 'uchastok',
+                    type: 'POST',
+                    value: "Не выбрано",
+                    source:
+                        [
+                            {% for el in uch %}
+                                {value: "{{ el }}", text: "{{ el }}"},
+                            {% endfor %}],
+                    validate: function (value) {
+                        if ($.trim(value) == '') {
+                            return 'This field is required';
+                        }
                     }
-                }
-            });
-    {% endif %}
+                });
+            {% endif %}
             $('#sample_data').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
@@ -54,8 +54,8 @@
                         for (let i = 0; i < test.length; i++) {
                             if (value === test[i].Key) {
                                 temp += test[i].Prichina + '%'
-                            {#if (value === test[i].key) {#}
-                            {#    temp += test[i].prichina + '%'#}
+                                {#if (value === test[i].key) {#}
+                                {#    temp += test[i].prichina + '%'#}
                             }
                         }
                         allProstoy = temp.split('%')
@@ -104,73 +104,66 @@
 
 
     {% include 'Line5/Chart5.html' %}
-    {% if not user.username == 'admin' %}
-<select id="Select5">
-    {% for option in select5 %}
-        <option>{{ option }}</option>
-    {% endfor %}
-</select>
-    {%  endif %}
+
+    <select id="Select5">
+        {% for option in select5 %}
+            <option>{{ option }}</option>
+        {% endfor %}
+    </select>
 
 
-<script>
-function saveSelectedOption() {
-    var selectElement = document.getElementById('Select5');
-    var selectedOption = selectElement.value;
-    localStorage.setItem('selectedOption', selectedOption);
-}
+    <script>
 
-function loadSavedOption() {
-    var selectElement = document.getElementById('Select5');
-    var savedOption = localStorage.getItem('selectedOption');
-    if (savedOption) {
-        selectElement.value = savedOption;
-    }
-}
-
-function sendData(selectedOption) {
-    var selectedValue = selectedOption;
-
-
-        // Отправляем выбранное значение на сервер через AJAX
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "{% url 'select5' %}", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    console.log(response.selected_value);
-                    // Делайте что-то с ответом от сервера
-                } else {
-                    console.log('Error:', xhr.statusText);
-                }
+        function loadSavedOption() {
+            let selectElement = document.getElementById('Select5');
+            let savedOption = '{{ select_valve|escapejs }}';
+            if (savedOption){
+                 selectElement.value = savedOption;
             }
-        };
-        xhr.send("selected_value=" + encodeURIComponent(selectedValue));
-}
 
-loadSavedOption();
-sendData(document.getElementById('Select5').value);
-document.getElementById('Select5').addEventListener('change', function(event) {
-    saveSelectedOption();
-    var selectedOption = event.target.value; // Получаем выбранное значение селекта
-    sendData(selectedOption); // Вызываем функцию отправки данных при изменении выбранного значения
-});
 
-// Устанавливаем интервал для отправки данных
-setInterval(function() {
-    var now = new Date();
-    var selectedOption = document.getElementById('Select5').value;
+        }
 
-    if ((now.getHours() === 16 && now.getMinutes() === 31) ||
-        (now.getHours() === 0 && now.getMinutes() === 1) ||
-        (now.getHours() === 8 && now.getMinutes() === 1)) {
-        sendData(selectedOption);
-    }
-}, 60000); // Проверяем каждую минуту
+        function sendData(selectedOption) {
+            var selectedValue = selectedOption;
+            // Отправляем выбранное значение на сервер через AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "{% url 'select5' %}", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        console.log(response.selected_value);
 
-</script>
+                    } else {
+                        console.log('Error:', xhr.statusText);
+                    }
+                }
+            };
+            xhr.send("selected_value=" + encodeURIComponent(selectedValue));
+        }
+
+        loadSavedOption();
+        sendData(document.getElementById('Select5').value);
+        document.getElementById('Select5').addEventListener('change', function (event) {
+            var selectedOption = event.target.value; // Получаем выбранное значение селекта
+            sendData(selectedOption); // Вызываем функцию отправки данных при изменении выбранного значения
+        });
+
+        // Устанавливаем интервал для отправки данных
+        setInterval(function () {
+            var now = new Date();
+            var selectedOption = document.getElementById('Select5').value;
+
+            if ((now.getHours() === 16 && now.getMinutes() === 31) ||
+                (now.getHours() === 0 && now.getMinutes() === 1) ||
+                (now.getHours() === 8 && now.getMinutes() === 1)) {
+                sendData(selectedOption);
+            }
+        }, 60000); // Проверяем каждую минуту
+
+    </script>
 
     <table id="sample_data" class="table table-bordered table-striped">
         <thead>
