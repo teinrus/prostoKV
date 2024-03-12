@@ -485,7 +485,7 @@ def otchet(request, ):
     table = []
     temp_chart = []
     timeAll = 0
-
+    end_bottle = []
     indicators = []
     filter = []
 
@@ -542,8 +542,26 @@ def otchet(request, ):
                             'data', 'time')
 
                         )
-                        # Пустой список для хранения скоростей
 
+                        temp_bottle=ProductionTime5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                        data__lte=form.cleaned_data["finish_data"],
+                                                                        time__gte=datetime.time(0),
+                                                                        time__lte=datetime.time(23, 59)).order_by(
+                            'data', 'time').values('type_bottle')
+                        list_bottle=[]
+                        for el in temp_bottle:
+                            list_bottle.append(el['type_bottle'])
+                        list_bottle= list(set(list_bottle))
+                        for el in list_bottle:
+                            production_speed = SetProductionSpeed.objects.filter(
+                                name_bottle=el).filter(
+                                line="5").first()
+                            try:
+                                end_bottle.append([el,production_speed.speed,int(round(production_speed.speed*1.18/0.8,0))])
+                            except:
+                                pass
+
+                        # Пустой список для хранения скоростей
                         speeds = []
 
                         # # Получение скорости для каждого продукта из списка
@@ -827,7 +845,24 @@ def otchet(request, ):
 
                         )
                         # Пустой список для хранения скоростей
-
+                        temp_bottle = ProductionTime2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                     data__lte=form.cleaned_data["finish_data"],
+                                                                     time__gte=datetime.time(0),
+                                                                     time__lte=datetime.time(23, 59)).order_by(
+                            'data', 'time').values('type_bottle')
+                        list_bottle = []
+                        for el in temp_bottle:
+                            list_bottle.append(el['type_bottle'])
+                        list_bottle = list(set(list_bottle))
+                        for el in list_bottle:
+                            production_speed = SetProductionSpeed.objects.filter(
+                                name_bottle=el).filter(
+                                line="2").first()
+                            try:
+                                end_bottle.append(
+                                [el, production_speed.speed, int(round(production_speed.speed * 1.18 / 0.8, 0))])
+                            except:
+                                pass
                         speeds = []
 
                         # # Получение скорости для каждого продукта из списка
@@ -1063,7 +1098,24 @@ def otchet(request, ):
 
                         )
                         # Пустой список для хранения скоростей
-
+                        temp_bottle = ProductionTime4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                     data__lte=form.cleaned_data["finish_data"],
+                                                                     time__gte=datetime.time(0),
+                                                                     time__lte=datetime.time(23, 59)).order_by(
+                            'data', 'time').values('type_bottle')
+                        list_bottle = []
+                        for el in temp_bottle:
+                            list_bottle.append(el['type_bottle'])
+                        list_bottle = list(set(list_bottle))
+                        for el in list_bottle:
+                            production_speed = SetProductionSpeed.objects.filter(
+                                name_bottle=el).filter(
+                                line="4").first()
+                            try:
+                                end_bottle.append(
+                                [el, production_speed.speed, int(round(production_speed.speed * 1.18 / 0.8, 0))])
+                            except:
+                                pass
                         speeds = []
 
                         # # Получение скорости для каждого продукта из списка
@@ -1439,6 +1491,9 @@ def otchet(request, ):
         'table_other': table_other,
         "table": table,
         'form': form,
+
+        "end_bottle":end_bottle,
+
         "data_chartneed_speed": data_chartneed_speed,
         "data_chartneed_speed2": data_chartneed_speed2,
         "data_chartneed_speed4": data_chartneed_speed4,
