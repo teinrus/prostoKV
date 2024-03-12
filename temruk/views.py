@@ -479,7 +479,7 @@ def temruk(request):
     })
 
 
-def otchet(request):
+def otchet(request, ):
     plan = 0
     table_other = []
     table = []
@@ -489,9 +489,12 @@ def otchet(request):
     indicators = []
     filter = []
 
+    data_chartneed_speed = []
+    data_chartneed_speed2 = []
+    data_chartneed_speed4 = []
     form = Otchet(request.GET)
     if form.is_valid():
-        data_chartneed_speed = []
+
         # Сортировка по дате
         if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 5'):
@@ -515,10 +518,7 @@ def otchet(request):
                                                            data__lte=form.cleaned_data["finish_data"],
                                                            time__gte=datetime.time(0),
                                                            time__lte=datetime.time(23, 59))
-                    prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                            data__lte=form.cleaned_data["finish_data"],
-                                                            time__gte=datetime.time(0),
-                                                            time__lte=datetime.time(23, 59))
+
                     try:
                         plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
                                                             Data__lte=form.cleaned_data["finish_data"],
@@ -530,6 +530,10 @@ def otchet(request):
                     except:
                         plan = 0
                     try:
+                        prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                data__lte=form.cleaned_data["finish_data"],
+                                                                time__gte=datetime.time(0),
+                                                                time__lte=datetime.time(23, 59))
 
                         prod_name = list(ProductionTime5.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                                         data__lte=form.cleaned_data["finish_data"],
@@ -586,7 +590,7 @@ def otchet(request):
                                 start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
                                 end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
                                 if start_datetime <= speed_datetime <= end_datetime:
-                                    data_chartneed_speed.append(speed_value)
+                                    data_chartneed_speed.append(round(speed_value*1.18/0.8,0))
                                     speed_in_range = True
                                     break
                             if not speed_in_range:
@@ -813,6 +817,75 @@ def otchet(request):
                                                         data__lte=form.cleaned_data["finish_data"])
                     except:
                         print("alarme")
+                    try:
+
+                        prod_name = list(ProductionTime2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                        data__lte=form.cleaned_data["finish_data"],
+                                                                        time__gte=datetime.time(0),
+                                                                        time__lte=datetime.time(23, 59)).order_by(
+                            'data', 'time')
+
+                        )
+                        # Пустой список для хранения скоростей
+
+                        speeds = []
+
+                        # # Получение скорости для каждого продукта из списка
+                        for product in prod_name:
+                            # Получение объекта SetProductionSpeed31 по названию продукта
+                            production_speed = SetProductionSpeed.objects.filter(
+                                name_bottle=product.type_bottle).filter(
+                                line="2").first()
+
+                            if production_speed:
+                                # Добавление скорости продукта в список
+                                speeds.append(production_speed.speed)
+                            else:
+                                speeds.append(0)
+
+                        # Получение первого времени из объектов speed
+                        first_speed_time = (speed2.first().data, speed2.first().time)
+
+                        # Создание списка start_times с первым значением first_speed_time
+                        start_times = [first_speed_time]
+
+                        # Добавление оставшихся элементов из prod_name
+                        start_times += [(elem.data, elem.time) for elem in prod_name[1:]]
+
+                        end_times = [(elem.data, elem.time) for elem in prod_name[1:]]
+                        end_times.append(
+                            (speed2.last().data, speed2.last().time))
+
+                        start_times = [(time) for time in start_times]
+                        end_times = [(time) for time in end_times]
+
+                        # Парное объединение элементов двух списков
+                        merged_list = [(elem1, elem2, elem3) for elem1, elem2, elem3 in
+                                       zip(start_times, end_times, speeds)]
+
+                        # Перебираем все интервалы времени в merged_list
+
+                        # print(*merged_list, sep="\n")
+
+                        for el_speed in speed2:
+                            speed_datetime = datetime.datetime.combine(el_speed.data, el_speed.time)
+                            speed_in_range = False
+                            for start_datetime, end_datetime, speed_value in merged_list:
+                                start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
+                                end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
+                                if start_datetime <= speed_datetime <= end_datetime:
+                                    data_chartneed_speed2.append(round(speed_value*1.18/0.8,0))
+                                    speed_in_range = True
+                                    break
+                            if not speed_in_range:
+                                data_chartneed_speed2.append(0)
+
+
+
+                    except   Exception as e:
+                        # Вывод ошибки в консоль
+                        print("Произошла ошибка:", e)
+
             if form.cleaned_data["SmenaF"] == 'Смена 1':
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(8),
                                                starttime__lte=datetime.time(16, 30),
@@ -979,6 +1052,75 @@ def otchet(request):
 
                     except:
                         timeAll = 0
+
+                    try:
+
+                        prod_name = list(ProductionTime4.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                        data__lte=form.cleaned_data["finish_data"],
+                                                                        time__gte=datetime.time(0),
+                                                                        time__lte=datetime.time(23, 59)).order_by(
+                            'data', 'time')
+
+                        )
+                        # Пустой список для хранения скоростей
+
+                        speeds = []
+
+                        # # Получение скорости для каждого продукта из списка
+                        for product in prod_name:
+                            # Получение объекта SetProductionSpeed31 по названию продукта
+                            production_speed = SetProductionSpeed.objects.filter(
+                                name_bottle=product.type_bottle).filter(
+                                line="4").first()
+
+                            if production_speed:
+                                # Добавление скорости продукта в список
+                                speeds.append(production_speed.speed)
+                            else:
+                                speeds.append(0)
+
+                        # Получение первого времени из объектов speed
+                        first_speed_time = (speed4.first().data, speed4.first().time)
+
+                        # Создание списка start_times с первым значением first_speed_time
+                        start_times = [first_speed_time]
+
+                        # Добавление оставшихся элементов из prod_name
+                        start_times += [(elem.data, elem.time) for elem in prod_name[1:]]
+
+                        end_times = [(elem.data, elem.time) for elem in prod_name[1:]]
+                        end_times.append(
+                            (speed4.last().data, speed4.last().time))
+
+                        start_times = [(time) for time in start_times]
+                        end_times = [(time) for time in end_times]
+
+                        # Парное объединение элементов двух списков
+                        merged_list = [(elem1, elem2, elem3) for elem1, elem2, elem3 in
+                                       zip(start_times, end_times, speeds)]
+
+                        # Перебираем все интервалы времени в merged_list
+
+                        # print(*merged_list, sep="\n")
+
+                        for el_speed in speed4:
+                            speed_datetime = datetime.datetime.combine(el_speed.data, el_speed.time)
+                            speed_in_range = False
+                            for start_datetime, end_datetime, speed_value in merged_list:
+                                start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
+                                end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
+                                if start_datetime <= speed_datetime <= end_datetime:
+                                    data_chartneed_speed4.append(round(speed_value*1.18/0.8,0))
+                                    speed_in_range = True
+                                    break
+                            if not speed_in_range:
+                                data_chartneed_speed4.append(0)
+
+
+
+                    except   Exception as e:
+                        # Вывод ошибки в консоль
+                        print("Произошла ошибка:", e)
             if form.cleaned_data["SmenaF"] == 'Смена 1':
                 table4 = Table4.objects.filter(starttime__gte=datetime.time(8),
                                                starttime__lte=datetime.time(16, 30),
@@ -1298,9 +1440,13 @@ def otchet(request):
         "table": table,
         'form': form,
         "data_chartneed_speed": data_chartneed_speed,
+        "data_chartneed_speed2": data_chartneed_speed2,
+        "data_chartneed_speed4": data_chartneed_speed4,
+
         "tempChart": temp_chart,
         "indicators": sorted_date_time_numbacr_list,
         "intervals_by_numbacr": intervals_by_numbacr,
+
         "data": data,
         'lableChart': lableChart,
         'dataChart': dataChart,
@@ -1371,8 +1517,6 @@ def TO5(request):
     return HttpResponse('yes')
 
 
-
-
 def start_perenaladka4(request):
     mod_bus(1, 1)
     return HttpResponse('yes')
@@ -1412,24 +1556,31 @@ def TO2(request):
     mod_bus(2, 8)
     return HttpResponse('yes')
 
+
 def end_of_downtime5(request):
     buttons_reg = modbus_client.read_input_registers(0)
     mod_bus(0, 16)
     sleep(1)
     mod_bus(0, int(buttons_reg[0]))
     return HttpResponse('yes')
+
+
 def end_of_downtime2(request):
     buttons_reg = modbus_client.read_input_registers(2)
     mod_bus(2, 16)
     sleep(1)
     mod_bus(2, int(buttons_reg[0]))
     return HttpResponse('yes')
+
+
 def end_of_downtime4(request):
     buttons_reg = modbus_client.read_input_registers(1)
     mod_bus(1, 16)
     sleep(1)
     mod_bus(1, int(buttons_reg[0]))
     return HttpResponse('yes')
+
+
 # блок формирования отчета
 
 

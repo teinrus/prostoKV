@@ -1089,6 +1089,14 @@
                     labels: {{ lableChart| safe }}
                     ,
                     datasets: [{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: {{ data_chartneed_speed2 | safe }},
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(248,6,6)',
+                    pointRadius: 0,
+                },{
                         borderColor: 'rgb(53,123,184)',
                         label: '# Производительность {{ line }}',
                         data: {{ dataChart | safe }},
@@ -1318,6 +1326,14 @@
                     labels: {{ lableChart| safe }}
                     ,
                     datasets: [{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: {{ data_chartneed_speed4 | safe }},
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(248,6,6)',
+                    pointRadius: 0,
+                },{
                         borderColor: 'rgb(53,123,184)',
                         label: '# Производительность {{ line }}',
                         data: {{ dataChart | safe }},

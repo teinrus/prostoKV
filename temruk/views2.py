@@ -243,12 +243,13 @@ def getData2(request):
     merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
                    zip(start_times, end_times, speeds, prod_name)]
 
+
     for sp in speed2_queryset:
         trig = False
         for el in range(0, len(merged_list)):
             if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
                     <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
-                dataChart2_need_speed.append(merged_list[el][2])
+                dataChart2_need_speed.append(round(merged_list[el][2]*1.18/0.8,0) if merged_list[el][2] else 0)
                 trig = True
 
         if not trig:
