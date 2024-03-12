@@ -1,5 +1,6 @@
 import datetime
 import random
+from time import sleep
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -16,6 +17,11 @@ from .forms import Otchet
 from .views2 import get_shift_number
 from .views5 import get_shift_times, get_plan_quantity, calculate_production_percentage, get_total_prostoy, \
     get_average_speed, get_total_product, get_boom_out
+
+slave_address = '192.168.88.230'
+port = 502
+unit_id = 1
+modbus_client = ModbusClient(host=slave_address, port=port, unit_id=unit_id, auto_open=True)
 
 vid_prostoev = {
     "Аварийные простои": ["Настройка после переналадки", "Поломка аппарата",
@@ -1356,12 +1362,15 @@ def start_donaladka5(request):
 
 def rabota5(request):
     mod_bus(0, 4)
+
     return HttpResponse('yes')
 
 
 def TO5(request):
     mod_bus(0, 8)
     return HttpResponse('yes')
+
+
 
 
 def start_perenaladka4(request):
@@ -1403,7 +1412,24 @@ def TO2(request):
     mod_bus(2, 8)
     return HttpResponse('yes')
 
-
+def end_of_downtime5(request):
+    buttons_reg = modbus_client.read_input_registers(0)
+    mod_bus(0, 16)
+    sleep(1)
+    mod_bus(0, int(buttons_reg[0]))
+    return HttpResponse('yes')
+def end_of_downtime2(request):
+    buttons_reg = modbus_client.read_input_registers(2)
+    mod_bus(2, 16)
+    sleep(1)
+    mod_bus(2, int(buttons_reg[0]))
+    return HttpResponse('yes')
+def end_of_downtime4(request):
+    buttons_reg = modbus_client.read_input_registers(1)
+    mod_bus(1, 16)
+    sleep(1)
+    mod_bus(1, int(buttons_reg[0]))
+    return HttpResponse('yes')
 # блок формирования отчета
 
 
