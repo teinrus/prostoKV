@@ -127,10 +127,10 @@
         function sendData2(selectedOption) {
             var selectedValue = selectedOption;
             // Отправляем выбранное значение на сервер через AJAX
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "{% url 'select2' %}", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send("selected_value=" + encodeURIComponent(selectedValue));
+            var xhr2 = new XMLHttpRequest();
+            xhr2.open("POST", "{% url 'select2' %}", true);
+            xhr2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr2.send("selected_value=" + encodeURIComponent(selectedValue));
         }
 
         loadSavedOption2();
@@ -173,7 +173,6 @@
 
     <input type="button" id="start_perenaladka2"
            value="Старт переналадка"/>
-    <input type="button" id="start_donaladka2" value="Cтарт доналадка"/>
     <input type="button" id="TO2" value="ТО"/>
     <input type="button" id="rabota2" value="Работа"/>
     <input type="button" id="end_of_downtime2" value="Завершить"/>
@@ -182,13 +181,6 @@
             $.ajax({
                 type: "POST",
                 url: "{% url 'start_perenaladka2' %}",
-            });
-        })
-        $('#start_donaladka2').click(function () {
-
-            $.ajax({
-                type: "POST",
-                url: "{% url 'start_donaladka2' %}",
             });
         })
         $('#rabota2').click(function () {

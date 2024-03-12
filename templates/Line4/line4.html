@@ -137,7 +137,7 @@
         sendData4(document.getElementById('Select4').value);
         document.getElementById('Select4').addEventListener('change', function (event) {
             var selectedOption = event.target.value; // Получаем выбранное значение селекта
-            sendData(selectedOption); // Вызываем функцию отправки данных при изменении выбранного значения
+            sendData4(selectedOption); // Вызываем функцию отправки данных при изменении выбранного значения
         });
 
         // Устанавливаем интервал для отправки данных
@@ -171,7 +171,6 @@
         </tbody>
     </table>
     <input type="button" id="start_perenaladka4" value="Старт переналадка"/>
-    <input type="button" id="start_donaladka4" value="Cтарт доналадка"/>
     <input type="button" id="TO4" value="ТО"/>
     <input type="button" id="rabota4" value="Работа"/>
      <input type="button" id="end_of_downtime4" value="Завершить"/>
@@ -182,12 +181,6 @@
                 type: "POST",
                 url: "{% url 'start_perenaladka4' %}",
 
-            });
-        })
-        $('#start_donaladka4').click(function () {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'start_donaladka4' %}",
             });
         })
         $('#rabota4').click(function () {
