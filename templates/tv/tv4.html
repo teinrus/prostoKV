@@ -1,128 +1,140 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% if user.username == 'master' or user.username == 'admin' or user.username == 'operator4' %}
-        <script> // зависимости выпадающих списков таблицы
-        $(document).ready(function () {
-            var sor = [];
-            let allProstoy
-            var test =
-            {{ prich|safe }}
-            var temp = '%'
-            $(function () {
-                $('#sample_data4').mousemove(function () {
-                    $('td.otv_pod', this).mousedown(function () {
-
-                        temp = '';
-                        for (let i = 0; i < test.length; i++) {
-                            if ($(this).text() === test[i].Key) {
-                                temp += test[i].Prichina + '%'
-                            }
-                        }
-                        allProstoy = temp.split('%')
-                        sor = [];
-                        for (let n = 0; n < allProstoy.length; n++) {
-                            if (allProstoy[n] !== '') {
-                                sor.push({value: allProstoy[n], text: allProstoy[n]})
-                            }
-                        }
-                    })
-                });
-
-            });
-            {% if not user.username == 'master' %}
-                var dataTable2 = $('#sample_data4').DataTable();
-
-                $('#sample_data4').editable({
-                    container: 'body',
-                    selector: 'td.uchastok',
-                    url: '/update4',
-                    title: 'uchastok',
-                    type: 'POST',
-                    value: "Не выбрано",
-                    source:
-                        [
-                            {% for el in uch_vino %}
-                                {value: "{{ el }}", text: "{{ el }}"},
-                            {% endfor %}],
-                    validate: function (value) {
-                        if ($.trim(value) == '') {
-                            return 'This field is required';
-                        }
-                    }
-                });
-            {% endif %}
-            $('#sample_data4').editable({
-                container: 'body',
-                selector: 'td.otv_pod',
-                url: '/update4',
-                title: 'otv_pod',
-                type: 'POST',
-                source: [
-                    {% for el in otv_p %}
-                        {value: "{{ el }}", text: "{{ el }}"},
-                    {% endfor %}
-                ],
-                validate: function (value) {
-                    if ($.trim(value)) {
-                        temp = '%'
-                        for (let i = 0; i < test.length; i++) {
-                            if (value === test[i].Key) {
-                                temp += test[i].Prichina + '%'
-                            }
-                        }
-                        allProstoy = temp.split('%')
-                        sor = [];
-                        for (let n = 0; n < allProstoy.length; n++) {
-                            if (allProstoy[n] !== '') {
-                                sor.push({value: allProstoy[n], text: allProstoy[n]})
-                            }
-                        }
-                    }
-                }
-            });
-            $('#sample_data4').editable({
-                container: 'body',
-                selector: 'td.prichina',
-                url: '/update4',
-                title: 'prichina',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    function () {
-                        return sor
-                    },
-                validate: function (value) {
-                    if ($.trim(value)) {
-                    }
-                }
-            });
-
-            $('#sample_data4').editable({
-                container: 'body',
-                selector: 'td.comment',
-                url: '/update4',
-                title: 'comment',
-                type: 'POST',
-                value: "",
-
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
-                    }
-                }
-            });
-        });
 
 
-        </script>
-    {% endif %}
-<script>
 
-    $(document).ready(function () {
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Простои линии</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+    <body>
+        <h1 style="text-align:center">Простои линии 4</h1>
 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+
+
+               $(document).ready(function () {
                            setTimeout(function () {
             window.location.href = '/tv2';
-        }, 60000);});
-</script>
-        {% include 'Line4/Chart4.html' %}
+        }, 60000);
+            var ctx = document.getElementById("Chart").getContext("2d");
+            var config = {
+                type: 'bar',
+                data: {
+                    labels: {{ lableChart4|safe }},
+                    datasets: [{
+                        label: '# Производительность линии 4',
+                        data: {{ dataChart4_triblok|safe }},
+                        borderWidth: 1,
+                        borderColor: 'rgb(2,74,255)',
+                    },{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: {{ dataChart4_need_speed|safe }},
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    pointRadius: 0,
+                },]
+                },
+                options: {
+                    elements: {
+                        point: {
+                            radius: 0
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            };
+
+
+            var chart = new Chart(ctx, config);
+
+
+
+        });
+    </script>
+
+        <div class="col__wrapper"
+             style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
+            <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
+                <canvas id="Chart"></canvas>
+            </div>
+
+
+
+        </div>
+<style>
+    .col__list_temp {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .col__item_temp {
+        width: 23%; /* Ширина элемента, чтобы уместить 4 элемента в строку */
+        margin-bottom: 20px;
+        border: 3px solid #070707;
+    }
+</style>
+
+<ul class="col__list_temp">
+    <!-- Здесь идет блок с различной информацией, который будет обновляться вместе с графиком -->
+    <!-- Данные с id="avgSpeeds", id="sumProduct", id="sumProstoy", и id="allProc" будут обновляться в коде JavaScript -->
+
+    <li class="col__item_temp">
+        <ul>
+            <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
+            <li id="avgSpeeds2" style="text-align: center; font-size:70px; list-style-type: none;">{{ avg_speed }}</li>
+        </ul>
+    </li>
+
+    <li class="col__item_temp">
+        <ul>
+            <li style="list-style-type: none; font-size:23px">Количество продукции:</li>
+            <li id="sumProduct2" style="text-align: center; font-size:70px; list-style-type: none;">{{ sum_product }}</li>
+        </ul>
+    </li>
+
+    <li class="col__item_temp">
+        <ul>
+            <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
+            <li id="sumProstoy2" style="text-align: center; font-size:70px; list-style-type: none;">{{ sum_prostoy }}</li>
+        </ul>
+    </li>
+
+    <li class="col__item_temp">
+        <ul>
+            <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
+            <li id="allProc2" style="text-align: center; font-size:70px; list-style-type: none;"> {{ all_proc }}</li>
+        </ul>
+    </li>
+
+
+</ul>
+
+
+
+
+        <script>
+
+    </script>
+
+
+
+    </div>
+
+    </body>
+    </html>
 {% endblock %}
+
+

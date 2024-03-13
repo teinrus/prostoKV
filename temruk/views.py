@@ -151,6 +151,7 @@ def index(request):
 
 
 def TV5(request):
+    dataChart5_need_speed = []
     start_time, stop_time = get_shift_times()
 
     today = datetime.date.today().isoformat()
@@ -235,6 +236,46 @@ def TV5(request):
 
     except:
         print("alarme")
+    start_times = list(ProductionTime5.objects.filter(data=datetime.date.today(),
+                                                      time__gte=start_time,
+                                                      time__lte=stop_time)
+                       .values_list('time', flat=True))
+
+    prod_name = list(ProductionTime5.objects.filter(data=datetime.date.today(),
+                                                    time__gte=start_time,
+                                                    time__lte=stop_time)
+                     .values_list('type_bottle', flat=True))
+    speeds = []
+
+    # Получение скорости для каждого продукта из списка
+    for product in prod_name:
+        # Получение объекта SetProductionSpeed31 по названию продукта
+        production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(line="5").first()
+
+        if production_speed:
+            # Добавление скорости продукта в список
+            speeds.append(production_speed.speed)
+        else:
+            speeds.append(None)
+
+    end_times = start_times[1:] + [speed5_queryset.last().time]
+    start_times = [str(time) for time in start_times]
+    end_times = [str(time) for time in end_times]
+
+    # Парное объединение элементов двух списков
+    merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
+                   zip(start_times, end_times, speeds, prod_name)]
+
+    for sp in speed5_queryset:
+        trig = False
+        for el in range(0, len(merged_list)):
+            if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
+                    <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
+                dataChart5_need_speed.append(round(merged_list[el][2] * 1.18 / 0.8, 0) if merged_list[el][2] else 0)
+                trig = True
+
+        if not trig:
+            dataChart5_need_speed.append(0)
 
     return render(request, "tv/tv5.html", {
 
@@ -246,8 +287,11 @@ def TV5(request):
         'sumProstoy': sum_prostoy,
         'avgSpeed': avg_speed,
         'sumProduct': sum_product,
+
         'lableChart': lable_chart,
         'dataChart_triblok': data_chart,
+        'dataChart5_need_speed': dataChart5_need_speed,
+
         "boomOut": boomOut,
         "temp_chart": temp_chart,
     })
@@ -260,12 +304,15 @@ def get_plan_quantity2():
         plan = bottling_plan.objects.filter(Data=today, GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
                                             ShiftNumber=shift_number)
         plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
+        print(plan_quantity)
         return plan_quantity
+
     except Exception as e:
         return 31000
 
 
 def TV2(request):
+    dataChart2_need_speed = []
     start_time, stop_time = get_shift_times()
 
     today = datetime.date.today().isoformat()
@@ -279,9 +326,11 @@ def TV2(request):
 
     all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output2_queryset),
                                                start_time, stop_time)
+
     sum_prostoy = get_total_prostoy(table2_queryset)
-    avg_speed = get_average_speed(speed2_queryset)
-    sum_product = get_total_product(production_output2_queryset)
+
+    avg_speed = '{0:,}'.format(int(get_average_speed(speed2_queryset))).replace(',', ' ')
+    sum_product = '{0:,}'.format(get_total_product(production_output2_queryset)).replace(',', ' ')
 
     lable_chart = [str(sp.time) for sp in speed2_queryset]
     data_chart = [sp.triblok for sp in speed2_queryset]
@@ -349,6 +398,47 @@ def TV2(request):
     except:
         print("alarme")
 
+    start_times = list(ProductionTime2.objects.filter(data=datetime.date.today(),
+                                                      time__gte=start_time,
+                                                      time__lte=stop_time)
+                       .values_list('time', flat=True))
+
+    prod_name = list(ProductionTime2.objects.filter(data=datetime.date.today(),
+                                                    time__gte=start_time,
+                                                    time__lte=stop_time)
+                     .values_list('type_bottle', flat=True))
+    speeds = []
+
+    # Получение скорости для каждого продукта из списка
+    for product in prod_name:
+        # Получение объекта SetProductionSpeed31 по названию продукта
+        production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(line="2").first()
+
+        if production_speed:
+            # Добавление скорости продукта в список
+            speeds.append(production_speed.speed)
+        else:
+            speeds.append(None)
+
+    end_times = start_times[1:] + [speed2_queryset.last().time]
+    start_times = [str(time) for time in start_times]
+    end_times = [str(time) for time in end_times]
+
+    # Парное объединение элементов двух списков
+    merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
+                   zip(start_times, end_times, speeds, prod_name)]
+
+    for sp in speed2_queryset:
+        trig = False
+        for el in range(0, len(merged_list)):
+            if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
+                    <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
+                dataChart2_need_speed.append(round(merged_list[el][2] * 1.18 / 0.8, 0) if merged_list[el][2] else 0)
+                trig = True
+
+        if not trig:
+            dataChart2_need_speed.append(0)
+
     return render(request, "tv/tv2.html", {
 
         "indicators": sorted_date_time_numbacr_list,
@@ -359,8 +449,10 @@ def TV2(request):
         'sumProstoy': sum_prostoy,
         'avgSpeed': avg_speed,
         'sumProduct': sum_product,
+
         'lable_chart': lable_chart,
         'data_chart': data_chart,
+        'dataChart2_need_speed': dataChart2_need_speed,
 
     })
 
@@ -379,6 +471,7 @@ def get_plan_quantity4():
 
 
 def TV4(request):
+    dataChart4_need_speed = []
     start_time, stop_time = get_shift_times()
 
     today = datetime.date.today().isoformat()
@@ -391,20 +484,63 @@ def TV4(request):
 
     all_proc = calculate_production_percentage(plan_quantity, get_total_product(production_output4_queryset),
                                                start_time, stop_time)
+
     sum_prostoy = get_total_prostoy(table4_queryset)
-    avg_speed = get_average_speed(speed4_queryset)
-    sum_product = get_total_product(production_output4_queryset)
+
+    avg_speed = '{0:,}'.format(int(get_average_speed(speed4_queryset))).replace(',', ' ')
+    sum_product = '{0:,}'.format(get_total_product(production_output4_queryset)).replace(',', ' ')
 
     lable_chart = [str(sp.time) for sp in speed4_queryset]
     data_chart = [sp.triblok for sp in speed4_queryset]
+    start_times = list(ProductionTime4.objects.filter(data=datetime.date.today(),
+                                                      time__gte=start_time,
+                                                      time__lte=stop_time)
+                       .values_list('time', flat=True))
 
+    prod_name = list(ProductionTime4.objects.filter(data=datetime.date.today(),
+                                                    time__gte=start_time,
+                                                    time__lte=stop_time)
+                     .values_list('type_bottle', flat=True))
+    speeds = []
+
+    # Получение скорости для каждого продукта из списка
+    for product in prod_name:
+        # Получение объекта SetProductionSpeed31 по названию продукта
+        production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(line="4").first()
+
+        if production_speed:
+            # Добавление скорости продукта в список
+            speeds.append(production_speed.speed)
+        else:
+            speeds.append(None)
+
+    end_times = start_times[1:] + [speed4_queryset.last().time]
+    start_times = [str(time) for time in start_times]
+    end_times = [str(time) for time in end_times]
+
+    # Парное объединение элементов двух списков
+    merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
+                   zip(start_times, end_times, speeds, prod_name)]
+
+    for sp in speed4_queryset:
+        trig = False
+        for el in range(0, len(merged_list)):
+            if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
+                    <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
+                dataChart4_need_speed.append(round(merged_list[el][2] * 1.18 / 0.8, 0) if merged_list[el][2] else 0)
+                trig = True
+
+        if not trig:
+            dataChart4_need_speed.append(0)
     return render(request, "tv/tv4.html", {
-        "allProc4": all_proc,
-        'sumProstoy4': sum_prostoy,
-        'avgSpeed4': avg_speed,
-        'sumProduct4': sum_product,
+        "all_proc": all_proc,
+        'sum_prostoy': sum_prostoy,
+        'avg_speed': avg_speed,
+        'sum_product': sum_product,
+
         'lableChart4': lable_chart,
         'dataChart4_triblok': data_chart,
+        'dataChart4_need_speed':dataChart4_need_speed,
     })
 
 
@@ -1465,9 +1601,6 @@ def otchet(request):
         osnova = table.exclude(prichina="Закрытие партии суточное").exclude(prichina="Открытие партии суточное") \
             .exclude(prichina='Обед').aggregate(Sum('prostoy')).get('prostoy__sum')
 
-
-
-
         if not osnova:
             osnova = datetime.timedelta(0)
 
@@ -1482,8 +1615,8 @@ def otchet(request):
     # Средняя скорость
     try:
         if sumProstoy > timeAll:
-           sumProstoy = timeAll
-        timeWork = (timeAll - sumProstoy-time_by_category_time[4]-time_by_category_time[5])
+            sumProstoy = timeAll
+        timeWork = (timeAll - sumProstoy - time_by_category_time[4] - time_by_category_time[5])
 
     except:
         timeWork = 0
@@ -1491,8 +1624,8 @@ def otchet(request):
     try:
 
         avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-        excludeSpeed = round((allProd / (timeWork+time_by_category_time[1] ).total_seconds() * 3600))
-        allSpeed = round(allProd / (timeWork + sumProstoy).total_seconds()*3600)
+        excludeSpeed = round((allProd / (timeWork + time_by_category_time[1]).total_seconds() * 3600))
+        allSpeed = round(allProd / (timeWork + sumProstoy).total_seconds() * 3600)
     except:
         avgSpeed = 0
         excludeSpeed = 0
@@ -1554,7 +1687,6 @@ def time_to_timedelta(time_obj):
 
 def format_timedelta(td):
     try:
-
         hours, remainder = divmod(td.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         return "{:02}:{:02}".format(int(hours), int(minutes))
@@ -1913,6 +2045,7 @@ def otchetSmena(request):
             allProd2 = 0
         procent2 = int(allProd2 / plan2.aggregate(Sum('Quantity')).get('Quantity__sum') * 100)
 
+
     except:
         allProd2 = 0
         procent2 = 0
@@ -1920,7 +2053,7 @@ def otchetSmena(request):
         allProd1 = prod1.aggregate(Sum('production')).get('production__sum')
         if (allProd1 == None):
             allProd1 = 0
-        procent2 = int(allProd1 / plan1.aggregate(Sum('Quantity')).get('Quantity__sum') * 100)
+        procent1 = int(allProd1 / plan1.aggregate(Sum('Quantity')).get('Quantity__sum') * 100)
 
     except:
         allProd1 = 0
@@ -2169,7 +2302,6 @@ def profile_view(request):
 
 
 def profileOut_view(request):
-    print("tut")
     logout(request)
     if request.method == 'GET':
         user_ip = request.META.get('HTTP_X_FORWARDED_FOR')

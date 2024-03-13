@@ -43,7 +43,9 @@ def get_plan_quantity():
         shift_number = get_shift_number()
         plan = bottling_plan.objects.filter(Data=today, GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
                                             ShiftNumber=shift_number)
+
         plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
+        print(plan_quantity)
         return plan_quantity
     except Exception as e:
         return 31000

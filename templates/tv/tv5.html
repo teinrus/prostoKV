@@ -42,7 +42,7 @@
                 }
             }
 
-            return 'rgb(2,74,255)'; // Зеленый, если не попадает в условие окрашивания в черный
+            return  'rgb(82,129,250)';// Зеленый, если не попадает в условие окрашивания в черный
         }
 
         $(document).ready(function () {
@@ -51,13 +51,21 @@
                 type: 'bar',
                 data: {
                     labels: [],
-                    datasets: [{
+                    datasets: [ {
                         label: '# Производительность линии 5',
                         data: [],
                         borderWidth: 1,
-                        borderColor: 'rgb(2,74,255)',
+                        borderColor: 'rgb(0,0,255)',
                         backgroundColor: [] // Добавляем пустой массив для хранения цветов фона
-                    }]
+                    },{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: [{{ dataChart5_need_speed }}],
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    pointRadius: 0,
+                },]
                 },
                 options: {
                     elements: {
@@ -215,6 +223,7 @@ beforeDraw: function (chart) {
                     // Обновление данных и цветов на графике
                     chart.data.labels = newData.lableChart;
                     chart.data.datasets[0].data = newData.dataChart_triblok;
+                    chart.data.datasets[1].data = newData.dataChart5_need_speed;
 
                     // Массив, который будет хранить цвета для каждого элемента данных
                     var backgroundColorArray = [];
@@ -238,7 +247,7 @@ beforeDraw: function (chart) {
                 // Переход на другую страницу через 5 секунд
                 setTimeout(function () {
                     window.location.href = '/tv4';
-                }, 60000);
+                }, 10000);
             }
 
             // Вызов функции dataUpdater для обновления данных и графика при загрузке страницы

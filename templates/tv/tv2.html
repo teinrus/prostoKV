@@ -61,7 +61,15 @@
                         data: {{ data_chart|safe }},
                         borderWidth: 1,
                         borderColor: 'rgb(2,74,255)',
-                    }]
+                    },{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: {{ dataChart2_need_speed|safe }},
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(255,0,0,0.2)',
+                    pointRadius: 0,
+                },]
                 },
                 options: {
                     elements: {
