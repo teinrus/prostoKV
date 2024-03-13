@@ -580,14 +580,14 @@
     <div class="not-print" style="display: flex; justify-content: space-between;">
         <!-- Столбец с дополнительной информацией (слева) -->
         <div class="col" style="width: 48%; margin-right: 2%; font-size: 105%; ">
-            <ul style="margin-bottom: 15px; padding-bottom: 30px;">
+                       <ul style="margin-bottom: 15px; padding-bottom: 30px;">
 
                 <li style="padding-bottom: 10px;">Общее время работы:<b style="font-size: 120%; "> {{ timeWork }}</b>
                 </li>
-
+                <li>Обед: <b style="font-size: 120%;"> {{ time_by_category.4 }}</b></li>
+                <li style="padding-bottom: 10px;">Отк.Закрытие: <b style="font-size: 120%;"> {{ time_by_category.5 }}</b></li>
                 <li>Общее время простоя:<b style="font-size: 120%;"> {{ sumProstoy }}</b></li>
-                <li style="padding-left:20px;">- Обед: <b
-                        style="font-size: 120%;"> {{ time_by_category.4 }}</b></li>
+
                 <li style="padding-left:20px;">- аварийные простои: <b
                         style="font-size: 120%;"> {{ time_by_category.0 }}</b></li>
                 <li style="padding-left:20px;">- технологические простои: <b
@@ -599,20 +599,13 @@
 
 
                 <li style="padding-top: 20px;">План продукции:<b style="font-size: 120%;"> {{ plan }}</b></li>
-                <li style="padding-bottom:20px;">Количество продукции:<b style="font-size: 120%;"> {{ allProd }}
-                    ({{ completion_percentage }}%)</b>
+                <li style="padding-bottom:20px;">Количество продукции:<b style="font-size: 120%;"> {{ allProd }} ({{ completion_percentage }}%)</b>
                 </li>
                 <li>Средняя производительность, бут/час:</li>
 
                 <li style="padding-left:20px;">- без учета простоев:<b style="font-size: 120%;"> {{ avgSpeed }}</b></li>
-                <li style="padding-left:20px;">- без учета тех. простоев простоев:<b
-                        style="font-size: 120%;"> {{ excludeSpeed }}</b></li>
+                <li style="padding-left:20px;">- без учета тех. простоев простоев:<b style="font-size: 120%;"> {{ excludeSpeed }}</b></li>
                 <li style="padding-left:20px;">- итоговая:<b style="font-size: 120%;"> {{ allSpeed }}</b></li>
-
-                {% if line == 'Линиия 5' %}
-                    <li>Количество взрывов: <b style="font-size: 120%;"> {{ boomOut }}</b></li>
-                {% endif %}
-
             </ul>
 
 

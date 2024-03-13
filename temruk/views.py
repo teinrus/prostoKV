@@ -66,8 +66,8 @@ vid_prostoev = {
                                 "Замена контрэтикетки, этикетки, марки",
                                 "Замена QR",
                                 "Замена скотча",
-                                "Закрытие партии суточное",
-                                "Открытие партии суточное",
+                                # "Закрытие партии суточное",
+                                # "Открытие партии суточное",
                                 "Замена рибона, коробочного стикера",
                                 "Порвалась к.этик, этикетка",
                                 "Переход на новый акратофор,емкость",
@@ -481,7 +481,7 @@ def temruk(request):
     })
 
 
-def otchet(request, ):
+def otchet(request):
     plan = 0
     table_other = []
     table = []
@@ -1317,32 +1317,6 @@ def otchet(request, ):
     except:
         boomOut = 0
 
-    # Общее время простоя
-    try:
-        other = table_other.aggregate(Sum('prostoy')).get('prostoy__sum')
-        if not other:
-            other = datetime.timedelta(0)
-        osnova = table.aggregate(Sum('prostoy')).get('prostoy__sum')
-        if not osnova:
-            osnova = datetime.timedelta(0)
-
-        sumProstoy = osnova + other
-        if sumProstoy == None:
-            sumProstoy = datetime.timedelta(0)
-
-    except:
-        sumProstoy = 0
-
-    # Средняя скорость
-    try:
-        if sumProstoy > timeAll:
-            sumProstoy = timeAll
-        timeWork = (timeAll - sumProstoy)
-
-
-    except:
-        timeWork = 0
-
     # Данные для графика
     try:
         for sp in speed:
@@ -1480,14 +1454,45 @@ def otchet(request, ):
                     temp_time += time_to_timedelta(el.prostoy)
         time_by_category.append(format_timedelta(temp_time))
         time_by_category_time.append(temp_time)
+    # Общее время простоя
+    try:
+        other = table_other.exclude(prichina="Закрытие партии суточное").exclude(prichina="Открытие партии суточное") \
+            .exclude(prichina='Обед').aggregate(Sum('prostoy')).get('prostoy__sum')
+
+        if not other:
+            other = datetime.timedelta(0)
+
+        osnova = table.exclude(prichina="Закрытие партии суточное").exclude(prichina="Открытие партии суточное") \
+            .exclude(prichina='Обед').aggregate(Sum('prostoy')).get('prostoy__sum')
+
+
+
+
+        if not osnova:
+            osnova = datetime.timedelta(0)
+
+        sumProstoy = osnova + other
+
+        if not sumProstoy:
+            sumProstoy = datetime.timedelta(0)
+
+    except:
+        sumProstoy = 0
+
+    # Средняя скорость
+    try:
+        if sumProstoy > timeAll:
+           sumProstoy = timeAll
+        timeWork = (timeAll - sumProstoy-time_by_category_time[4]-time_by_category_time[5])
+
+    except:
+        timeWork = 0
 
     try:
+
         avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-        excludeSpeed = round((allProd / (timeWork + time_by_category_time[0] +
-                                         time_by_category_time[2] + time_by_category_time[3] + time_by_category_time[
-                                             4]).total_seconds() * 3600))
-        allSpeed = round((allProd / (timeAll.total_seconds() - (
-                    time_by_category_time[4] + time_by_category_time[5]).total_seconds()) * 3600))
+        excludeSpeed = round((allProd / (timeWork+time_by_category_time[1] ).total_seconds() * 3600))
+        allSpeed = round(allProd / (timeWork + sumProstoy).total_seconds()*3600)
     except:
         avgSpeed = 0
         excludeSpeed = 0
