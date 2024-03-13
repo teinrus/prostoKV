@@ -88,7 +88,9 @@ vid_prostoev = {
     "ТО и Переналадки АСУП": ["ТО",
                               "Доналадка",
                               "Переналадка"],
-    "Обед": ["Обед"]
+    "Обед": ["Обед"],
+    "Сутки": ["Закрытие партии суточное",
+              "Открытие партии суточное", ]
 }
 
 
@@ -543,21 +545,22 @@ def otchet(request, ):
 
                         )
 
-                        temp_bottle=ProductionTime5.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                                        data__lte=form.cleaned_data["finish_data"],
-                                                                        time__gte=datetime.time(0),
-                                                                        time__lte=datetime.time(23, 59)).order_by(
+                        temp_bottle = ProductionTime5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                     data__lte=form.cleaned_data["finish_data"],
+                                                                     time__gte=datetime.time(0),
+                                                                     time__lte=datetime.time(23, 59)).order_by(
                             'data', 'time').values('type_bottle')
-                        list_bottle=[]
+                        list_bottle = []
                         for el in temp_bottle:
                             list_bottle.append(el['type_bottle'])
-                        list_bottle= list(set(list_bottle))
+                        list_bottle = list(set(list_bottle))
                         for el in list_bottle:
                             production_speed = SetProductionSpeed.objects.filter(
                                 name_bottle=el).filter(
                                 line="5").first()
                             try:
-                                end_bottle.append([el,production_speed.speed,int(round(production_speed.speed*1.18/0.8,0))])
+                                end_bottle.append(
+                                    [el, production_speed.speed, int(round(production_speed.speed * 1.18 / 0.8, 0))])
                             except:
                                 pass
 
@@ -608,7 +611,7 @@ def otchet(request, ):
                                 start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
                                 end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
                                 if start_datetime <= speed_datetime <= end_datetime:
-                                    data_chartneed_speed.append(round(speed_value*1.18/0.8,0))
+                                    data_chartneed_speed.append(round(speed_value * 1.18 / 0.8, 0))
                                     speed_in_range = True
                                     break
                             if not speed_in_range:
@@ -824,6 +827,7 @@ def otchet(request, ):
                             "start_data"] + datetime.timedelta(days=1)
                     except:
                         timeAll = 0
+
                     try:
                         indicators = Line2Indicators.objects.filter(time__gte=datetime.time(0),
                                                                     time__lte=datetime.time(23, 59),
@@ -860,7 +864,7 @@ def otchet(request, ):
                                 line="2").first()
                             try:
                                 end_bottle.append(
-                                [el, production_speed.speed, int(round(production_speed.speed * 1.18 / 0.8, 0))])
+                                    [el, production_speed.speed, int(round(production_speed.speed * 1.18 / 0.8, 0))])
                             except:
                                 pass
                         speeds = []
@@ -909,7 +913,7 @@ def otchet(request, ):
                                 start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
                                 end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
                                 if start_datetime <= speed_datetime <= end_datetime:
-                                    data_chartneed_speed2.append(round(speed_value*1.18/0.8,0))
+                                    data_chartneed_speed2.append(round(speed_value * 1.18 / 0.8, 0))
                                     speed_in_range = True
                                     break
                             if not speed_in_range:
@@ -1113,7 +1117,7 @@ def otchet(request, ):
                                 line="4").first()
                             try:
                                 end_bottle.append(
-                                [el, production_speed.speed, int(round(production_speed.speed * 1.18 / 0.8, 0))])
+                                    [el, production_speed.speed, int(round(production_speed.speed * 1.18 / 0.8, 0))])
                             except:
                                 pass
                         speeds = []
@@ -1162,7 +1166,7 @@ def otchet(request, ):
                                 start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
                                 end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
                                 if start_datetime <= speed_datetime <= end_datetime:
-                                    data_chartneed_speed4.append(round(speed_value*1.18/0.8,0))
+                                    data_chartneed_speed4.append(round(speed_value * 1.18 / 0.8, 0))
                                     speed_in_range = True
                                     break
                             if not speed_in_range:
@@ -1479,9 +1483,11 @@ def otchet(request, ):
 
     try:
         avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-        excludeSpeed = round((allProd / (timeWork + time_by_category_time[1] +
-                                         time_by_category_time[3] + time_by_category_time[3]).total_seconds() * 3600))
-        allSpeed = round((allProd / timeAll.total_seconds() * 3600))
+        excludeSpeed = round((allProd / (timeWork + time_by_category_time[0] +
+                                         time_by_category_time[2] + time_by_category_time[3] + time_by_category_time[
+                                             4]).total_seconds() * 3600))
+        allSpeed = round((allProd / (timeAll.total_seconds() - (
+                    time_by_category_time[4] + time_by_category_time[5]).total_seconds()) * 3600))
     except:
         avgSpeed = 0
         excludeSpeed = 0
@@ -1492,7 +1498,7 @@ def otchet(request, ):
         "table": table,
         'form': form,
 
-        "end_bottle":end_bottle,
+        "end_bottle": end_bottle,
 
         "data_chartneed_speed": data_chartneed_speed,
         "data_chartneed_speed2": data_chartneed_speed2,

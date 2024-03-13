@@ -591,9 +591,10 @@ def Sotchet(request):
 
     try:
         avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-        excludeSpeed = round((allProd / (timeWork + time_by_category_time[1] +
-                                         time_by_category_time[3] + time_by_category_time[3]).total_seconds() * 3600))
-        allSpeed = round((allProd / timeAll.total_seconds() * 3600))
+        excludeSpeed = round((allProd / (timeWork + time_by_category_time[0] +
+                                         time_by_category_time[2] + time_by_category_time[3] + time_by_category_time[
+                                             4]).total_seconds() * 3600))
+        allSpeed = round((allProd / (timeAll.total_seconds() - time_by_category_time[4].total_seconds()) * 3600))
     except:
         avgSpeed = 0
         excludeSpeed = 0
@@ -1288,9 +1289,10 @@ def SotchetIgr(request):
 
     try:
         avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-        excludeSpeed = round((allProd / (timeWork + time_by_category_time[1] +
-                                         time_by_category_time[3] + time_by_category_time[3]).total_seconds() * 3600))
-        allSpeed = round((allProd / timeAll.total_seconds() * 3600))
+        excludeSpeed = round((allProd / (timeWork + time_by_category_time[0] +
+                                         time_by_category_time[2] + time_by_category_time[3] + time_by_category_time[
+                                             4]).total_seconds() * 3600))
+        allSpeed = round((allProd / (timeAll.total_seconds() - time_by_category_time[4].total_seconds()) * 3600))
     except:
         avgSpeed = 0
         excludeSpeed = 0
