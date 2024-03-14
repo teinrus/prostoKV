@@ -14,9 +14,8 @@ from pyModbusTCP.client import ModbusClient
 
 from temruk.models import *
 from .forms import Otchet
-from .views2 import get_shift_number
-from .views5 import get_shift_times, get_plan_quantity, calculate_production_percentage, get_total_prostoy, \
-    get_average_speed, get_total_product, get_boom_out
+from .general_functions import get_shift_times, get_plan_quantity, calculate_production_percentage, get_total_product, \
+    get_total_prostoy, get_average_speed, get_boom_out, get_shift_number
 
 slave_address = '192.168.88.230'
 port = 502
