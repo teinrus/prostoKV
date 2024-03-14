@@ -154,7 +154,7 @@ def update2_2(request):
                                          Uchastok=b).Guid_Uchastok
 
                 a = Table2.objects.get(id=pk)
-
+                print(a)
                 setattr(a, n, v)
 
             except Table2.DoesNotExist:

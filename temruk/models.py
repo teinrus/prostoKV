@@ -108,7 +108,7 @@ class Table5(models.Model):
     prostoy = models.TimeField('Время простоя', blank=True, null=True)
 
     uchastok = models.CharField('Где произошол простой', max_length=50, default='', blank=True, null=True)
-    prichina = models.CharField('Причина', max_length=50, default='', blank=True, null=True)
+    prichina = models.CharField('Причина', max_length=100, default='', blank=True, null=True)
     otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
@@ -128,7 +128,7 @@ class Table2(models.Model):
     prostoy = models.TimeField('Время простоя', blank=True, null=True)
 
     uchastok = models.CharField('Где произошол простой', max_length=50, default='', blank=True, null=True)
-    prichina = models.CharField('Причина', max_length=50, default='', blank=True, null=True)
+    prichina = models.CharField('Причина', max_length=100, default='', blank=True, null=True)
     otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
@@ -148,7 +148,7 @@ class Table4(models.Model):
     prostoy = models.TimeField('Время простоя', blank=True, null=True)
 
     uchastok = models.CharField('Где произошол простой', max_length=50, default='', blank=True, null=True)
-    prichina = models.CharField('Причина', max_length=50, default='', blank=True, null=True)
+    prichina = models.CharField('Причина', max_length=100, default='', blank=True, null=True)
     otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)
     comment = models.CharField('Комментарий', max_length=250, default=' ', blank=True, null=True)
