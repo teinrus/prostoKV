@@ -15,7 +15,7 @@ from pyModbusTCP.client import ModbusClient
 from temruk.models import *
 from .forms import Otchet
 from .general_functions import get_shift_times, get_plan_quantity, calculate_production_percentage, get_total_product, \
-    get_total_prostoy, get_average_speed, get_boom_out, get_shift_number
+    get_total_prostoy, get_average_speed, get_boom_out
 
 slave_address = '192.168.88.230'
 port = 502
@@ -65,8 +65,6 @@ vid_prostoev = {
                                 "Замена контрэтикетки, этикетки, марки",
                                 "Замена QR",
                                 "Замена скотча",
-                                # "Закрытие партии суточное",
-                                # "Открытие партии суточное",
                                 "Замена рибона, коробочного стикера",
                                 "Порвалась к.этик, этикетка",
                                 "Переход на новый акратофор,емкость",
@@ -155,7 +153,7 @@ def TV5(request):
 
     today = datetime.date.today().isoformat()
 
-    plan_quantity = get_plan_quantity()
+    plan_quantity = get_plan_quantity(GIUDLine='22b8afd6-110a-11e6-b0ff-005056ac2c77')
 
     table5_queryset = Table5.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
     speed5_queryset = Speed5.objects.filter(data=today, time__range=(start_time, stop_time))
@@ -296,27 +294,13 @@ def TV5(request):
     })
 
 
-def get_plan_quantity2():
-    try:
-        today = datetime.datetime.today()
-        shift_number = get_shift_number()
-        plan = bottling_plan.objects.filter(Data=today, GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77',
-                                            ShiftNumber=shift_number)
-        plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
-        print(plan_quantity)
-        return plan_quantity
-
-    except Exception as e:
-        return 31000
-
-
 def TV2(request):
     dataChart2_need_speed = []
     start_time, stop_time = get_shift_times()
 
     today = datetime.date.today().isoformat()
 
-    plan_quantity = get_plan_quantity2()
+    plan_quantity = get_plan_quantity(GIUDLine='48f7e8d8-1114-11e6-b0ff-005056ac2c77')
 
     table2_queryset = Table2.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
     speed2_queryset = Speed2.objects.filter(data=today, time__range=(start_time, stop_time))
@@ -456,26 +440,13 @@ def TV2(request):
     })
 
 
-def get_plan_quantity4():
-    try:
-        today = datetime.datetime.today()
-        shift_number = get_shift_number()
-        plan = bottling_plan.objects.filter(Data=today, GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77',
-                                            ShiftNumber=shift_number)
-        plan_quantity = plan.aggregate(Sum('Quantity'))['Quantity__sum'] or 31000
-        return plan_quantity
-    except Exception as e:
-        print("alarme")
-        return 31000
-
-
 def TV4(request):
     dataChart4_need_speed = []
     start_time, stop_time = get_shift_times()
 
     today = datetime.date.today().isoformat()
 
-    plan_quantity = get_plan_quantity()
+    plan_quantity = get_plan_quantity(GIUDLine='b84d1e71-1109-11e6-b0ff-005056ac2c77')
 
     table4_queryset = Table4.objects.filter(startdata=today, starttime__range=(start_time, stop_time))
     speed4_queryset = Speed4.objects.filter(data=today, time__range=(start_time, stop_time))
@@ -539,7 +510,7 @@ def TV4(request):
 
         'lableChart4': lable_chart,
         'dataChart4_triblok': data_chart,
-        'dataChart4_need_speed':dataChart4_need_speed,
+        'dataChart4_need_speed': dataChart4_need_speed,
     })
 
 

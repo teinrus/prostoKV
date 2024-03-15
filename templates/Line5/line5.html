@@ -137,12 +137,12 @@
         sendData5(document.getElementById('Select5').value);
         document.getElementById('Select5').addEventListener('change', function (event) {
             var selectedOption = event.target.value; // Получаем выбранное значение селекта
-            console.log(selectedOption);
             sendData5(selectedOption);
         });
 
         // Устанавливаем интервал для отправки данных
         setInterval(function () {
+            loadSavedOption5();
             var now = new Date();
             var selectedOption = document.getElementById('Select5').value;
 
