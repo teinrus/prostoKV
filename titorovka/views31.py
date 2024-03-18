@@ -5,8 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from pyModbusTCP.client import ModbusClient
 
-from temruk.general_functions import get_shift_times_tiorovka
-from temruk.models import bottling_plan, Nomenclature, uchastok, prichina, SetProductionSpeed
+from temruk.models import bottling_plan, uchastok, prichina, SetProductionSpeed
 from titorovka.models import *
 
 vid_prostoev = {
@@ -71,9 +70,9 @@ vid_prostoev = {
                     "Переход по в/м, этикетке, бутылке с мойкой (Линия 31)",
                     "Переход по этикетке, в/м и бутылке (переход с изменением объема бутылки)"],
 
-    "ТО и Переналадки АСУП":["ТО",
-                        "Доналадка",
-                        "Переналадка"]
+    "ТО и Переналадки АСУП": ["ТО",
+                              "Доналадка",
+                              "Переналадка"]
 }
 slave_address = '10.36.20.2'
 unit_id = 1
@@ -134,7 +133,7 @@ def update31(request):
                 v = uchastok.objects.get(Guid_Uchastok="641cea98-e3b8-4386-8924-e15f8100cb4e").Guid_Uchastok
             else:
                 v = uchastok.objects.get(Guid_Line="12ab36dc-0fb9-44d8-b14d-63230bf1c0cd",
-                                     Uchastok=b).Guid_Uchastok
+                                         Uchastok=b).Guid_Uchastok
                 print(v)
 
             try:
@@ -190,7 +189,10 @@ def update_items31(request):
 
 # получение данных для графика и ячеек
 def getData31(requst):
-    dataChart31_need_speed=[]
+    lableChart31 = []
+    dataChart31_triblok = []
+    dataChart31_need_speed = []
+
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
         spotSmena = datetime.time(16, 00, 0)
@@ -256,23 +258,21 @@ def getData31(requst):
     except:
         allProc31 = 0
 
-    lableChart31 = []
-    dataChart31_triblok = []
+
 
     for sp in speed31:
         lableChart31.append(str(sp.time))
         dataChart31_triblok.append(sp.triblok)
 
-    start_time, stop_time = get_shift_times_tiorovka()
     # Получение времени начала и окончания из ProductionTime
     start_times = list(ProductionTime31.objects.filter(data=datetime.date.today(),
-                                                      time__gte=start_time,
-                                                      time__lte=stop_time)
+                                                       time__gte=startSmena,
+                                                       time__lte=spotSmena)
                        .values_list('time', flat=True))
 
     prod_name = list(ProductionTime31.objects.filter(data=datetime.date.today(),
-                                                    time__gte=start_time,
-                                                    time__lte=stop_time)
+                                                     time__gte=startSmena,
+                                                     time__lte=spotSmena)
                      .values_list('type_bottle', flat=True))
     # Пустой список для хранения скоростей
     speeds = []
@@ -329,14 +329,13 @@ def getBtn31(requst):
     return JsonResponse(result)
 
 
-
-
 def select31(request):
     if request.method == 'POST':
         selected_value = request.POST.get('selected_value')
         response_data = {'selected_value': selected_value}
         production_time = ProductionTime31(data=datetime.datetime.today(),
-                                          time=datetime.datetime.now().strftime("%H:%M:%S"), type_bottle=selected_value)
+                                           time=datetime.datetime.now().strftime("%H:%M:%S"),
+                                           type_bottle=selected_value)
         production_time.save()
         return JsonResponse(response_data)
     else:

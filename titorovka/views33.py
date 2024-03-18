@@ -261,18 +261,12 @@ def getData33(requst):
 
     lableChart33 = []
     dataChart33_triblok = []
-    dataChart33_kapsula = []
-    dataChart33_eticetka = []
-    dataChart33_ukladchik = []
-    dataChart33_zakleichik = []
+
 
     for sp in speed33:
         lableChart33.append(str(sp.time))
         dataChart33_triblok.append(sp.triblok)
-        dataChart33_kapsula.append(sp.kapsula)
-        dataChart33_eticetka.append(sp.eticetka)
-        dataChart33_ukladchik.append(sp.ukladchik)
-        dataChart33_zakleichik.append(sp.zakleichik)
+
 
 
 

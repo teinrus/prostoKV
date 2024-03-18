@@ -51,7 +51,14 @@
         config31 = {
             data: {
                 labels: data.lableChart31,
-                datasets: [{
+                datasets: [ {
+                    type: 'bar',
+                    label: '# Производительность триблок',
+                    data: data.dataChart31_triblok,
+                    borderWidth: 3,
+                    borderColor: 'rgb(76,125,248)',
+                    backgroundColor: 'rgba(76,125,248,0.2)',
+                },{
                     type: 'line',
                     label: 'Необходимая производительность',
                     data: data.dataChart31_need_speed,
@@ -59,13 +66,6 @@
                     borderColor: 'rgb(255,0,0)',
                     backgroundColor: 'rgba(255,0,0,0.2)',
                     pointRadius: 0,
-                }, {
-                    type: 'bar',
-                    label: '# Производительность триблок',
-                    data: data.dataChart31_triblok,
-                    borderWidth: 3,
-                    borderColor: 'rgb(76,125,248)',
-                    backgroundColor: 'rgba(76,125,248,0.2)',
                 }]
             },
             // Другие настройки вашего графика
@@ -82,8 +82,8 @@
             success: function (newData) {
                 // Обновление данных графика и вызов метода update()
                 config31.data.labels = newData.lableChart31;
-                config31.data.datasets[0].data = newData.dataChart31_need_speed;
-                config31.data.datasets[1].data = newData.dataChart31_triblok;
+                config31.data.datasets[1].data = newData.dataChart31_need_speed;
+                config31.data.datasets[0].data = newData.dataChart31_triblok;
 
                 chart31.update();
             }
@@ -104,7 +104,7 @@
             chart31 = createChart(data);
 
             // Вызов функции обновления данных графика каждые 15 секунд
-            setInterval(updateChart, 15000);
+            setInterval(updateChart, 1000);
         }
     });
 });
