@@ -54,7 +54,7 @@
                 datasets: [{
                     type: 'line',
                     label: 'Необходимая производительность',
-                    data: data.dataChart31_test,
+                    data: data.dataChart31_need_speed,
                     borderWidth: 2,
                     borderColor: 'rgb(255,0,0)',
                     backgroundColor: 'rgba(255,0,0,0.2)',
@@ -82,8 +82,9 @@
             success: function (newData) {
                 // Обновление данных графика и вызов метода update()
                 config31.data.labels = newData.lableChart31;
+                config31.data.datasets[0].data = newData.dataChart31_need_speed;
                 config31.data.datasets[1].data = newData.dataChart31_triblok;
-                config31.data.datasets[0].data = newData.dataChart31_test;
+
                 chart31.update();
             }
         });

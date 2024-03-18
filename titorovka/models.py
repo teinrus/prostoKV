@@ -258,21 +258,23 @@ class ProductionOutput26(models.Model):
 class ProductionTime31(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
-    nameProduct = models.CharField('Наименование продукта', max_length=150, default='', blank=True, null=True)
+    type_bottle = models.CharField('Тип бутылки', max_length=150, default='', blank=True, null=True)
 
     def __str__(self):
         return str(self.time)
 
     class Meta:
-        verbose_name_plural = "Время работы на продукте"
+        verbose_name_plural = "Время работы на бутылке 31"
 
 
-class SetProductionSpeed31(models.Model):
-    nameProduct = models.CharField('Наименование продукта', max_length=150, default='', blank=True, null=True)
-    speed = models.IntegerField('Скорость',null=True)
+
+class ProductionTime33(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    type_bottle = models.CharField('Тип бутылки', max_length=150, default='', blank=True, null=True)
 
     def __str__(self):
-        return str(self.nameProduct)
+        return str(self.time)
 
     class Meta:
-        verbose_name_plural = "Установленная скорость по продукту"
+        verbose_name_plural = "Время работы на бутылке 33"

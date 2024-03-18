@@ -5,7 +5,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from pyModbusTCP.client import ModbusClient
 
-from temruk.models import bottling_plan, Nomenclature, uchastok, prichina
+from temruk.general_functions import get_shift_times_tiorovka
+from temruk.models import bottling_plan, Nomenclature, uchastok, prichina, SetProductionSpeed
 from titorovka.models import *
 
 vid_prostoev = {
@@ -189,6 +190,7 @@ def update_items31(request):
 
 # получение данных для графика и ячеек
 def getData31(requst):
+    dataChart31_need_speed=[]
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
         spotSmena = datetime.time(16, 00, 0)
@@ -256,24 +258,29 @@ def getData31(requst):
 
     lableChart31 = []
     dataChart31_triblok = []
-    dataChart31_test = []
 
-    # Получение времени начала и окончания из ProductionTime31
+    for sp in speed31:
+        lableChart31.append(str(sp.time))
+        dataChart31_triblok.append(sp.triblok)
+
+    start_time, stop_time = get_shift_times_tiorovka()
+    # Получение времени начала и окончания из ProductionTime
     start_times = list(ProductionTime31.objects.filter(data=datetime.date.today(),
-                                                       time__gte=startSmena,
-                                                       time__lte=spotSmena)
+                                                      time__gte=start_time,
+                                                      time__lte=stop_time)
                        .values_list('time', flat=True))
+
     prod_name = list(ProductionTime31.objects.filter(data=datetime.date.today(),
-                                                     time__gte=startSmena,
-                                                     time__lte=spotSmena)
-                     .values_list('nameProduct', flat=True))
+                                                    time__gte=start_time,
+                                                    time__lte=stop_time)
+                     .values_list('type_bottle', flat=True))
     # Пустой список для хранения скоростей
     speeds = []
 
     # Получение скорости для каждого продукта из списка
     for product in prod_name:
         # Получение объекта SetProductionSpeed31 по названию продукта
-        production_speed = SetProductionSpeed31.objects.filter(nameProduct=product).first()
+        production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(line="31").first()
 
         if production_speed:
             # Добавление скорости продукта в список
@@ -291,17 +298,14 @@ def getData31(requst):
 
     for sp in speed31:
         trig = False
-        lableChart31.append(str(sp.time))
-        dataChart31_triblok.append(sp.triblok)
         for el in range(0, len(merged_list)):
             if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
                     <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
-                dataChart31_test.append(merged_list[el][2])
+                dataChart31_need_speed.append(round(merged_list[el][2] * 1.18 / 0.8, 0) if merged_list[el][2] else 0)
                 trig = True
 
         if not trig:
-            dataChart31_test.append(0)
-
+            dataChart31_need_speed.append(0)
     result = {
         "allProc31": allProc31,
         'sumProstoy31': str(sumProstoy),
@@ -310,7 +314,7 @@ def getData31(requst):
 
         'lableChart31': lableChart31,
         'dataChart31_triblok': dataChart31_triblok,
-        'dataChart31_test': dataChart31_test,
+        'dataChart31_need_speed': dataChart31_need_speed,
 
     }
     return JsonResponse(result)
@@ -324,62 +328,17 @@ def getBtn31(requst):
 
     return JsonResponse(result)
 
-def list_nomenklature31 (requst):
 
 
-    if start1 <= datetime.datetime.now().time() <= start2:
-        startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 00, 0)
-        Smena = 1
-    elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 00, 0)
-        spotSmena = datetime.time(23, 59, 0)
-        Smena = 2
-    else:
-        startSmena = datetime.time(00, 00, 00)
-        spotSmena = datetime.time(8, 00, 00)
-        Smena = 3
 
-    list_nomenklature = []
-    list_guid_nomenklature = bottling_plan.objects.filter(
-        Data=datetime.date.today(),
-        GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
-        ShiftNumber=Smena).values_list('GUIDNomenсlature', flat=True)
-
-    for e in list_guid_nomenklature:
-        list_nomenklature.append(Nomenclature.objects.filter(GUID=e).values('Nomenclature')[0]['Nomenclature'])
-    list_nomenklature = list(set(list_nomenklature))
-    list_nomenklature.insert(0, "Выберите продукт")
-
-    result = {
-        'list_nomenklature': list_nomenklature,
-    }
-
-    return JsonResponse(result)
-def handle_select_position31(request):
+def select31(request):
     if request.method == 'POST':
-        selected_option = request.POST.get('selected_option')
-        print(f'Выбранная позиция: {selected_option}')  # Вывод позиции в консоль
-
-        # Попытка получить объект SetProductionSpeed по полю nameProduct
-        production_speed, created = SetProductionSpeed31.objects.get_or_create(nameProduct=selected_option)
-
-        # Если объект был создан, вы можете установить начальное значение скорости
-        if created:
-            production_speed.speed = 3000  # Установка начальной скорости, если объект был создан
-            production_speed.save()
-
-        # Получение значения скорости из объекта
-        speed = production_speed.speed
-        print(f'Скорость: {speed}')  # Вывод скорости в консоль
-
-        # Добавление времени, даты и выбранного продукта в модель ProductionTime31
-        production_time = ProductionTime31.objects.create(
-            data=datetime.datetime.today(),
-            time=datetime.datetime.now().strftime("%H:%M:%S"),
-            nameProduct=selected_option
-        )
-
-        return JsonResponse({'message': 'Успешно обработано'})  # Ответ на AJAX-запрос
+        selected_value = request.POST.get('selected_value')
+        response_data = {'selected_value': selected_value}
+        production_time = ProductionTime31(data=datetime.datetime.today(),
+                                          time=datetime.datetime.now().strftime("%H:%M:%S"), type_bottle=selected_value)
+        production_time.save()
+        return JsonResponse(response_data)
     else:
-        return JsonResponse({'message': 'Метод не поддерживается'})
+        # Вернуть ошибку, если запрос не является POST-запросом или не AJAX-запросом
+        return JsonResponse({'error': 'Invalid request'}, status=400)

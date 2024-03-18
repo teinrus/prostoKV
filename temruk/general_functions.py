@@ -63,6 +63,16 @@ def get_shift_times():
     else:
         return datetime.time(16, 30), datetime.time(23, 59, 59)
 
+def get_shift_times_tiorovka():
+    now_time = time.localtime().tm_hour * 3600 + time.localtime().tm_min * 60 + time.localtime().tm_sec
+
+    if 0 <= now_time < 8 * 3600:
+        return datetime.time(0, 0), datetime.time(8, 0)
+    elif 8 * 3600 <= now_time < 16 * 3600 :
+        return datetime.time(8, 0), datetime.time(16, 00)
+    else:
+        return datetime.time(16, 00), datetime.time(23, 59, 59)
+
 
 def get_total_product(production_output_queryset):
     sum_product = production_output_queryset.aggregate(Sum('production'))['production__sum']

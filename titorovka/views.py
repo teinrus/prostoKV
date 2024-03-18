@@ -5,13 +5,13 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from pyModbusTCP.client import ModbusClient
 
-from temruk.models import bottling_plan, prichina, uchastok
+from temruk.models import bottling_plan, prichina, uchastok, SetProductionSpeed
 from temruk.views import vid_prostoev, time_to_timedelta, format_timedelta
-from .forms import Otchet, OtchetIgr
-
 # Create your views here.
 from titorovka.models import Table31, ProductionOutput31, Speed31, Table33, Speed33, ProductionOutput33, Table24, \
-    Speed24, Table26, Speed26, ProductionOutput24, ProductionOutput26, Speed25, Table25, ProductionOutput25
+    Speed24, Table26, Speed26, ProductionOutput24, ProductionOutput26, Speed25, Table25, ProductionOutput25, \
+    ProductionTime33, ProductionTime31
+from .forms import Otchet, OtchetIgr
 
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 00, 0)
@@ -99,12 +99,28 @@ def index(request):
     podrazdeleniaEl = []
     for el in prichAll:
         podrazdeleniaEl.append(el.Key)
-    otv_p = set(podrazdeleniaEl)
 
+    otv_p = set(podrazdeleniaEl)
     prich = list(prichAll.values())
+
     uch = uchastok.objects.all()
     uch_vino = uchastok.objects.all()
     uch_vino33 = uchastok.objects.all()
+
+    select33 = SetProductionSpeed.objects.all().filter(line="33")
+    select33 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select33]
+    try:
+        select_valve_33 = ProductionTime33.objects.last().type_bottle
+    except:
+        select_valve_33 = None
+
+    select31 = SetProductionSpeed.objects.all().filter(line="31")
+    select31 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select31]
+    try:
+        select_valve_31 = ProductionTime31.objects.last().type_bottle
+    except:
+        select_valve_31 = None
+
     return render(request, "titorovka.html", {
 
         'otv_p': otv_p,
@@ -127,6 +143,12 @@ def index(request):
 
         'table26': table26,
         'speed26': speed26,
+
+        'select33': select33,
+        'select_valve_33': select_valve_33,
+
+        'select31': select31,
+        'select_valve_31': select_valve_31,
 
     })
 
@@ -152,8 +174,9 @@ def Sotchet(request):
                         starttime__gte=datetime.time(0),
                         starttime__lte=datetime.time(23, 59),
                         startdata__gte=form.cleaned_data["start_data"],
-                        startdata__lte=form.cleaned_data["finish_data"]).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
-                                                                                                          'starttime')
+                        startdata__lte=form.cleaned_data["finish_data"]).filter(
+                        uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                                                                         'starttime')
                     table_other = Table31.objects.filter(starttime__gte=datetime.time(0),
                                                          starttime__lte=datetime.time(23, 59),
                                                          startdata__gte=form.cleaned_data["start_data"],
@@ -198,8 +221,9 @@ def Sotchet(request):
                         starttime__gte=datetime.time(8),
                         starttime__lte=datetime.time(16, 00),
                         startdata__gte=form.cleaned_data["start_data"],
-                        startdata__lte=form.cleaned_data["finish_data"]).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
-                                                                                                          'starttime')
+                        startdata__lte=form.cleaned_data["finish_data"]).filter(
+                        uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                                                                         'starttime')
                     table_other = Table31.objects.filter(starttime__gte=datetime.time(8),
                                                          starttime__lte=datetime.time(16, 00),
                                                          startdata__gte=form.cleaned_data["start_data"],
@@ -241,8 +265,9 @@ def Sotchet(request):
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
                         starttime__gte=datetime.time(16, 00),
-                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
-                                                                                                          'starttime') \
+                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by(
+                        'startdata',
+                        'starttime') \
                         .order_by('startdata', 'starttime')
                     table_other = Table31.objects.filter(starttime__gte=datetime.time(16, 00),
                                                          starttime__lte=datetime.time(23, 59),
@@ -285,8 +310,9 @@ def Sotchet(request):
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
                         starttime__gte=datetime.time(00, 00),
-                        starttime__lte=datetime.time(8, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
-                                                                                                          'starttime')
+                        starttime__lte=datetime.time(8, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by(
+                        'startdata',
+                        'starttime')
                     table_other = Table31.objects.filter(starttime__gte=datetime.time(00, 00),
                                                          starttime__lte=datetime.time(8, 00),
                                                          startdata__gte=form.cleaned_data["start_data"],
@@ -333,8 +359,9 @@ def Sotchet(request):
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
                     starttime__gte=datetime.time(0),
-                    starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
-                                                                                                      'starttime')
+                    starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by(
+                    'startdata',
+                    'starttime')
                 table_other = Table33.objects.filter(starttime__gte=datetime.time(0),
                                                      starttime__lte=datetime.time(23, 59),
                                                      startdata__gte=form.cleaned_data["start_data"],
@@ -380,8 +407,9 @@ def Sotchet(request):
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
                     starttime__gte=datetime.time(8),
-                    starttime__lte=datetime.time(16, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
-                                                                                                      'starttime')
+                    starttime__lte=datetime.time(16, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by(
+                    'startdata',
+                    'starttime')
                 table_other = Table33.objects.filter(starttime__gte=datetime.time(8),
                                                      starttime__lte=datetime.time(16, 00),
                                                      startdata__gte=form.cleaned_data["start_data"],
@@ -424,8 +452,9 @@ def Sotchet(request):
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
                     starttime__gte=datetime.time(16, 00),
-                    starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
-                                                                                                      'starttime')
+                    starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by(
+                    'startdata',
+                    'starttime')
                 table_other = Table33.objects.filter(starttime__gte=datetime.time(16, 00),
                                                      starttime__lte=datetime.time(23, 59),
                                                      startdata__gte=form.cleaned_data["start_data"],
@@ -468,8 +497,9 @@ def Sotchet(request):
                     startdata__gte=form.cleaned_data["start_data"],
                     startdata__lte=form.cleaned_data["finish_data"],
                     starttime__gte=datetime.time(00, 00),
-                    starttime__lte=datetime.time(8, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by('startdata',
-                                                                                                      'starttime')
+                    starttime__lte=datetime.time(8, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by(
+                    'startdata',
+                    'starttime')
                 table_other = Table33.objects.filter(starttime__gte=datetime.time(00, 00),
                                                      starttime__lte=datetime.time(8, 00),
                                                      startdata__gte=form.cleaned_data["start_data"],
@@ -506,40 +536,13 @@ def Sotchet(request):
     lableChart = []
     dataChart = []
 
-    # # Общее количество  продукции
+    #  Общее количество продукции
     try:
         allProd = prod.aggregate(Sum('production')).get('production__sum')
         if (allProd == None):
             allProd = 0
     except:
         allProd = 0
-    #
-    # # Общее время простоя
-    # try:
-    #
-    #     if table_other:
-    #         sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum') + table_other.aggregate(
-    #             Sum('prostoy')).get('prostoy__sum')
-    #     else:
-    #         sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
-    #     if sumProstoy == None:
-    #         sumProstoy = datetime.timedelta(0)
-    # except:
-    #     sumProstoy = 0
-    # # Средняя скорость
-    # try:
-    #     if sumProstoy > timeAll:
-    #         sumProstoy = timeAll
-    #     timeWork = (timeAll - sumProstoy)
-    #
-    #
-    # except:
-    #     timeWork = 0
-    # try:
-    #     avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-    #
-    # except:
-    #     avgSpeed = 0
 
     # Данные для графика
 
@@ -589,16 +592,6 @@ def Sotchet(request):
         time_by_category.append(format_timedelta(temp_time))
         time_by_category_time.append(temp_time)
 
-    # try:
-    #     avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-    #     excludeSpeed = round((allProd / (timeWork + time_by_category_time[0] +
-    #                                      time_by_category_time[2] + time_by_category_time[3] + time_by_category_time[
-    #                                          4]).total_seconds() * 3600))
-    #     allSpeed = round((allProd / (timeAll.total_seconds() - time_by_category_time[4].total_seconds()) * 3600))
-    # except:
-    #     avgSpeed = 0
-    #     excludeSpeed = 0
-    #     allSpeed = 0
     try:
         if plan > 0 and allProd > 0:
             completion_percentage = round((allProd / plan) * 100)
@@ -631,8 +624,8 @@ def Sotchet(request):
     # Средняя скорость
     try:
         if sumProstoy > timeAll:
-           sumProstoy = timeAll
-        timeWork = (timeAll - sumProstoy-time_by_category_time[4]-time_by_category_time[5])
+            sumProstoy = timeAll
+        timeWork = (timeAll - sumProstoy - time_by_category_time[4] - time_by_category_time[5])
 
     except:
         timeWork = 0
@@ -640,8 +633,8 @@ def Sotchet(request):
     try:
 
         avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-        excludeSpeed = round((allProd / (timeWork+time_by_category_time[1] ).total_seconds() * 3600))
-        allSpeed = round(allProd / (timeWork + sumProstoy).total_seconds()*3600)
+        excludeSpeed = round((allProd / (timeWork + time_by_category_time[1]).total_seconds() * 3600))
+        allSpeed = round(allProd / (timeWork + sumProstoy).total_seconds() * 3600)
     except:
         avgSpeed = 0
         excludeSpeed = 0
@@ -708,8 +701,9 @@ def SotchetIgr(request):
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
                         starttime__gte=datetime.time(0),
-                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
-                                                                                                       'starttime')
+                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        'startdata',
+                        'starttime')
                     table_other = Table24.objects.filter(starttime__gte=datetime.time(0),
                                                          starttime__lte=datetime.time(23, 59),
                                                          startdata__gte=form.cleaned_data["start_data"],
@@ -755,8 +749,9 @@ def SotchetIgr(request):
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
                         starttime__gte=datetime.time(8),
-                        starttime__lte=datetime.time(16, 00)).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
-                                                                                                       'starttime')
+                        starttime__lte=datetime.time(16, 00)).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        'startdata',
+                        'starttime')
                     table_other = Table24.objects.filter(starttime__gte=datetime.time(8),
                                                          starttime__lte=datetime.time(16, 00),
                                                          startdata__gte=form.cleaned_data["start_data"],
@@ -798,8 +793,9 @@ def SotchetIgr(request):
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
                         starttime__gte=datetime.time(16, 00),
-                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Этикетировочный аппарат")).order_by('startdata',
-                                                                                                       'starttime')
+                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Этикетировочный аппарат")).order_by(
+                        'startdata',
+                        'starttime')
                     table_other = Table24.objects.filter(starttime__gte=datetime.time(16, 00),
                                                          starttime__lte=datetime.time(23, 59),
                                                          startdata__gte=form.cleaned_data["start_data"],
@@ -889,7 +885,8 @@ def SotchetIgr(request):
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
                         starttime__gte=datetime.time(0, 00),
-                        starttime__lte=datetime.time(23, 59)).filter(uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        starttime__lte=datetime.time(23, 59)).filter(
+                        uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
                         'startdata',
                         'starttime')
                     table_other = Table26.objects.filter(starttime__gte=datetime.time(0, 00),
@@ -937,7 +934,8 @@ def SotchetIgr(request):
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
                         starttime__gte=datetime.time(8),
-                        starttime__lte=datetime.time(16, 00),).filter(uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        starttime__lte=datetime.time(16, 00), ).filter(
+                        uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
                         'startdata',
                         'starttime')
 
@@ -1028,7 +1026,8 @@ def SotchetIgr(request):
                         startdata__gte=form.cleaned_data["start_data"],
                         startdata__lte=form.cleaned_data["finish_data"],
                         starttime__gte=datetime.time(00, 00),
-                        starttime__lte=datetime.time(8, 00)).filter(uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
+                        starttime__lte=datetime.time(8, 00)).filter(
+                        uchastok__icontains="Этикетировочный аппарат S2T6/Ri")).order_by(
                         'startdata',
                         'starttime')
                     table_other = Table26.objects.filter(starttime__gte=datetime.time(00, 00),
@@ -1263,7 +1262,6 @@ def SotchetIgr(request):
     except:
         allProd = 0
 
-
     # Данные для графика
 
     try:
@@ -1363,9 +1361,6 @@ def SotchetIgr(request):
         osnova = table.exclude(prichina="Закрытие партии суточное").exclude(prichina="Открытие партии суточное") \
             .exclude(prichina='Обед').aggregate(Sum('prostoy')).get('prostoy__sum')
 
-
-
-
         if not osnova:
             osnova = datetime.timedelta(0)
 
@@ -1380,8 +1375,8 @@ def SotchetIgr(request):
     # Средняя скорость
     try:
         if sumProstoy > timeAll:
-           sumProstoy = timeAll
-        timeWork = (timeAll - sumProstoy-time_by_category_time[4]-time_by_category_time[5])
+            sumProstoy = timeAll
+        timeWork = (timeAll - sumProstoy - time_by_category_time[4] - time_by_category_time[5])
 
     except:
         timeWork = 0
@@ -1389,8 +1384,8 @@ def SotchetIgr(request):
     try:
 
         avgSpeed = round((allProd / timeWork.total_seconds() * 3600))
-        excludeSpeed = round((allProd / (timeWork+time_by_category_time[1] ).total_seconds() * 3600))
-        allSpeed = round(allProd / (timeWork + sumProstoy).total_seconds()*3600)
+        excludeSpeed = round((allProd / (timeWork + time_by_category_time[1]).total_seconds() * 3600))
+        allSpeed = round(allProd / (timeWork + sumProstoy).total_seconds() * 3600)
     except:
         avgSpeed = 0
         excludeSpeed = 0
@@ -1471,6 +1466,8 @@ def rabota33(request):
 def TO33(request):
     mod_bus(1, 8)
     return HttpResponse('yes')
+
+
 def start_oformlenie33(request):
     mod_bus(1, 16)
     return HttpResponse('yes')

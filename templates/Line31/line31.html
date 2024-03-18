@@ -131,9 +131,53 @@
 
     {% include 'Line31/Chart31.html' %}
 
-    <label>Продукция:</label>
+  <select id="Select31">
+        {% for option in select31 %}
+            <option>{{ option }}</option>
+        {% endfor %}
+    </select>
+        <script>
 
-    <select name="select31" id="select31"></select>
+        function loadSavedOption31() {
+            let selectElement = document.getElementById('Select31');
+            let savedOption = '{{ select_valve_31|escapejs }}';
+            if (savedOption){
+                 selectElement.value = savedOption;
+            }
+
+
+        }
+
+        function sendData31(selectedOption) {
+            var selectedValue = selectedOption;
+            // Отправляем выбранное значение на сервер через AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "{% url 'select31' %}", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("selected_value=" + encodeURIComponent(selectedValue));
+        }
+
+        loadSavedOption31();
+        sendData31(document.getElementById('Select31').value);
+        document.getElementById('Select31').addEventListener('change', function (event) {
+            var selectedOption = event.target.value; // Получаем выбранное значение селекта
+            sendData31(selectedOption); // Вызываем функцию отправки данных при изменении выбранного значения
+        });
+
+        // Устанавливаем интервал для отправки данных
+        setInterval(function () {
+            loadSavedOption31();
+            var now = new Date();
+            var selectedOption = document.getElementById('Select31').value;
+
+            if ((now.getHours() === 16 && now.getMinutes() === 31) ||
+                (now.getHours() === 0 && now.getMinutes() === 1) ||
+                (now.getHours() === 8 && now.getMinutes() === 1)) {
+                sendData31(selectedOption);
+            }
+        }, 60000); // Проверяем каждую минуту
+
+    </script>
 
     <table id="sample_data31" class="table table-bordered table-striped">
         <thead>
