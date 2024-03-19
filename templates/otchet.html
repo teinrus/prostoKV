@@ -713,26 +713,24 @@
             </ul>
         </div>
     </div>
-<div>
-     {% if end_bottle %}
-            <table id="sample_data" class="table table-bordered table-striped">
-             <thead>
-            <tr>
-                <th>Тип бутылки</th>
+    {% if end_bottle %}
+        <table id="sample_data" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Тип бутылки</th>
 
-                <th>Производительность </th>
-             <th>Производительность Б/Р</th>
-            </thead>
-            {% for el in end_bottle %}
-                <tr>
-                    <td>{{ el.0 }}</td>
+            <th>Производительность </th>
+            <th>Производительность Б/Р</th>
+        </thead>
+        {% for el in end_bottle %}
+            <tr>
+                <td>{{ el.0 }}</td>
                 <td>{{ el.1 }}</td>
                 <td>{{ el.2 }}</td>
 
-                </tr>
-            {% endfor %}
-            {% endif %}
-</div>
+            </tr>
+        {% endfor %}
+    {% endif %}
 
     <div class="not-print">
         <div class="col__wrapper" style="display: flex; flex-direction: column; justify-content: space-between;

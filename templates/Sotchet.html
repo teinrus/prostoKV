@@ -449,9 +449,26 @@
             <div class="col" style="width: calc((100% - 30px) / 1.85);">
                 <canvas id="myChart"></canvas>
             </div>
+        </div>
+    </div>
+    {% if end_bottle %}
+        <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Тип бутылки</th>
 
+            <th>Производительность </th>
+            <th>Производительность Б/Р</th>
+        </thead>
+        {% for el in end_bottle %}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 }}</td>
+                <td>{{ el.2 }}</td>
 
-
+            </tr>
+        {% endfor %}
+    {% endif %}
     {% if line == 'Линиия 31' %}
         <table id="sample_data31" class="table table-bordered table-striped">
             <thead>
@@ -612,6 +629,14 @@
                 labels: {{ lableChart| safe }}
                 ,
                 datasets: [{
+                    type: 'line',
+                    label: 'Необходимая производительность',
+                    data: {{ data_chartneed_speed | safe }},
+                    borderWidth: 2,
+                    borderColor: 'rgb(255,0,0)',
+                    backgroundColor: 'rgba(248,6,6)',
+                    pointRadius: 0,
+                },{
                     borderColor: 'rgb(53,123,184)',
                     label: '# Производительность {{ line }}',
                     data: {{ dataChart | safe }},

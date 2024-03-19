@@ -155,10 +155,14 @@ def index(request):
 
 def Sotchet(request):
     plan = 0
+    timeAll = 0
+
     table = []
     table_other = []
 
-    timeAll = 0
+    data_chartneed_speed = []
+    end_bottle = []
+
     form = Otchet(request.GET)
     if form.is_valid():
         # Сортировка по дате
@@ -211,141 +215,229 @@ def Sotchet(request):
 
                     except:
                         timeAll = 0
-
-                if form.cleaned_data["SmenaF"] == 'Смена 1':
-                    table = (Table31.objects.filter(starttime__gte=datetime.time(8),
-                                                    starttime__lte=datetime.time(16, 00),
-                                                    startdata__gte=form.cleaned_data["start_data"],
-                                                    startdata__lte=form.cleaned_data["finish_data"]
-                                                    ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
-                        starttime__gte=datetime.time(8),
-                        starttime__lte=datetime.time(16, 00),
-                        startdata__gte=form.cleaned_data["start_data"],
-                        startdata__lte=form.cleaned_data["finish_data"]).filter(
-                        uchastok="Автомат этикетировочный PE")).order_by('startdata',
-                                                                         'starttime')
-                    table_other = Table31.objects.filter(starttime__gte=datetime.time(8),
-                                                         starttime__lte=datetime.time(16, 00),
-                                                         startdata__gte=form.cleaned_data["start_data"],
-                                                         startdata__lte=form.cleaned_data["finish_data"]
-                                                         ).exclude(uchastok="Триблок MBF").exclude(
-                        uchastok="Автомат этикетировочный PE") \
-                        .order_by('startdata', 'starttime')
-
-                    speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                   data__lte=form.cleaned_data["finish_data"],
-                                                   time__gte=datetime.time(8),
-                                                   time__lte=datetime.time(16, 00))
-
-                    prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                             data__lte=form.cleaned_data["finish_data"],
-                                                             time__gte=datetime.time(8),
-                                                             time__lte=datetime.time(16, 00))
+                        # Пустой список для хранения скоростей
                     try:
-                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
-                                                            Data__lte=form.cleaned_data["finish_data"],
-                                                            GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
-                                                            ShiftNumber=1)
-                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-                    except:
-                        plan = 0
+                        prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                 data__lte=form.cleaned_data["finish_data"],
+                                                                 time__gte=datetime.time(0),
+                                                                 time__lte=datetime.time(23, 59))
 
-                    try:
-                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = 1 + timeAll.total_seconds() / 3600 / 24
-                        timeAll = datetime.timedelta(hours=(8 * count), minutes=00 * count)
-                    except:
-                        timeAll = 0
-                if form.cleaned_data["SmenaF"] == 'Смена 2':
-                    table = (Table31.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                    starttime__lte=datetime.time(23, 59),
-                                                    startdata__gte=form.cleaned_data["start_data"],
-                                                    startdata__lte=form.cleaned_data["finish_data"]
-                                                    ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
-                        startdata__gte=form.cleaned_data["start_data"],
-                        startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=datetime.time(16, 00),
-                        starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by(
-                        'startdata',
-                        'starttime') \
-                        .order_by('startdata', 'starttime')
-                    table_other = Table31.objects.filter(starttime__gte=datetime.time(16, 00),
-                                                         starttime__lte=datetime.time(23, 59),
-                                                         startdata__gte=form.cleaned_data["start_data"],
-                                                         startdata__lte=form.cleaned_data["finish_data"]
-                                                         ).exclude(uchastok="Триблок MBF").exclude(
-                        uchastok="Этикетировка")
-
-                    speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                   data__lte=form.cleaned_data["finish_data"],
-                                                   time__gte=datetime.time(16, 00),
-                                                   time__lte=datetime.time(23, 59))
-
-                    prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                             data__lte=form.cleaned_data["finish_data"],
-                                                             time__gte=datetime.time(16, 00),
-                                                             time__lte=datetime.time(23, 59))
-                    try:
-                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
-                                                            Data__lte=form.cleaned_data["finish_data"],
-                                                            GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
-                                                            ShiftNumber=2)
-                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-                    except:
-                        plan = 0
-
-                    try:
-                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeAll.total_seconds() / 3600 / 24 + 1
-
-                        timeAll = datetime.timedelta(hours=(7 * count), minutes=00 * count)
-                    except:
-                        timeAll = 0
-                if form.cleaned_data["SmenaF"] == 'Смена 3':
-                    table = (Table31.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                    starttime__lte=datetime.time(8, 00),
-                                                    startdata__gte=form.cleaned_data["start_data"],
-                                                    startdata__lte=form.cleaned_data["finish_data"]
-                                                    ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
-                        startdata__gte=form.cleaned_data["start_data"],
-                        startdata__lte=form.cleaned_data["finish_data"],
-                        starttime__gte=datetime.time(00, 00),
-                        starttime__lte=datetime.time(8, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by(
-                        'startdata',
-                        'starttime')
-                    table_other = Table31.objects.filter(starttime__gte=datetime.time(00, 00),
-                                                         starttime__lte=datetime.time(8, 00),
-                                                         startdata__gte=form.cleaned_data["start_data"],
-                                                         startdata__lte=form.cleaned_data["finish_data"]
-                                                         ).exclude(uchastok="Триблок MBF").exclude(
-                        uchastok="Автомат этикетировочный PE") \
-                        .order_by('startdata', 'starttime')
-
-                    speed = Speed31.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
+                        prod_name = list(ProductionTime31.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                                          data__lte=form.cleaned_data["finish_data"],
-                                                                         time__gte=datetime.time(00, 00),
-                                                                         time__lte=datetime.time(8, 00))
+                                                                         time__gte=datetime.time(0),
+                                                                         time__lte=datetime.time(23, 59)).order_by(
+                            'data', 'time')
 
-                    prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
-                                                             data__lte=form.cleaned_data["finish_data"],
-                                                             time__gte=datetime.time(00, 00),
-                                                             time__lte=datetime.time(8, 00))
-                    try:
-                        plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
-                                                            Data__lte=form.cleaned_data["finish_data"],
-                                                            GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
-                                                            ShiftNumber=3)
-                        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-                    except:
-                        plan = 0
+                        )
 
-                    try:
-                        timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
-                        count = timeAll.total_seconds() / 3600 / 24 + 1
+                        temp_bottle = ProductionTime31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                      data__lte=form.cleaned_data["finish_data"],
+                                                                      time__gte=datetime.time(0),
+                                                                      time__lte=datetime.time(23, 59)).order_by(
+                            'data', 'time').values('type_bottle')
+                        list_bottle = []
+                        for el in temp_bottle:
+                            list_bottle.append(el['type_bottle'])
+                        list_bottle = list(set(list_bottle))
+                        for el in list_bottle:
+                            production_speed = SetProductionSpeed.objects.filter(
+                                name_bottle=el).filter(
+                                line="31").first()
+                            try:
+                                end_bottle.append(
+                                    [el, production_speed.speed,
+                                     int(round(production_speed.speed * 1.18 / 0.8, 0))])
+                            except:
+                                pass
+                        speeds = []
 
-                        timeAll = datetime.timedelta(hours=(8 * count))
-                    except:
-                        timeAll = 0
+                        # # Получение скорости для каждого продукта из списка
+                        for product in prod_name:
+                            # Получение объекта SetProductionSpeed31 по названию продукта
+                            production_speed = SetProductionSpeed.objects.filter(
+                                name_bottle=product.type_bottle).filter(
+                                line="31").first()
+
+                            if production_speed:
+                                # Добавление скорости продукта в список
+                                speeds.append(production_speed.speed)
+                            else:
+                                speeds.append(0)
+
+                        # Получение первого времени из объектов speed
+                        first_speed_time = (speed.first().data, speed.first().time)
+
+                        # Создание списка start_times с первым значением first_speed_time
+                        start_times = [first_speed_time]
+
+                        # Добавление оставшихся элементов из prod_name
+                        start_times += [(elem.data, elem.time) for elem in prod_name[1:]]
+
+                        end_times = [(elem.data, elem.time) for elem in prod_name[1:]]
+                        end_times.append(
+                            (speed.last().data, speed.last().time))
+
+                        start_times = [(time) for time in start_times]
+                        end_times = [(time) for time in end_times]
+
+                        # Парное объединение элементов двух списков
+                        merged_list = [(elem1, elem2, elem3) for elem1, elem2, elem3 in
+                                       zip(start_times, end_times, speeds)]
+
+                        # Перебираем все интервалы времени в merged_list
+
+                        # print(*merged_list, sep="\n")
+
+                        for el_speed in speed:
+                            speed_datetime = datetime.datetime.combine(el_speed.data, el_speed.time)
+                            speed_in_range = False
+                            for start_datetime, end_datetime, speed_value in merged_list:
+                                start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
+                                end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
+                                if start_datetime <= speed_datetime <= end_datetime:
+                                    data_chartneed_speed.append(round(speed_value * 1.18 / 0.8, 0))
+                                    speed_in_range = True
+                                    break
+                            if not speed_in_range:
+                                data_chartneed_speed.append(0)
+                    except   Exception as e:
+                        # Вывод ошибки в консоль
+                        print("Произошла ошибка:", e)
+
+            if form.cleaned_data["SmenaF"] == 'Смена 1':
+                table = (Table31.objects.filter(starttime__gte=datetime.time(8),
+                                                starttime__lte=datetime.time(16, 00),
+                                                startdata__gte=form.cleaned_data["start_data"],
+                                                startdata__lte=form.cleaned_data["finish_data"]
+                                                ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
+                    starttime__gte=datetime.time(8),
+                    starttime__lte=datetime.time(16, 00),
+                    startdata__gte=form.cleaned_data["start_data"],
+                    startdata__lte=form.cleaned_data["finish_data"]).filter(
+                    uchastok="Автомат этикетировочный PE")).order_by('startdata',
+                                                                     'starttime')
+                table_other = Table31.objects.filter(starttime__gte=datetime.time(8),
+                                                     starttime__lte=datetime.time(16, 00),
+                                                     startdata__gte=form.cleaned_data["start_data"],
+                                                     startdata__lte=form.cleaned_data["finish_data"]
+                                                     ).exclude(uchastok="Триблок MBF").exclude(
+                    uchastok="Автомат этикетировочный PE") \
+                    .order_by('startdata', 'starttime')
+
+                speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(8),
+                                               time__lte=datetime.time(16, 00))
+
+                prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                         data__lte=form.cleaned_data["finish_data"],
+                                                         time__gte=datetime.time(8),
+                                                         time__lte=datetime.time(16, 00))
+                try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
+                                                        ShiftNumber=1)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan = 0
+
+                try:
+                    timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = 1 + timeAll.total_seconds() / 3600 / 24
+                    timeAll = datetime.timedelta(hours=(8 * count), minutes=00 * count)
+                except:
+                    timeAll = 0
+            if form.cleaned_data["SmenaF"] == 'Смена 2':
+                table = (Table31.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                starttime__lte=datetime.time(23, 59),
+                                                startdata__gte=form.cleaned_data["start_data"],
+                                                startdata__lte=form.cleaned_data["finish_data"]
+                                                ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
+                    startdata__gte=form.cleaned_data["start_data"],
+                    startdata__lte=form.cleaned_data["finish_data"],
+                    starttime__gte=datetime.time(16, 00),
+                    starttime__lte=datetime.time(23, 59)).filter(uchastok="Автомат этикетировочный PE")).order_by(
+                    'startdata',
+                    'starttime') \
+                    .order_by('startdata', 'starttime')
+                table_other = Table31.objects.filter(starttime__gte=datetime.time(16, 00),
+                                                     starttime__lte=datetime.time(23, 59),
+                                                     startdata__gte=form.cleaned_data["start_data"],
+                                                     startdata__lte=form.cleaned_data["finish_data"]
+                                                     ).exclude(uchastok="Триблок MBF").exclude(
+                    uchastok="Этикетировка")
+
+                speed = Speed31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(16, 00),
+                                               time__lte=datetime.time(23, 59))
+
+                prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                         data__lte=form.cleaned_data["finish_data"],
+                                                         time__gte=datetime.time(16, 00),
+                                                         time__lte=datetime.time(23, 59))
+                try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
+                                                        ShiftNumber=2)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan = 0
+
+                try:
+                    timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeAll.total_seconds() / 3600 / 24 + 1
+
+                    timeAll = datetime.timedelta(hours=(7 * count), minutes=00 * count)
+                except:
+                    timeAll = 0
+            if form.cleaned_data["SmenaF"] == 'Смена 3':
+                table = (Table31.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                starttime__lte=datetime.time(8, 00),
+                                                startdata__gte=form.cleaned_data["start_data"],
+                                                startdata__lte=form.cleaned_data["finish_data"]
+                                                ).filter(uchastok="Триблок MBF") | Table31.objects.filter(
+                    startdata__gte=form.cleaned_data["start_data"],
+                    startdata__lte=form.cleaned_data["finish_data"],
+                    starttime__gte=datetime.time(00, 00),
+                    starttime__lte=datetime.time(8, 00)).filter(uchastok="Автомат этикетировочный PE")).order_by(
+                    'startdata',
+                    'starttime')
+                table_other = Table31.objects.filter(starttime__gte=datetime.time(00, 00),
+                                                     starttime__lte=datetime.time(8, 00),
+                                                     startdata__gte=form.cleaned_data["start_data"],
+                                                     startdata__lte=form.cleaned_data["finish_data"]
+                                                     ).exclude(uchastok="Триблок MBF").exclude(
+                    uchastok="Автомат этикетировочный PE") \
+                    .order_by('startdata', 'starttime')
+
+                speed = Speed31.objects.using('titorovka_db').filter(data__gte=form.cleaned_data["start_data"],
+                                                                     data__lte=form.cleaned_data["finish_data"],
+                                                                     time__gte=datetime.time(00, 00),
+                                                                     time__lte=datetime.time(8, 00))
+
+                prod = ProductionOutput31.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                         data__lte=form.cleaned_data["finish_data"],
+                                                         time__gte=datetime.time(00, 00),
+                                                         time__lte=datetime.time(8, 00))
+                try:
+                    plan = bottling_plan.objects.filter(Data__gte=form.cleaned_data["start_data"],
+                                                        Data__lte=form.cleaned_data["finish_data"],
+                                                        GIUDLine='12ab36dc-0fb9-44d8-b14d-63230bf1c0cd',
+                                                        ShiftNumber=3)
+                    plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+                except:
+                    plan = 0
+
+                try:
+                    timeAll = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeAll.total_seconds() / 3600 / 24 + 1
+
+                    timeAll = datetime.timedelta(hours=(8 * count))
+                except:
+                    timeAll = 0
         elif form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 33'):
             uchastok_rozliv = "Автомат розлива BORELLI"
@@ -396,6 +488,93 @@ def Sotchet(request):
 
                 except:
                     timeAll = 0
+                try:
+                    prod = ProductionOutput33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                             data__lte=form.cleaned_data["finish_data"],
+                                                             time__gte=datetime.time(0),
+                                                             time__lte=datetime.time(23, 59))
+
+                    prod_name = list(ProductionTime33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                     data__lte=form.cleaned_data["finish_data"],
+                                                                     time__gte=datetime.time(0),
+                                                                     time__lte=datetime.time(23, 59)).order_by(
+                        'data', 'time')
+
+                    )
+
+                    temp_bottle = ProductionTime33.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                                  data__lte=form.cleaned_data["finish_data"],
+                                                                  time__gte=datetime.time(0),
+                                                                  time__lte=datetime.time(23, 59)).order_by(
+                        'data', 'time').values('type_bottle')
+                    list_bottle = []
+                    for el in temp_bottle:
+                        list_bottle.append(el['type_bottle'])
+                    list_bottle = list(set(list_bottle))
+                    for el in list_bottle:
+                        production_speed = SetProductionSpeed.objects.filter(
+                            name_bottle=el).filter(
+                            line="33").first()
+                        try:
+                            end_bottle.append(
+                                [el, production_speed.speed,
+                                 int(round(production_speed.speed * 1.18 / 0.8, 0))])
+                        except:
+                            pass
+                    speeds = []
+
+                    # # Получение скорости для каждого продукта из списка
+                    for product in prod_name:
+                        # Получение объекта SetProductionSpeed31 по названию продукта
+                        production_speed = SetProductionSpeed.objects.filter(
+                            name_bottle=product.type_bottle).filter(
+                            line="33").first()
+
+                        if production_speed:
+                            # Добавление скорости продукта в список
+                            speeds.append(production_speed.speed)
+                        else:
+                            speeds.append(0)
+
+                    # Получение первого времени из объектов speed
+                    first_speed_time = (speed.first().data, speed.first().time)
+
+                    # Создание списка start_times с первым значением first_speed_time
+                    start_times = [first_speed_time]
+
+                    # Добавление оставшихся элементов из prod_name
+                    start_times += [(elem.data, elem.time) for elem in prod_name[1:]]
+
+                    end_times = [(elem.data, elem.time) for elem in prod_name[1:]]
+                    end_times.append(
+                        (speed.last().data, speed.last().time))
+
+                    start_times = [(time) for time in start_times]
+                    end_times = [(time) for time in end_times]
+
+                    # Парное объединение элементов двух списков
+                    merged_list = [(elem1, elem2, elem3) for elem1, elem2, elem3 in
+                                   zip(start_times, end_times, speeds)]
+
+                    # Перебираем все интервалы времени в merged_list
+
+                    # print(*merged_list, sep="\n")
+
+                    for el_speed in speed:
+                        speed_datetime = datetime.datetime.combine(el_speed.data, el_speed.time)
+                        speed_in_range = False
+                        for start_datetime, end_datetime, speed_value in merged_list:
+                            start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
+                            end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
+                            if start_datetime <= speed_datetime <= end_datetime:
+                                data_chartneed_speed.append(round(speed_value * 1.18 / 0.8, 0))
+                                speed_in_range = True
+                                break
+                        if not speed_in_range:
+                            data_chartneed_speed.append(0)
+                except   Exception as e:
+                    # Вывод ошибки в консоль
+                    print("Произошла ошибка:", e)
 
             if form.cleaned_data["SmenaF"] == 'Смена 1':
                 table = (Table33.objects.filter(starttime__gte=datetime.time(8),
@@ -671,11 +850,14 @@ def Sotchet(request):
 
         'lableChart': lableChart,
         'dataChart': dataChart,
+        'data_chartneed_speed': data_chartneed_speed,
 
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
         'uch_v': uch_v,
+
+        'end_bottle': end_bottle
 
     })
 
