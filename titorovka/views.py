@@ -10,7 +10,7 @@ from temruk.views import vid_prostoev, time_to_timedelta, format_timedelta
 # Create your views here.
 from titorovka.models import Table31, ProductionOutput31, Speed31, Table33, Speed33, ProductionOutput33, Table24, \
     Speed24, Table26, Speed26, ProductionOutput24, ProductionOutput26, Speed25, Table25, ProductionOutput25, \
-    ProductionTime33, ProductionTime31
+    ProductionTime33, ProductionTime31, ProductionTime24, ProductionTime25, ProductionTime26
 from .forms import Otchet, OtchetIgr
 
 start1 = datetime.time(8, 00, 0)
@@ -109,6 +109,7 @@ def index(request):
 
     select33 = SetProductionSpeed.objects.all().filter(line="33")
     select33 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select33]
+
     try:
         select_valve_33 = ProductionTime33.objects.last().type_bottle
     except:
@@ -120,6 +121,26 @@ def index(request):
         select_valve_31 = ProductionTime31.objects.last().type_bottle
     except:
         select_valve_31 = None
+    select24 = SetProductionSpeed.objects.all().filter(line="24")
+    select24 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select24]
+    try:
+        select_valve_24 = ProductionTime24.objects.last().type_bottle
+    except:
+        select_valve_24 = None
+
+    select25 = SetProductionSpeed.objects.all().filter(line="25")
+    select25 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select25]
+    try:
+        select_valve_25 = ProductionTime25.objects.last().type_bottle
+    except:
+        select_valve_25 = None
+
+    select26 = SetProductionSpeed.objects.all().filter(line="26")
+    select26 = ['Выберите тип бутылки'] + [obj.name_bottle for obj in select26]
+    try:
+        select_valve_26 = ProductionTime26.objects.last().type_bottle
+    except:
+        select_valve_26 = None
 
     return render(request, "titorovka.html", {
 
@@ -149,6 +170,15 @@ def index(request):
 
         'select31': select31,
         'select_valve_31': select_valve_31,
+
+        'select24': select24,
+        'select_valve_24': select_valve_24,
+
+        'select25': select25,
+        'select_valve_25': select_valve_25,
+
+        'select26': select26,
+        'select_valve_26': select_valve_26,
 
     })
 

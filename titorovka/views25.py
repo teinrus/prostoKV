@@ -5,7 +5,7 @@ from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
-from temruk.models import bottling_plan, prichina, uchastok
+from temruk.models import bottling_plan, prichina, uchastok, SetProductionSpeed
 from titorovka.models import *
 from  pyModbusTCP.client import ModbusClient
 
@@ -183,6 +183,7 @@ def update_items25(request):
 
 # получение данных для графика и ячеек
 def getData25(requst):
+    dataChart25_need_speed = []
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
         spotSmena = datetime.time(16, 00, 0)
@@ -251,19 +252,54 @@ def getData25(requst):
 
     lableChart25 = []
     dataChart25_triblok = []
-    dataChart25_kapsula = []
-    dataChart25_eticetka = []
-    dataChart25_ukladchik = []
-    dataChart25_zakleichik = []
+
 
     for sp in speed25:
         lableChart25.append(str(sp.time))
         dataChart25_triblok.append(sp.triblok)
-        dataChart25_kapsula.append(sp.kapsula)
-        dataChart25_eticetka.append(sp.eticetka)
-        dataChart25_ukladchik.append(sp.ukladchik)
-        dataChart25_zakleichik.append(sp.zakleichik)
 
+    # Получение времени начала и окончания из ProductionTime
+    start_times = list(ProductionTime24.objects.filter(data=datetime.date.today(),
+                                                       time__gte=startSmena,
+                                                       time__lte=spotSmena)
+                       .values_list('time', flat=True))
+
+    prod_name = list(ProductionTime24.objects.filter(data=datetime.date.today(),
+                                                     time__gte=startSmena,
+                                                     time__lte=spotSmena)
+                     .values_list('type_bottle', flat=True))
+    # Пустой список для хранения скоростей
+    speeds = []
+
+    # Получение скорости для каждого продукта из списка
+    for product in prod_name:
+        # Получение объекта SetProductionSpeed31 по названию продукта
+        production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(line="24").first()
+
+        if production_speed:
+            # Добавление скорости продукта в список
+            speeds.append(production_speed.speed)
+        else:
+            speeds.append(None)
+
+    end_times = start_times[1:] + [speed25.last().time]
+    start_times = [str(time) for time in start_times]
+    end_times = [str(time) for time in end_times]
+
+    # Парное объединение элементов двух списков
+    merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
+                   zip(start_times, end_times, speeds, prod_name)]
+
+    for sp in speed25:
+        trig = False
+        for el in range(0, len(merged_list)):
+            if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
+                    <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
+                dataChart25_need_speed.append(round(merged_list[el][2] * 1.18 / 0.8, 0) if merged_list[el][2] else 0)
+                trig = True
+
+        if not trig:
+            dataChart25_need_speed.append(0)
     result = {
         "allProc25": allProc25,
         'sumProstoy25': str(sumProstoy),
@@ -272,10 +308,8 @@ def getData25(requst):
 
         'lableChart25': lableChart25,
         'dataChart25_triblok': dataChart25_triblok,
-        'dataChart25_kapsula': dataChart25_kapsula,
-        'dataChart25_eticetka': dataChart25_eticetka,
-        'dataChart25_ukladchik': dataChart25_ukladchik,
-        'dataChart25_zakleichik': dataChart25_zakleichik,
+        'dataChart25_need_speed': dataChart25_need_speed,
+
 
     }
     return JsonResponse(result)
@@ -286,3 +320,18 @@ def getBtn25(requst):
         'buttons_reg':buttons_reg
               }
     return JsonResponse(result)
+
+def select25(request):
+    if request.method == 'POST':
+
+        selected_value = request.POST.get('selected_value')
+
+        response_data = {'selected_value': selected_value}
+        production_time = ProductionTime25(data=datetime.datetime.today(),
+                                           time=datetime.datetime.now().strftime("%H:%M:%S"),
+                                           type_bottle=selected_value)
+        production_time.save()
+        return JsonResponse(response_data)
+    else:
+        # Вернуть ошибку, если запрос не является POST-запросом или не AJAX-запросом
+        return JsonResponse({'error': 'Invalid request'}, status=400)

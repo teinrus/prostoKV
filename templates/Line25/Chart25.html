@@ -60,33 +60,20 @@
 
                         labels: data.lableChart25,
                         datasets: [{
+                            type: 'line',
+                            label: 'Необходимая производительность',
+                            data: data.dataChart25_need_speed,
+                            borderWidth: 2,
+                            borderColor: 'rgb(255,0,0)',
+                            backgroundColor: 'rgba(255,0,0,0.2)',
+                            pointRadius: 0,
+                        },{
                             label: '# Производительность триблок',
                             data: data.dataChart25_triblok,
                             borderWidth: 3,
                             borderColor: 'rgb(76,125,258)',
                         }],
-                {#{#}
-                {#            label: '# Производительность капсула',#}
-                {#            data: data.dataChart25_kapsula,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,130,258)',#}
-                {#            },{#}
-                {#            label: '# Производительность этикетировка',#}
-                {#            data: data.dataChart25_eticetka,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,258,216)',#}
-                {#             },{#}
-                {#            label: '# Производительность укладчик',#}
-                {#            data: data.dataChart25_ukladchik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(76,258,145)',#}
-                {#            },{#}
-                {#            label: '# Производительность заклейщик',#}
-                {#            data: data.dataChart25_zakleichik,#}
-                {#            borderWidth: 3,#}
-                {#            borderColor: 'rgb(87,258,76)',#}
-                {##}
-                {#        }]#}
+
                     },
                     options: {
 
@@ -132,11 +119,8 @@
                 url: 'getData25',
             }).done(function (newData) {
                 chart25.data.labels = newData.lableChart25;
-                chart25.data.datasets[0].data = newData.dataChart25_triblok;
-                {#chart25.data.datasets[1].data = newData.dataChart25_kapsula;#}
-                {#chart25.data.datasets[2].data = newData.dataChart25_eticetka;#}
-                {#chart25.data.datasets[3].data = newData.dataChart25_ukladchik;#}
-                {#chart25.data.datasets[4].data = newData.dataChart25_zakleichik;#}
+                chart25.data.datasets[1].data = newData.dataChart25_triblok;
+                chart24.data.datasets[0].data = newData.dataChart25_need_speed;
                 chart25.update();
             });
 

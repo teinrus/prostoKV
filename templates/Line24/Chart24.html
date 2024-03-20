@@ -60,6 +60,14 @@
 
                         labels: data.lableChart24,
                         datasets: [{
+                            type: 'line',
+                            label: 'Необходимая производительность',
+                            data: data.dataChart24_need_speed,
+                            borderWidth: 2,
+                            borderColor: 'rgb(255,0,0)',
+                            backgroundColor: 'rgba(255,0,0,0.2)',
+                            pointRadius: 0,
+                        }, {
                             label: '# Производительность триблок',
                             data: data.dataChart24_triblok,
                             borderWidth: 3,
@@ -69,10 +77,10 @@
                     options: {
 
                         elements: {
-                    point:{
-                        radius: 0
-                    }
-                },
+                            point: {
+                                radius: 0
+                            }
+                        },
                         scales: {
                             y: {
                                 beginAtZero: true
@@ -110,7 +118,8 @@
                 url: 'getData24',
             }).done(function (newData) {
                 chart24.data.labels = newData.lableChart24;
-                chart24.data.datasets[0].data = newData.dataChart24_triblok;
+                chart24.data.datasets[1].data = newData.dataChart24_triblok;
+                chart24.data.datasets[0].data = newData.dataChart24_need_speed;
                 chart24.update();
             });
 
@@ -120,8 +129,6 @@
     </script>
 
     <script>
-
-
 
 
     </script>

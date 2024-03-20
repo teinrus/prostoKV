@@ -103,6 +103,57 @@
 
     {% include 'Line25/Chart25.html' %}
 
+
+     <select id="Select25">
+        {% for option in select25 %}
+            <option>{{ option }}</option>
+        {% endfor %}
+    </select>
+
+
+    <script>
+
+        function loadSavedOption25() {
+            let selectElement = document.getElementById('Select25');
+            let savedOption = '{{ select_valve_25|escapejs }}';
+            if (savedOption){
+                 selectElement.value = savedOption;
+            }
+
+
+        }
+
+        function sendData25(selectedOption) {
+            var selectedValue = selectedOption;
+            // Отправляем выбранное значение на сервер через AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "{% url 'select25' %}", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("selected_value=" + encodeURIComponent(selectedValue));
+        }
+
+        loadSavedOption25();
+        sendData25(document.getElementById('Select25').value);
+        document.getElementById('Select25').addEventListener('change', function (event) {
+            var selectedOption = event.target.value; // Получаем выбранное значение селекта
+            sendData25(selectedOption); // Вызываем функцию отправки данных при изменении выбранного значения
+        });
+
+        // Устанавливаем интервал для отправки данных
+        setInterval(function () {
+            loadSavedOption25();
+            var now = new Date();
+            var selectedOption = document.getElementById('Select25').value;
+
+            if ((now.getHours() === 16 && now.getMinutes() === 31) ||
+                (now.getHours() === 0 && now.getMinutes() === 1) ||
+                (now.getHours() === 8 && now.getMinutes() === 1)) {
+                sendData25(selectedOption);
+            }
+        }, 60000); // Проверяем каждую минуту
+
+    </script>
+
     <table id="sample_data25" class="table table-bordered table-striped">
         <thead>
         <tr>

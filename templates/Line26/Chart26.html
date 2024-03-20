@@ -60,6 +60,14 @@
 
                         labels: data.lableChart26,
                         datasets: [{
+                            type: 'line',
+                            label: 'Необходимая производительность',
+                            data: data.dataChart26_need_speed,
+                            borderWidth: 2,
+                            borderColor: 'rgb(255,0,0)',
+                            backgroundColor: 'rgba(255,0,0,0.2)',
+                            pointRadius: 0,
+                        },{
                             label: '# Производительность триблок',
                             data: data.dataChart26_triblok,
                             borderWidth: 3,
@@ -111,7 +119,8 @@
                 url: 'getData26',
             }).done(function (newData) {
                 chart26.data.labels = newData.lableChart26;
-                chart26.data.datasets[0].data = newData.dataChart26_triblok;
+                chart26.data.datasets[1].data = newData.dataChart26_triblok;
+                chart26.data.datasets[0].data = newData.dataChart26_need_speed;
                 chart26.update();
             });
 

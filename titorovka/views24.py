@@ -1,13 +1,12 @@
 import datetime
 
-
-from django.db.models import Count, Sum, Avg
+from django.db.models import Sum
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from pyModbusTCP.client import ModbusClient
 
-from temruk.models import bottling_plan, uchastok, prichina
+from temruk.models import bottling_plan, uchastok, prichina, SetProductionSpeed
 from titorovka.models import *
-from  pyModbusTCP.client import ModbusClient
 
 vid_prostoev = {
     "Аварийные простои": ["Настройка после переналадки", "Поломка аппарата",
@@ -71,14 +70,14 @@ vid_prostoev = {
                     "Переход по в/м, этикетке, бутылке с мойкой (Линия 31)",
                     "Переход по этикетке, в/м и бутылке (переход с изменением объема бутылки)"],
 
-    "ТО и Переналадки АСУП":["ТО",
-                        "Доналадка",
-                        "Переналадка"]
+    "ТО и Переналадки АСУП": ["ТО",
+                              "Доналадка",
+                              "Переналадка"]
 }
-slave_address='10.36.20.4'
+slave_address = '10.36.20.4'
 
 unit_id = 1
-modbus_client = ModbusClient(host=slave_address, unit_id=unit_id,auto_open=True)
+modbus_client = ModbusClient(host=slave_address, unit_id=unit_id, auto_open=True)
 
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 00, 0)
@@ -168,7 +167,6 @@ def update24(request):
         return HttpResponse('yes')
 
 
-
 # получение данных в таблицу
 def update_items24(request):
     if start1 <= datetime.datetime.now().time() <= start2:
@@ -182,14 +180,15 @@ def update_items24(request):
         spotSmena = datetime.time(8, 00, 00)
 
     table24 = Table24.objects.filter(startdata=datetime.date.today(),
-                                   starttime__gte=startSmena,
-                                   starttime__lte=spotSmena)
+                                     starttime__gte=startSmena,
+                                     starttime__lte=spotSmena)
 
     return render(request, 'Line24/table_body24.html', {'table24': table24})
 
 
 # получение данных для графика и ячеек
 def getData24(requst):
+    dataChart24_need_speed = []
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
         spotSmena = datetime.time(16, 00, 0)
@@ -205,27 +204,24 @@ def getData24(requst):
 
     try:
         plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-                                         GIUDLine='90aef8a3-8edd-4904-b22b-8f53d903f90d',
-                                         ShiftNumber=Smena)
-        plan=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-        if plan== None:
-            plan=31000
+                                            GIUDLine='90aef8a3-8edd-4904-b22b-8f53d903f90d',
+                                            ShiftNumber=Smena)
+        plan = plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+        if plan == None:
+            plan = 31000
     except:
-        plan=31000
-
+        plan = 31000
 
     table24 = Table24.objects.filter(startdata=datetime.date.today(),
-                                   starttime__gte=startSmena,
-                                   starttime__lte=spotSmena)
+                                     starttime__gte=startSmena,
+                                     starttime__lte=spotSmena)
 
     speed24 = Speed24.objects.filter(data=datetime.date.today(),
-                                   time__gte=startSmena,
-                                   time__lte=spotSmena)
+                                     time__gte=startSmena,
+                                     time__lte=spotSmena)
     productionOutput24 = ProductionOutput24.objects.filter(data=datetime.date.today(),
-                                                         time__gte=startSmena,
-                                                         time__lte=spotSmena)
-
-
+                                                           time__gte=startSmena,
+                                                           time__lte=spotSmena)
 
     try:
         count24 = 0
@@ -248,7 +244,7 @@ def getData24(requst):
     try:
         sumProduct24 = productionOutput24.aggregate(Sum('production')).get('production__sum')
         if (sumProduct24 == None):
-            sumProduct24= '0'
+            sumProduct24 = '0'
     except:
         sumProduct24 = 0
     try:
@@ -258,19 +254,52 @@ def getData24(requst):
 
     lableChart24 = []
     dataChart24_triblok = []
-    dataChart24_kapsula = []
-    dataChart24_eticetka = []
-    dataChart24_ukladchik = []
-    dataChart24_zakleichik = []
 
     for sp in speed24:
         lableChart24.append(str(sp.time))
         dataChart24_triblok.append(sp.triblok)
-        dataChart24_kapsula.append(sp.kapsula)
-        dataChart24_eticetka.append(sp.eticetka)
-        dataChart24_ukladchik.append(sp.ukladchik)
-        dataChart24_zakleichik.append(sp.zakleichik)
+    # Получение времени начала и окончания из ProductionTime
+    start_times = list(ProductionTime24.objects.filter(data=datetime.date.today(),
+                                                       time__gte=startSmena,
+                                                       time__lte=spotSmena)
+                       .values_list('time', flat=True))
 
+    prod_name = list(ProductionTime24.objects.filter(data=datetime.date.today(),
+                                                     time__gte=startSmena,
+                                                     time__lte=spotSmena)
+                     .values_list('type_bottle', flat=True))
+    # Пустой список для хранения скоростей
+    speeds = []
+
+    # Получение скорости для каждого продукта из списка
+    for product in prod_name:
+        # Получение объекта SetProductionSpeed31 по названию продукта
+        production_speed = SetProductionSpeed.objects.filter(name_bottle=product).filter(line="24").first()
+
+        if production_speed:
+            # Добавление скорости продукта в список
+            speeds.append(production_speed.speed)
+        else:
+            speeds.append(None)
+
+    end_times = start_times[1:] + [speed24.last().time]
+    start_times = [str(time) for time in start_times]
+    end_times = [str(time) for time in end_times]
+
+    # Парное объединение элементов двух списков
+    merged_list = [(elem1, elem2, elem3, elem4) for elem1, elem2, elem3, elem4 in
+                   zip(start_times, end_times, speeds, prod_name)]
+
+    for sp in speed24:
+        trig = False
+        for el in range(0, len(merged_list)):
+            if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
+                    <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
+                dataChart24_need_speed.append(round(merged_list[el][2] * 1.18 / 0.8, 0) if merged_list[el][2] else 0)
+                trig = True
+
+        if not trig:
+            dataChart24_need_speed.append(0)
     result = {
         "allProc24": allProc24,
         'sumProstoy24': str(sumProstoy),
@@ -279,17 +308,31 @@ def getData24(requst):
 
         'lableChart24': lableChart24,
         'dataChart24_triblok': dataChart24_triblok,
-        'dataChart24_kapsula': dataChart24_kapsula,
-        'dataChart24_eticetka': dataChart24_eticetka,
-        'dataChart24_ukladchik': dataChart24_ukladchik,
-        'dataChart24_zakleichik': dataChart24_zakleichik,
+        'dataChart24_need_speed': dataChart24_need_speed,
 
     }
     return JsonResponse(result)
 
+
 def getBtn24(requst):
     buttons_reg = modbus_client.read_input_registers(0)
     result = {
-        'buttons_reg':buttons_reg
-              }
+        'buttons_reg': buttons_reg
+    }
     return JsonResponse(result)
+
+
+def select24(request):
+    if request.method == 'POST':
+
+        selected_value = request.POST.get('selected_value')
+
+        response_data = {'selected_value': selected_value}
+        production_time = ProductionTime24(data=datetime.datetime.today(),
+                                           time=datetime.datetime.now().strftime("%H:%M:%S"),
+                                           type_bottle=selected_value)
+        production_time.save()
+        return JsonResponse(response_data)
+    else:
+        # Вернуть ошибку, если запрос не является POST-запросом или не AJAX-запросом
+        return JsonResponse({'error': 'Invalid request'}, status=400)

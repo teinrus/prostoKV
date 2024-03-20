@@ -4,6 +4,9 @@ from titorovka.views import start_perenaladka31, start_adaptacia31, rabota31, TO
     start_perenaladka24, start_donaladka24, rabota24, TO24, start_perenaladka26, start_donaladka26, \
     rabota26, TO26, start_perenaladka25, start_donaladka25, rabota25, TO25, vid25, vid26, Oformlenie31, \
     start_adaptation33, start_oformlenie33
+from titorovka.views24 import select24
+from titorovka.views25 import select25
+from titorovka.views26 import select26
 from titorovka.views31 import select31
 from titorovka.views33 import select33
 
@@ -65,4 +68,7 @@ urlpatterns = [
     path('select33/', select33, name='select33'),
     path('select31/', select31, name='select31'),
 
+    path('select24/', select24, name='select24'),
+    path('select25/', select25, name='select25'),
+    path('select26/', select26, name='select26'),
 ]

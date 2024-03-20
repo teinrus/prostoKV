@@ -200,7 +200,6 @@ def select4(request):
         selected_value = request.POST.get('selected_value')
 
         response_data = {'selected_value': selected_value}
-        print(selected_value)
         production_time = ProductionTime4(data=datetime.datetime.today(),
                                           time=datetime.datetime.now().strftime("%H:%M:%S"), type_bottle=selected_value)
         production_time.save()

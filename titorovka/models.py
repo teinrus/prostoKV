@@ -278,3 +278,34 @@ class ProductionTime33(models.Model):
 
     class Meta:
         verbose_name_plural = "Время работы на бутылке 33"
+class ProductionTime24(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    type_bottle = models.CharField('Тип бутылки', max_length=150, default='', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Время работы на бутылке 24"
+class ProductionTime25(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    type_bottle = models.CharField('Тип бутылки', max_length=150, default='', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Время работы на бутылке 25"
+
+class ProductionTime26(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    type_bottle = models.CharField('Тип бутылки', max_length=150, default='', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Время работы на бутылке 26"
