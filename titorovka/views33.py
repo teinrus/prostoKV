@@ -307,7 +307,7 @@ def getData33(requst):
         for el in range(0, len(merged_list)):
             if datetime.datetime.strptime(merged_list[el][0], "%H:%M:%S").time() < sp.time \
                     <= datetime.datetime.strptime(merged_list[el][1], "%H:%M:%S").time():
-                dataChart33_need_speed.append(round(merged_list[el][2] * 1.18 / 0.8, 0) if merged_list[el][2] else 0)
+                dataChart33_need_speed.append(round(merged_list[el][2], 0) if merged_list[el][2] else 0)
                 trig = True
 
         if not trig:

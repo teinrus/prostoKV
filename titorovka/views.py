@@ -276,7 +276,7 @@ def Sotchet(request):
                             try:
                                 end_bottle.append(
                                     [el, production_speed.speed,
-                                     int(round(production_speed.speed * 1.18 / 0.8, 0))])
+                                     int(round(production_speed.speed, 0))])
                             except:
                                 pass
                         speeds = []
@@ -325,7 +325,7 @@ def Sotchet(request):
                                 start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
                                 end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
                                 if start_datetime <= speed_datetime <= end_datetime:
-                                    data_chartneed_speed.append(round(speed_value * 1.18 / 0.8, 0))
+                                    data_chartneed_speed.append(round(speed_value, 0))
                                     speed_in_range = True
                                     break
                             if not speed_in_range:
@@ -548,7 +548,7 @@ def Sotchet(request):
                         try:
                             end_bottle.append(
                                 [el, production_speed.speed,
-                                 int(round(production_speed.speed * 1.18 / 0.8, 0))])
+                                 int(round(production_speed.speed , 0))])
                         except:
                             pass
                     speeds = []
@@ -597,7 +597,7 @@ def Sotchet(request):
                             start_datetime = datetime.datetime.combine(start_datetime[0], start_datetime[1])
                             end_datetime = datetime.datetime.combine(end_datetime[0], end_datetime[1])
                             if start_datetime <= speed_datetime <= end_datetime:
-                                data_chartneed_speed.append(round(speed_value * 1.18 / 0.8, 0))
+                                data_chartneed_speed.append(round(speed_value , 0))
                                 speed_in_range = True
                                 break
                         if not speed_in_range:
